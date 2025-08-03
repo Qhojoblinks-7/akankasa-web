@@ -10,7 +10,7 @@ const Homepage = () => {
       category: "Language Learning",
       link: "/learn/greetings",
       icon: MessageCircle,
-      color: "bg-akan-deep-brown"
+      color: "#564c38"
     },
     {
       title: "Adinkra Symbols",
@@ -18,7 +18,7 @@ const Homepage = () => {
       category: "Culture",
       link: "/culture/arts",
       icon: Star,
-      color: "bg-akan-muted-olive"
+      color: "#695e46"
     },
     {
       title: "Akan Dictionary",
@@ -26,7 +26,7 @@ const Homepage = () => {
       category: "Dictionary",
       link: "/dictionary",
       icon: Book,
-      color: "bg-akan-warm-gray"
+      color: "#77705c"
     },
     {
       title: "Cultural Events",
@@ -34,7 +34,7 @@ const Homepage = () => {
       category: "Community",
       link: "/community/events",
       icon: Calendar,
-      color: "bg-akan-soft-beige"
+      color: "#c2ae81"
     }
   ];
 
@@ -48,7 +48,7 @@ const Homepage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative akan-gradient overflow-hidden">
+      <section className="relative overflow-hidden" style={{background: 'linear-gradient(135deg, #695e46 0%, #564c38 100%)'}}>
         <div className="absolute inset-0 akan-pattern opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
@@ -77,7 +77,10 @@ const Homepage = () => {
             >
               <Link 
                 to="/learn" 
-                className="bg-akan-pale-gold text-akan-deep-brown px-8 py-4 rounded-lg font-semibold hover:bg-akan-soft-beige transition-colors inline-flex items-center space-x-2 shadow-lg"
+                className="px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2 shadow-lg"
+                style={{backgroundColor: '#f1d799', color: '#564c38'}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#c2ae81'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#f1d799'}
               >
                 <BookOpen className="w-5 h-5" />
                 <span>Start Learning</span>
@@ -85,7 +88,16 @@ const Homepage = () => {
               </Link>
               <Link 
                 to="/culture" 
-                className="border-2 border-akan-pale-gold text-akan-pale-gold px-8 py-4 rounded-lg font-semibold hover:bg-akan-pale-gold hover:text-akan-deep-brown transition-colors inline-flex items-center space-x-2"
+                className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2"
+                style={{borderColor: '#f1d799', color: '#f1d799'}}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#f1d799';
+                  e.target.style.color = '#564c38';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#f1d799';
+                }}
               >
                 <Users className="w-5 h-5" />
                 <span>Explore Culture</span>
@@ -115,28 +127,28 @@ const Homepage = () => {
                 title: "Learn Language",
                 description: "Interactive lessons, alphabet, and vocabulary",
                 link: "/learn",
-                color: "from-akan-deep-brown to-akan-muted-olive"
+                color: "linear-gradient(135deg, #564c38 0%, #695e46 100%)"
               },
               {
                 icon: Users,
                 title: "Explore Culture",
                 description: "Traditions, history, arts, and customs",
                 link: "/culture",
-                color: "from-akan-muted-olive to-akan-warm-gray"
+                color: "linear-gradient(135deg, #695e46 0%, #77705c 100%)"
               },
               {
                 icon: Book,
                 title: "Use Dictionary",
                 description: "Comprehensive Akan-English dictionary",
                 link: "/dictionary",
-                color: "from-akan-warm-gray to-akan-soft-beige"
+                color: "linear-gradient(135deg, #77705c 0%, #c2ae81 100%)"
               },
               {
                 icon: Search,
                 title: "Research Hub",
                 description: "Academic resources and research tools",
                 link: "/research",
-                color: "from-akan-soft-beige to-akan-pale-gold"
+                color: "linear-gradient(135deg, #c2ae81 0%, #f1d799 100%)"
               }
             ].map((item, index) => {
               const Icon = item.icon;
@@ -151,12 +163,12 @@ const Homepage = () => {
                     to={item.link}
                     className="block p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-gray-200 group"
                   >
-                    <div className={`w-12 h-12 bg-gradient-to-r ${item.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300" style={{background: item.color}}>
                       <Icon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.description}</p>
-                    <div className="mt-4 flex items-center text-akan-deep-brown group-hover:text-akan-muted-olive">
+                    <div className="mt-4 flex items-center transition-colors" style={{color: '#564c38'}}>
                       <span className="text-sm font-medium">Get Started</span>
                       <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -194,16 +206,16 @@ const Homepage = () => {
                     to={content.link}
                     className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group"
                   >
-                    <div className={`h-32 ${content.color} relative`}>
+                    <div className="h-32 relative" style={{backgroundColor: content.color}}>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <Icon className="w-12 h-12 text-white" />
                       </div>
                     </div>
                     <div className="p-6">
-                      <span className="inline-block px-3 py-1 bg-akan-pale-gold text-akan-deep-brown text-xs font-medium rounded-full mb-3">
+                      <span className="inline-block px-3 py-1 text-xs font-medium rounded-full mb-3" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
                         {content.category}
                       </span>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-akan-deep-brown transition-colors">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:transition-colors" style={{'&:hover': {color: '#564c38'}}}>
                         {content.title}
                       </h3>
                       <p className="text-gray-600 text-sm">{content.description}</p>
@@ -217,7 +229,7 @@ const Homepage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-akan-deep-brown text-white">
+      <section className="py-16 text-white" style={{backgroundColor: '#564c38'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -257,14 +269,26 @@ const Homepage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/learn"
-              className="bg-akan-deep-brown text-white px-8 py-4 rounded-lg font-semibold hover:bg-akan-muted-olive transition-colors inline-flex items-center justify-center space-x-2"
+              className="px-8 py-4 rounded-lg font-semibold text-white transition-colors inline-flex items-center justify-center space-x-2"
+              style={{backgroundColor: '#564c38'}}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
             >
               <Play className="w-5 h-5" />
               <span>Start Learning Now</span>
             </Link>
             <Link
               to="/community"
-              className="border-2 border-akan-deep-brown text-akan-deep-brown px-8 py-4 rounded-lg font-semibold hover:bg-akan-deep-brown hover:text-white transition-colors inline-flex items-center justify-center space-x-2"
+              className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center justify-center space-x-2"
+              style={{borderColor: '#564c38', color: '#564c38'}}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#564c38';
+                e.target.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = '#564c38';
+              }}
             >
               <Users className="w-5 h-5" />
               <span>Join Community</span>
