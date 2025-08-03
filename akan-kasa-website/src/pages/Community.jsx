@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, Trending } from 'lucide-react';
+import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp } from 'lucide-react';
 import { forumData, eventsData, userProfiles } from '../data/mockData';
 
 const Community = () => {
@@ -235,7 +235,7 @@ const Community = () => {
             {/* Trending Topics */}
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <div className="flex items-center mb-4">
-                <Trending className="w-5 h-5 text-orange-600 mr-2" />
+                <TrendingUp className="w-5 h-5 text-orange-600 mr-2" />
                 <h3 className="font-semibold text-gray-900">Trending Topics</h3>
               </div>
               <div className="flex flex-wrap gap-2">
