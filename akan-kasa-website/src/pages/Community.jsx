@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp } from 'lucide-react';
-import { forumData, eventsData, userProfiles } from '../data/mockData';
+import { communityData } from '../data/mockData';
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState('forums');
@@ -15,9 +15,7 @@ const Community = () => {
 
   const categories = ['all', 'Language Learning', 'Cultural Events', 'Research', 'General Discussion'];
 
-  const filteredForumPosts = forumData.filter(post => 
-    selectedCategory === 'all' || post.category === selectedCategory
-  );
+  const filteredForumPosts = communityData.forums || [];
 
   const ForumPostCard = ({ post }) => (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
@@ -31,7 +29,7 @@ const Community = () => {
             <span>{post.replies} replies</span>
           </div>
         </div>
-        <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium ml-4">
+        <span className="px-2 py-1 rounded-full text-xs font-medium ml-4" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
           {post.category}
         </span>
       </div>
@@ -45,7 +43,12 @@ const Community = () => {
       </div>
       
       <div className="flex justify-between items-center">
-        <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+        <button 
+          className="font-medium text-sm transition-colors"
+          style={{color: '#564c38'}}
+          onMouseEnter={(e) => e.target.style.color = '#695e46'}
+          onMouseLeave={(e) => e.target.style.color = '#564c38'}
+        >
           Join Discussion →
         </button>
         <div className="flex items-center space-x-2">

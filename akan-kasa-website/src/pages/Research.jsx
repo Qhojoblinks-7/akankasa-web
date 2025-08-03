@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, Download, Filter, BookOpen, Users, GraduationCap, FileText, ExternalLink, MessageSquare } from 'lucide-react';
-import { researchData, forumData } from '../data/mockData';
+import { researchData, communityData } from '../data/mockData';
 
 const Research = () => {
   const [activeTab, setActiveTab] = useState('resources');
@@ -19,23 +19,18 @@ const Research = () => {
   const types = ['all', 'article', 'research paper', 'thesis', 'book', 'video', 'dataset'];
 
   const getAllResources = () => {
-    return [
-      ...researchData.beginner.map(item => ({ ...item, level: 'beginner' })),
-      ...researchData.intermediate.map(item => ({ ...item, level: 'intermediate' })),
-      ...researchData.advanced.map(item => ({ ...item, level: 'advanced' }))
-    ];
+    return researchData.papers || [];
   };
 
   const filteredResources = getAllResources().filter(resource => {
     const matchesSearch = !searchTerm || 
       resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       resource.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      resource.description.toLowerCase().includes(searchTerm.toLowerCase());
+      (resource.abstract && resource.abstract.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesLevel = selectedLevel === 'all' || resource.level === selectedLevel;
-    const matchesType = selectedType === 'all' || resource.type === selectedType;
     
-    return matchesSearch && matchesLevel && matchesType;
+    return matchesSearch && matchesLevel;
   });
 
   const ResourceCard = ({ resource }) => (
@@ -47,11 +42,12 @@ const Research = () => {
           <p className="text-gray-700 mb-4">{resource.description}</p>
         </div>
         <div className="flex flex-col items-end space-y-2 ml-4">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            resource.level === 'beginner' ? 'bg-green-100 text-green-700' :
-            resource.level === 'intermediate' ? 'bg-yellow-100 text-yellow-700' :
-            'bg-red-100 text-red-700'
-          }`}>
+          <span className="px-2 py-1 rounded-full text-xs font-medium"
+                style={{
+                  backgroundColor: resource.level === 'beginner' ? '#f1d799' : 
+                                 resource.level === 'intermediate' ? '#c2ae81' : '#77705c',
+                  color: '#564c38'
+                }}>
             {resource.level}
           </span>
           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
@@ -69,11 +65,21 @@ const Research = () => {
       </div>
       
       <div className="flex justify-between items-center">
-        <button className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center">
+        <button 
+          className="font-medium text-sm flex items-center transition-colors"
+          style={{color: '#564c38'}}
+          onMouseEnter={(e) => e.target.style.color = '#695e46'}
+          onMouseLeave={(e) => e.target.style.color = '#564c38'}
+        >
           <ExternalLink className="w-4 h-4 mr-2" />
           View Details
         </button>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center text-sm">
+        <button 
+          className="text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm"
+          style={{backgroundColor: '#564c38'}}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
+        >
           <Download className="w-4 h-4 mr-2" />
           Download
         </button>
@@ -115,7 +121,7 @@ const Research = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white">
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Research Hub</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -134,11 +140,22 @@ const Research = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? 'border-green-500 text-green-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                  className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
+                  style={activeTab === tab.id 
+                    ? {borderColor: '#564c38', color: '#564c38'} 
+                    : {borderColor: 'transparent', color: '#6b7280'}}
+                  onMouseEnter={(e) => {
+                    if (activeTab !== tab.id) {
+                      e.target.style.color = '#374151';
+                      e.target.style.borderColor = '#d1d5db';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeTab !== tab.id) {
+                      e.target.style.color = '#6b7280';
+                      e.target.style.borderColor = 'transparent';
+                    }
+                  }}
                 >
                   <Icon className="w-5 h-5" />
                   <span>{tab.label}</span>

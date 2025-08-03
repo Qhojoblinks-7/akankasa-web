@@ -12,6 +12,7 @@ import LessonDetail from './pages/LessonDetail';
 import VocabularyModule from './pages/VocabularyModule';
 import GreetingsLesson from './pages/GreetingsLesson';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="/research" element={<Research />} />
               <Route path="/community" element={<Community />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
             </Routes>
           </main>
           <Footer />

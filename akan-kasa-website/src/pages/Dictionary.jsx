@@ -67,7 +67,7 @@ const Dictionary = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white">
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Akan Dictionary</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -84,21 +84,39 @@ const Dictionary = () => {
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setSearchDirection('akan-english')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  searchDirection === 'akan-english'
-                    ? 'bg-purple-600 text-white'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                style={searchDirection === 'akan-english' 
+                  ? {backgroundColor: '#564c38', color: 'white'} 
+                  : {color: '#6b7280'}}
+                onMouseEnter={(e) => {
+                  if (searchDirection !== 'akan-english') {
+                    e.target.style.color = '#111827';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (searchDirection !== 'akan-english') {
+                    e.target.style.color = '#6b7280';
+                  }
+                }}
               >
                 Akan → English
               </button>
               <button
                 onClick={() => setSearchDirection('english-akan')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  searchDirection === 'english-akan'
-                    ? 'bg-purple-600 text-white'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
+                className="px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                style={searchDirection === 'english-akan' 
+                  ? {backgroundColor: '#564c38', color: 'white'} 
+                  : {color: '#6b7280'}}
+                onMouseEnter={(e) => {
+                  if (searchDirection !== 'english-akan') {
+                    e.target.style.color = '#111827';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (searchDirection !== 'english-akan') {
+                    e.target.style.color = '#6b7280';
+                  }
+                }}
               >
                 English → Akan
               </button>
@@ -113,7 +131,9 @@ const Dictionary = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder={`Search in ${searchDirection === 'akan-english' ? 'Akan' : 'English'}...`}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
+                  style={{'--tw-ring-color': '#564c38'}}
+                  onFocus={(e) => e.target.style.ringColor = '#564c38'}
                 />
               </div>
               
@@ -142,7 +162,8 @@ const Dictionary = () => {
               <select
                 value={selectedDialect}
                 onChange={(e) => setSelectedDialect(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:border-transparent"
+                style={{'--tw-ring-color': '#564c38'}}
               >
                 {dialects.map(dialect => (
                   <option key={dialect} value={dialect}>
