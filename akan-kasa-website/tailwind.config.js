@@ -6,15 +6,6 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        akan: {
-          gold: '#FFD700',
-          red: '#CC0000',
-          green: '#008000',
-          black: '#000000',
-          brown: '#8B4513',
-        }
-      },
       fontFamily: {
         'akan': ['Georgia', 'serif'],
       }
