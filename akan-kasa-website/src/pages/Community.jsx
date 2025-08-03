@@ -105,7 +105,7 @@ const Community = () => {
 
   const MemberCard = ({ member }) => (
     <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
-      <div className="w-20 h-20 bg-gradient-to-r from-akan-gold to-akan-red rounded-full mx-auto mb-4 flex items-center justify-center">
+              <div className="w-20 h-20 bg-gradient-to-r from-accent-gold to-primary-deep rounded-full mx-auto mb-4 flex items-center justify-center">
         <span className="text-white text-2xl font-bold">
           {member.name.split(' ').map(n => n[0]).join('')}
         </span>

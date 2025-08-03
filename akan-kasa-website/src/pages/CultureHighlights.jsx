@@ -33,7 +33,7 @@ const CultureHighlights = () => {
 
   const CultureCard = ({ item, sectionType }) => (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="relative h-48 bg-gradient-to-r from-akan-gold to-akan-red">
+              <div className="relative h-48 bg-gradient-to-r from-accent-gold to-primary-deep">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-white text-center">
             <h3 className="text-xl font-bold mb-2">{item.title}</h3>
@@ -119,7 +119,7 @@ const CultureHighlights = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-akan-red via-akan-gold to-akan-green text-white">
+      <div className="bg-gradient-to-r from-primary-deep via-accent-gold to-primary-muted text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Akan Culture Highlights</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -140,7 +140,7 @@ const CultureHighlights = () => {
                   onClick={() => setActiveSection(section.id)}
                   className={`flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
                     activeSection === section.id
-                      ? 'border-akan-gold text-akan-red'
+                      ? 'border-accent-gold text-primary-deep'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
@@ -166,7 +166,7 @@ const CultureHighlights = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search traditions, stories, or topics..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-akan-gold focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-gold focus:border-transparent"
                 />
                 <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               </div>
@@ -178,7 +178,7 @@ const CultureHighlights = () => {
               <select
                 value={selectedRegion}
                 onChange={(e) => setSelectedRegion(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-akan-gold focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent-gold focus:border-transparent"
               >
                 {regions.map(region => (
                   <option key={region} value={region}>
@@ -275,13 +275,13 @@ const CultureHighlights = () => {
         </div>
 
         {/* User Contribution Section */}
-        <div className="bg-gradient-to-r from-akan-gold to-akan-red text-white rounded-lg p-8 mt-8">
+        <div className="bg-gradient-to-r from-accent-gold to-primary-deep text-white rounded-lg p-8 mt-8">
           <div className="text-center">
             <h3 className="text-2xl font-bold mb-4">Share Your Knowledge</h3>
             <p className="text-lg opacity-90 mb-6">
               Help preserve Akan culture by contributing your stories, photos, and knowledge
             </p>
-            <button className="bg-white text-akan-red px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                          <button className="bg-white text-primary-deep px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Contribute Content
             </button>
           </div>

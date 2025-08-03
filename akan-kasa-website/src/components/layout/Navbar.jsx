@@ -23,13 +23,13 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-akan-red via-akan-gold to-akan-green shadow-lg sticky top-0 z-50">
+    <nav className="bg-gradient-to-r from-primary-deep via-accent-beige to-primary-muted shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-              <span className="text-akan-red font-bold text-xl">অ</span>
+              <span className="text-primary-deep font-bold text-xl">অ</span>
             </div>
             <div className="text-white">
               <h1 className="font-bold text-xl">Akan Kasa</h1>
@@ -47,7 +47,7 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
                   to={item.path}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
                     isActive(item.path)
-                      ? 'bg-white text-akan-red shadow-md'
+                      ? 'bg-white text-primary-deep shadow-md'
                       : 'text-white hover:bg-white/20'
                   }`}
                 >
@@ -96,7 +96,7 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
                     onClick={() => setIsMenuOpen(false)}
                     className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-3 ${
                       isActive(item.path)
-                        ? 'bg-white text-akan-red'
+                        ? 'bg-white text-primary-deep'
                         : 'text-white hover:bg-white/20'
                     }`}
                   >
@@ -111,7 +111,7 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
       </div>
 
       {/* Decorative Adinkra Pattern */}
-      <div className="h-1 bg-gradient-to-r from-akan-gold via-white to-akan-gold opacity-50"></div>
+      <div className="h-1 bg-gradient-to-r from-accent-gold via-white to-accent-gold opacity-50"></div>
     </nav>
   );
 };

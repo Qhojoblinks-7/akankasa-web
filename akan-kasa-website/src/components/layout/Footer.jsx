@@ -31,14 +31,14 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       {/* Decorative Adinkra Pattern Border */}
-      <div className="h-2 bg-gradient-to-r from-akan-red via-akan-gold to-akan-green"></div>
+      <div className="h-2 bg-gradient-to-r from-primary-deep via-accent-gold to-primary-muted"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo and Mission */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-akan-gold to-akan-red rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-accent-gold to-primary-deep rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-2xl">অ</span>
               </div>
               <div>
@@ -51,16 +51,16 @@ const Footer = () => {
               cultural education, and community engagement.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-akan-gold transition-colors">
+              <a href="#" className="text-gray-400 hover:text-accent-gold transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-akan-gold transition-colors">
+              <a href="#" className="text-gray-400 hover:text-accent-gold transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-akan-gold transition-colors">
+              <a href="#" className="text-gray-400 hover:text-accent-gold transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-akan-gold transition-colors">
+              <a href="#" className="text-gray-400 hover:text-accent-gold transition-colors">
                 <Youtube className="w-5 h-5" />
               </a>
             </div>
@@ -68,7 +68,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-lg mb-4 text-akan-gold">Quick Links</h4>
+            <h4 className="font-semibold text-lg mb-4 text-accent-gold">Quick Links</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.to}>
@@ -85,7 +85,7 @@ const Footer = () => {
 
           {/* Cultural Resources */}
           <div>
-            <h4 className="font-semibold text-lg mb-4 text-akan-gold">Cultural Resources</h4>
+            <h4 className="font-semibold text-lg mb-4 text-accent-gold">Cultural Resources</h4>
             <ul className="space-y-3">
               {culturalLinks.map((link) => (
                 <li key={link.to}>
@@ -102,7 +102,7 @@ const Footer = () => {
 
           {/* Learning Resources */}
           <div>
-            <h4 className="font-semibold text-lg mb-4 text-akan-gold">Learning Resources</h4>
+            <h4 className="font-semibold text-lg mb-4 text-accent-gold">Learning Resources</h4>
             <ul className="space-y-3">
               {resourceLinks.map((link) => (
                 <li key={link.to}>
@@ -122,21 +122,21 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-12 pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="flex items-center space-x-3">
-              <Mail className="w-5 h-5 text-akan-gold" />
+              <Mail className="w-5 h-5 text-accent-gold" />
               <div>
                 <p className="text-sm text-gray-300">Email Us</p>
                 <p className="text-white">info@akankasa.org</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Phone className="w-5 h-5 text-akan-gold" />
+              <Phone className="w-5 h-5 text-accent-gold" />
               <div>
                 <p className="text-sm text-gray-300">Call Us</p>
                 <p className="text-white">+233 (0) 20 123 4567</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <MapPin className="w-5 h-5 text-akan-gold" />
+              <MapPin className="w-5 h-5 text-accent-gold" />
               <div>
                 <p className="text-sm text-gray-300">Location</p>
                 <p className="text-white">Kumasi, Ghana</p>

@@ -5,11 +5,31 @@
 @layer base {
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #f8f7f5; /* Very light warm background */
   }
 }
 
 @layer components {
   .akan-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFD700' fill-opacity='0.1'%3E%3Cpath d='M36 30c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12zm12-12c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1d799' fill-opacity='0.1'%3E%3Cpath d='M36 30c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12zm12-12c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
+  
+  /* New color utilities for the palette */
+  .bg-primary-deep { background-color: #564c38; }
+  .bg-primary-muted { background-color: #695e46; }
+  .bg-secondary-gray { background-color: #77705c; }
+  .bg-accent-gold { background-color: #f1d799; }
+  .bg-accent-beige { background-color: #c2ae81; }
+  
+  .text-primary-deep { color: #564c38; }
+  .text-primary-muted { color: #695e46; }
+  .text-secondary-gray { color: #77705c; }
+  .text-accent-gold { color: #f1d799; }
+  .text-accent-beige { color: #c2ae81; }
+  
+  .border-primary-deep { border-color: #564c38; }
+  .border-primary-muted { border-color: #695e46; }
+  .border-secondary-gray { border-color: #77705c; }
+  .border-accent-gold { border-color: #f1d799; }
+  .border-accent-beige { border-color: #c2ae81; }
 }

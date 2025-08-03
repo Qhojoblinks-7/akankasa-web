@@ -48,7 +48,7 @@ const Homepage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-akan-red via-akan-gold to-akan-green overflow-hidden">
+      <section className="relative bg-gradient-to-br from-primary-deep via-accent-gold to-primary-muted overflow-hidden">
         <div className="absolute inset-0 akan-pattern opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
@@ -77,7 +77,7 @@ const Homepage = () => {
             >
               <Link 
                 to="/learn" 
-                className="bg-white text-akan-red px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center space-x-2 shadow-lg"
+                className="bg-white text-primary-deep px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center space-x-2 shadow-lg"
               >
                 <BookOpen className="w-5 h-5" />
                 <span>Start Learning</span>
@@ -85,7 +85,7 @@ const Homepage = () => {
               </Link>
               <Link 
                 to="/culture" 
-                className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-akan-red transition-colors inline-flex items-center space-x-2"
+                                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary-deep transition-colors inline-flex items-center space-x-2"
               >
                 <Users className="w-5 h-5" />
                 <span>Explore Culture</span>
@@ -217,7 +217,7 @@ const Homepage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-akan-red text-white">
+      <section className="py-16 bg-primary-deep text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -257,14 +257,14 @@ const Homepage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/learn"
-              className="bg-akan-red text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700 transition-colors inline-flex items-center justify-center space-x-2"
+              className="bg-primary-deep text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary-muted transition-colors inline-flex items-center justify-center space-x-2"
             >
               <Play className="w-5 h-5" />
               <span>Start Learning Now</span>
             </Link>
             <Link
               to="/community"
-              className="border-2 border-akan-red text-akan-red px-8 py-4 rounded-lg font-semibold hover:bg-akan-red hover:text-white transition-colors inline-flex items-center justify-center space-x-2"
+                              className="border-2 border-primary-deep text-primary-deep px-8 py-4 rounded-lg font-semibold hover:bg-primary-deep hover:text-white transition-colors inline-flex items-center justify-center space-x-2"
             >
               <Users className="w-5 h-5" />
               <span>Join Community</span>
