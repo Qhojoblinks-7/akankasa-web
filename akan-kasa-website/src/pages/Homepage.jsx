@@ -10,7 +10,7 @@ const Homepage = () => {
       category: "Language Learning",
       link: "/learn/greetings",
       icon: MessageCircle,
-      color: "bg-blue-500"
+      color: "bg-akan-deep-brown"
     },
     {
       title: "Adinkra Symbols",
@@ -18,7 +18,7 @@ const Homepage = () => {
       category: "Culture",
       link: "/culture/arts",
       icon: Star,
-      color: "bg-green-500"
+      color: "bg-akan-muted-olive"
     },
     {
       title: "Akan Dictionary",
@@ -26,7 +26,7 @@ const Homepage = () => {
       category: "Dictionary",
       link: "/dictionary",
       icon: Book,
-      color: "bg-purple-500"
+      color: "bg-akan-warm-gray"
     },
     {
       title: "Cultural Events",
@@ -34,7 +34,7 @@ const Homepage = () => {
       category: "Community",
       link: "/community/events",
       icon: Calendar,
-      color: "bg-orange-500"
+      color: "bg-akan-soft-beige"
     }
   ];
 
@@ -48,7 +48,7 @@ const Homepage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-akan-red via-akan-gold to-akan-green overflow-hidden">
+      <section className="relative akan-gradient overflow-hidden">
         <div className="absolute inset-0 akan-pattern opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
@@ -77,7 +77,7 @@ const Homepage = () => {
             >
               <Link 
                 to="/learn" 
-                className="bg-white text-akan-red px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center space-x-2 shadow-lg"
+                className="bg-akan-pale-gold text-akan-deep-brown px-8 py-4 rounded-lg font-semibold hover:bg-akan-soft-beige transition-colors inline-flex items-center space-x-2 shadow-lg"
               >
                 <BookOpen className="w-5 h-5" />
                 <span>Start Learning</span>
@@ -85,7 +85,7 @@ const Homepage = () => {
               </Link>
               <Link 
                 to="/culture" 
-                className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-akan-red transition-colors inline-flex items-center space-x-2"
+                className="border-2 border-akan-pale-gold text-akan-pale-gold px-8 py-4 rounded-lg font-semibold hover:bg-akan-pale-gold hover:text-akan-deep-brown transition-colors inline-flex items-center space-x-2"
               >
                 <Users className="w-5 h-5" />
                 <span>Explore Culture</span>
@@ -115,28 +115,28 @@ const Homepage = () => {
                 title: "Learn Language",
                 description: "Interactive lessons, alphabet, and vocabulary",
                 link: "/learn",
-                color: "from-blue-500 to-blue-600"
+                color: "from-akan-deep-brown to-akan-muted-olive"
               },
               {
                 icon: Users,
                 title: "Explore Culture",
                 description: "Traditions, history, arts, and customs",
                 link: "/culture",
-                color: "from-green-500 to-green-600"
+                color: "from-akan-muted-olive to-akan-warm-gray"
               },
               {
                 icon: Book,
                 title: "Use Dictionary",
                 description: "Comprehensive Akan-English dictionary",
                 link: "/dictionary",
-                color: "from-purple-500 to-purple-600"
+                color: "from-akan-warm-gray to-akan-soft-beige"
               },
               {
                 icon: Search,
                 title: "Research Hub",
                 description: "Academic resources and research tools",
                 link: "/research",
-                color: "from-orange-500 to-orange-600"
+                color: "from-akan-soft-beige to-akan-pale-gold"
               }
             ].map((item, index) => {
               const Icon = item.icon;
@@ -156,7 +156,7 @@ const Homepage = () => {
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.description}</p>
-                    <div className="mt-4 flex items-center text-blue-600 group-hover:text-blue-700">
+                    <div className="mt-4 flex items-center text-akan-deep-brown group-hover:text-akan-muted-olive">
                       <span className="text-sm font-medium">Get Started</span>
                       <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -200,10 +200,10 @@ const Homepage = () => {
                       </div>
                     </div>
                     <div className="p-6">
-                      <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full mb-3">
+                      <span className="inline-block px-3 py-1 bg-akan-pale-gold text-akan-deep-brown text-xs font-medium rounded-full mb-3">
                         {content.category}
                       </span>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-akan-deep-brown transition-colors">
                         {content.title}
                       </h3>
                       <p className="text-gray-600 text-sm">{content.description}</p>
@@ -217,7 +217,7 @@ const Homepage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-akan-red text-white">
+      <section className="py-16 bg-akan-deep-brown text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -257,14 +257,14 @@ const Homepage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/learn"
-              className="bg-akan-red text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700 transition-colors inline-flex items-center justify-center space-x-2"
+              className="bg-akan-deep-brown text-white px-8 py-4 rounded-lg font-semibold hover:bg-akan-muted-olive transition-colors inline-flex items-center justify-center space-x-2"
             >
               <Play className="w-5 h-5" />
               <span>Start Learning Now</span>
             </Link>
             <Link
               to="/community"
-              className="border-2 border-akan-red text-akan-red px-8 py-4 rounded-lg font-semibold hover:bg-akan-red hover:text-white transition-colors inline-flex items-center justify-center space-x-2"
+              className="border-2 border-akan-deep-brown text-akan-deep-brown px-8 py-4 rounded-lg font-semibold hover:bg-akan-deep-brown hover:text-white transition-colors inline-flex items-center justify-center space-x-2"
             >
               <Users className="w-5 h-5" />
               <span>Join Community</span>

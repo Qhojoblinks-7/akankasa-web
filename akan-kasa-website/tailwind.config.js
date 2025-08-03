@@ -8,11 +8,24 @@ export default {
     extend: {
       colors: {
         akan: {
-          gold: '#FFD700',
-          red: '#CC0000',
-          green: '#008000',
-          black: '#000000',
-          brown: '#8B4513',
+          // Primary colors
+          'deep-brown': '#564c38',
+          'muted-olive': '#695e46',
+          // Secondary colors
+          'warm-gray': '#77705c',
+          // Accent colors
+          'pale-gold': '#f1d799',
+          'soft-beige': '#c2ae81',
+          // Neutral
+          'black': '#000000',
+          
+          // Legacy aliases for backward compatibility
+          primary: '#564c38',
+          'primary-light': '#695e46',
+          secondary: '#77705c',
+          accent: '#f1d799',
+          'accent-light': '#c2ae81',
+          dark: '#000000',
         }
       },
       fontFamily: {
