@@ -1,37 +1,40 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Homepage = () => {
+  const { t } = useLanguage();
+  
   const featuredContent = [
     {
-      title: "Learn Basic Greetings",
-      description: "Start your Akan journey with essential daily greetings",
-      category: "Language Learning",
+      title: t('basicGreetings'),
+      description: t('basicGreetingsDesc'),
+      category: t('languageLearning'),
       link: "/learn/greetings",
       icon: MessageCircle,
       color: "#564c38"
     },
     {
-      title: "Adinkra Symbols",
-      description: "Discover the wisdom embedded in traditional Akan symbols",
-      category: "Culture",
+      title: t('adinkraSymbols'),
+      description: t('adinkraSymbolsDesc'),
+      category: t('culture'),
       link: "/culture/arts",
       icon: Star,
       color: "#695e46"
     },
     {
-      title: "Akan Dictionary",
-      description: "Explore our comprehensive bilingual dictionary",
-      category: "Dictionary",
+      title: t('akanDictionary'),
+      description: t('akanDictionaryDesc'),
+      category: t('dictionary'),
       link: "/dictionary",
       icon: Book,
       color: "#77705c"
     },
     {
-      title: "Cultural Events",
-      description: "Join upcoming Akan cultural celebrations",
-      category: "Community",
+      title: t('culturalEvents'),
+      description: t('culturalEventsDesc'),
+      category: t('community'),
       link: "/community/events",
       icon: Calendar,
       color: "#c2ae81"
@@ -39,10 +42,10 @@ const Homepage = () => {
   ];
 
   const stats = [
-    { number: "500+", label: "Vocabulary Words" },
-    { number: "50+", label: "Cultural Articles" },
-    { number: "20+", label: "Interactive Lessons" },
-    { number: "1000+", label: "Community Members" }
+    { number: "500+", label: t('vocabularyWords') },
+    { number: "50+", label: t('culturalArticles') },
+    { number: "20+", label: t('interactiveLessons') },
+    { number: "1000+", label: t('communityMembers') }
   ];
 
   return (
@@ -58,7 +61,7 @@ const Homepage = () => {
               transition={{ duration: 0.8 }}
               className="text-4xl md:text-6xl font-bold text-white mb-6"
             >
-              Akwaaba to Akan Culture
+              {t('welcomeTitle')}
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 30 }}
@@ -66,8 +69,7 @@ const Homepage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto"
             >
-              Discover the rich heritage of the Akan people through language learning, 
-              cultural exploration, and community engagement
+              {t('welcomeDescription')}
             </motion.p>
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
@@ -83,7 +85,7 @@ const Homepage = () => {
                 onMouseLeave={(e) => e.target.style.backgroundColor = '#f1d799'}
               >
                 <BookOpen className="w-5 h-5" />
-                <span>Start Learning</span>
+                <span>{t('startLearning')}</span>
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link 
@@ -100,7 +102,7 @@ const Homepage = () => {
                 }}
               >
                 <Users className="w-5 h-5" />
-                <span>Explore Culture</span>
+                <span>{t('exploreCulture')}</span>
               </Link>
             </motion.div>
           </div>
@@ -113,10 +115,10 @@ const Homepage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Start Your Akan Journey
+              {t('quickStartTitle')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Choose your path to explore the beautiful Akan language and culture
+              {t('quickStartDescription')}
             </p>
           </div>
           
@@ -124,29 +126,29 @@ const Homepage = () => {
             {[
               {
                 icon: BookOpen,
-                title: "Learn Language",
-                description: "Interactive lessons, alphabet, and vocabulary",
+                title: t('learnLanguage'),
+                description: t('learnLanguageDesc'),
                 link: "/learn",
                 color: "linear-gradient(135deg, #564c38 0%, #695e46 100%)"
               },
               {
                 icon: Users,
-                title: "Explore Culture",
-                description: "Traditions, history, arts, and customs",
+                title: t('exploreCulture'),
+                description: t('exploreCultureDesc'),
                 link: "/culture",
                 color: "linear-gradient(135deg, #695e46 0%, #77705c 100%)"
               },
               {
                 icon: Book,
-                title: "Use Dictionary",
-                description: "Comprehensive Akan-English dictionary",
+                title: t('useDictionary'),
+                description: t('useDictionaryDesc'),
                 link: "/dictionary",
                 color: "linear-gradient(135deg, #77705c 0%, #c2ae81 100%)"
               },
               {
                 icon: Search,
-                title: "Research Hub",
-                description: "Academic resources and research tools",
+                title: t('researchHub'),
+                description: t('researchHubDesc'),
                 link: "/research",
                 color: "linear-gradient(135deg, #c2ae81 0%, #f1d799 100%)"
               }
@@ -169,7 +171,7 @@ const Homepage = () => {
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.description}</p>
                     <div className="mt-4 flex items-center transition-colors" style={{color: '#564c38'}}>
-                      <span className="text-sm font-medium">Get Started</span>
+                      <span className="text-sm font-medium">{t('getStarted')}</span>
                       <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </Link>
@@ -185,10 +187,10 @@ const Homepage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Featured Content
+              {t('featuredContentTitle')}
             </h2>
             <p className="text-xl text-gray-600">
-              Discover the most popular and engaging content on our platform
+              {t('featuredContentDesc')}
             </p>
           </div>
           
@@ -233,10 +235,10 @@ const Homepage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Growing Together
+              {t('growingTogetherTitle')}
             </h2>
             <p className="text-xl opacity-90">
-              Join thousands of learners preserving and celebrating Akan heritage
+              {t('growingTogetherDesc')}
             </p>
           </div>
           
@@ -261,10 +263,10 @@ const Homepage = () => {
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Ready to Begin Your Akan Journey?
+            {t('readyToBegin')}
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join our community of learners, researchers, and culture enthusiasts
+            {t('readyToBeginDesc')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -273,26 +275,26 @@ const Homepage = () => {
               style={{backgroundColor: '#564c38'}}
               onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
               onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
-            >
-              <Play className="w-5 h-5" />
-              <span>Start Learning Now</span>
-            </Link>
-            <Link
-              to="/community"
-              className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center justify-center space-x-2"
-              style={{borderColor: '#564c38', color: '#564c38'}}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#564c38';
-                e.target.style.color = 'white';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent';
-                e.target.style.color = '#564c38';
-              }}
-            >
-              <Users className="w-5 h-5" />
-              <span>Join Community</span>
-            </Link>
+                          >
+                <Play className="w-5 h-5" />
+                <span>{t('startLearningNow')}</span>
+              </Link>
+              <Link
+                to="/community"
+                className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center justify-center space-x-2"
+                style={{borderColor: '#564c38', color: '#564c38'}}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#564c38';
+                  e.target.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#564c38';
+                }}
+              >
+                <Users className="w-5 h-5" />
+                <span>{t('joinCommunity')}</span>
+              </Link>
           </div>
         </div>
       </section>
