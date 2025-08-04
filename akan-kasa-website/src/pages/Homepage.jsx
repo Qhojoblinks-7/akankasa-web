@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
+import { Book, Search, Play, Star, Calendar, MessageCircle, Users, ArrowRight, BookOpen } from 'lucide-react';
+import Hero from '../components/layout/Hero';
 import { motion } from 'framer-motion';
 
 const Homepage = () => {
@@ -48,53 +49,7 @@ const Homepage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-akan-red via-akan-gold to-akan-green overflow-hidden">
-        <div className="absolute inset-0 akan-pattern opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center">
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold text-white mb-6"
-            >
-              Akwaaba to Akan Culture
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto"
-            >
-              Discover the rich heritage of the Akan people through language learning, 
-              cultural exploration, and community engagement
-            </motion.p>
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            >
-              <Link 
-                to="/learn" 
-                className="bg-white text-akan-red px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-flex items-center space-x-2 shadow-lg"
-              >
-                <BookOpen className="w-5 h-5" />
-                <span>Start Learning</span>
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link 
-                to="/culture" 
-                className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-akan-red transition-colors inline-flex items-center space-x-2"
-              >
-                <Users className="w-5 h-5" />
-                <span>Explore Culture</span>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
-      </section>
+      <Hero />
 
       {/* Quick Start Section */}
       <section className="py-16 bg-white">
@@ -111,7 +66,7 @@ const Homepage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                icon: BookOpen,
+                icon: Book,
                 title: "Learn Language",
                 description: "Interactive lessons, alphabet, and vocabulary",
                 link: "/learn",
@@ -139,7 +94,6 @@ const Homepage = () => {
                 color: "from-orange-500 to-orange-600"
               }
             ].map((item, index) => {
-              const Icon = item.icon;
               return (
                 <motion.div
                   key={item.title}
@@ -152,7 +106,10 @@ const Homepage = () => {
                     className="block p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-gray-200 group"
                   >
                     <div className={`w-12 h-12 bg-gradient-to-r ${item.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className="w-6 h-6 text-white" />
+                      {item.title === 'Learn Language' && <BookOpen className="w-6 h-6 text-white" />}
+                      {item.title === 'Explore Culture' && <Users className="w-6 h-6 text-white" />}
+                      {item.title === 'Use Dictionary' && <Book className="w-6 h-6 text-white" />}
+                      {item.title === 'Research Hub' && <Search className="w-6 h-6 text-white" />}
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.description}</p>
