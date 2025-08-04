@@ -11,6 +11,11 @@ import Community from './pages/Community';
 import LessonDetail from './pages/LessonDetail';
 import VocabularyModule from './pages/VocabularyModule';
 import PlaceholderPage from './pages/PlaceholderPage';
+import LearnGreetings from './pages/LearnGreetings';
+import CultureArts from './pages/CultureArts';
+import CommunityEvents from './pages/CommunityEvents';
+import UserProfile from './pages/UserProfile';
+import Contribute from './pages/Contribute';
 
 function App() {
   const [currentLanguage, setCurrentLanguage] = useState('en');
@@ -30,11 +35,11 @@ function App() {
             <Route path="/research" element={<Research />} />
             <Route path="/community" element={<Community />} />
             {/* Placeholder routes for demo */}
-            <Route path="/learn/greetings" element={<PlaceholderPage title="Basic Greetings" />} />
-            <Route path="/culture/arts" element={<PlaceholderPage title="Arts & Crafts" />} />
-            <Route path="/community/events" element={<PlaceholderPage title="Community Events" />} />
-            <Route path="/contribute" element={<PlaceholderPage title="Contribute Content" />} />
-            <Route path="/profile/:id" element={<PlaceholderPage title="User Profile" />} />
+            <Route path="/learn/greetings" element={<LearnGreetings />} />
+            <Route path="/culture/arts" element={<CultureArts />} />
+            <Route path="/community/events" element={<CommunityEvents />} />
+            <Route path="/contribute" element={<Contribute />} />
+            <Route path="/profile/:id" element={<UserProfile />} />
             <Route path="/privacy" element={<PlaceholderPage title="Privacy Policy" />} />
             <Route path="/terms" element={<PlaceholderPage title="Terms of Service" />} />
             <Route path="/accessibility" element={<PlaceholderPage title="Accessibility" />} />
