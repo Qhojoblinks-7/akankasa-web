@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp } from 'lucide-react';
 import { forumData, eventsData, userProfiles } from '../data/mockData';
+import { useNavigate } from 'react-router-dom';
 
 const Community = () => {
   const [activeTab, setActiveTab] = useState('forums');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const navigate = useNavigate();
 
   const tabs = [
     { id: 'forums', label: 'Discussion Forums', icon: MessageSquare },
@@ -96,7 +98,9 @@ const Community = () => {
           </div>
         </div>
         
-        <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+        <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          onClick={() => navigate('/community/register-event')}
+        >
           Register Now
         </button>
       </div>
@@ -136,7 +140,9 @@ const Community = () => {
         ))}
       </div>
       
-      <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+      <button className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+        onClick={() => navigate(`/profile/${member.id}`)}
+      >
         View Profile
       </button>
     </div>
@@ -225,7 +231,9 @@ const Community = () => {
                     </option>
                   ))}
                 </select>
-                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center">
+                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center"
+                  onClick={() => navigate('/community/new-post')}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   New Post
                 </button>
@@ -289,7 +297,9 @@ const Community = () => {
                 <button className="text-gray-600 hover:text-gray-700 p-2 border border-gray-300 rounded-lg">
                   <Filter className="w-4 h-4" />
                 </button>
-                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+                  onClick={() => navigate('/community/join')}
+                >
                   Join Community
                 </button>
               </div>

@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Book, Search, Play, Star, Calendar, MessageCircle, Users, ArrowRight, BookOpen } from 'lucide-react';
 import Hero from '../components/layout/Hero';
 import { motion } from 'framer-motion';
 
 const Homepage = () => {
+  const navigate = useNavigate();
   const featuredContent = [
     {
       title: "Learn Basic Greetings",
@@ -164,6 +165,12 @@ const Homepage = () => {
                         {content.title}
                       </h3>
                       <p className="text-gray-600 text-sm">{content.description}</p>
+                      <button
+                        className="mt-4 text-blue-600 hover:text-blue-700 font-medium text-sm"
+                        onClick={e => { e.preventDefault(); navigate(content.link); }}
+                      >
+                        Learn More
+                      </button>
                     </div>
                   </Link>
                 </motion.div>

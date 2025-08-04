@@ -10,6 +10,7 @@ import Research from './pages/Research';
 import Community from './pages/Community';
 import LessonDetail from './pages/LessonDetail';
 import VocabularyModule from './pages/VocabularyModule';
+import PlaceholderPage from './pages/PlaceholderPage';
 
 function App() {
   const [currentLanguage, setCurrentLanguage] = useState('en');
@@ -28,6 +29,20 @@ function App() {
             <Route path="/dictionary" element={<Dictionary />} />
             <Route path="/research" element={<Research />} />
             <Route path="/community" element={<Community />} />
+            {/* Placeholder routes for demo */}
+            <Route path="/learn/greetings" element={<PlaceholderPage title="Basic Greetings" />} />
+            <Route path="/culture/arts" element={<PlaceholderPage title="Arts & Crafts" />} />
+            <Route path="/community/events" element={<PlaceholderPage title="Community Events" />} />
+            <Route path="/contribute" element={<PlaceholderPage title="Contribute Content" />} />
+            <Route path="/profile/:id" element={<PlaceholderPage title="User Profile" />} />
+            <Route path="/privacy" element={<PlaceholderPage title="Privacy Policy" />} />
+            <Route path="/terms" element={<PlaceholderPage title="Terms of Service" />} />
+            <Route path="/accessibility" element={<PlaceholderPage title="Accessibility" />} />
+            <Route path="/community/new-post" element={<PlaceholderPage title="New Forum Post" />} />
+            <Route path="/community/register-event" element={<PlaceholderPage title="Register for Event" />} />
+            <Route path="/community/join" element={<PlaceholderPage title="Join Community" />} />
+            <Route path="/research/propose-project" element={<PlaceholderPage title="Propose Research Project" />} />
+            <Route path="/research/new-discussion" element={<PlaceholderPage title="New Research Discussion" />} />
           </Routes>
         </main>
         <Footer />
