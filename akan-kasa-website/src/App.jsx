@@ -16,6 +16,14 @@ import CultureArts from './pages/CultureArts';
 import CommunityEvents from './pages/CommunityEvents';
 import UserProfile from './pages/UserProfile';
 import Contribute from './pages/Contribute';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Accessibility from './pages/Accessibility';
+import CommunityNewPost from './pages/CommunityNewPost';
+import CommunityRegisterEvent from './pages/CommunityRegisterEvent';
+import CommunityJoin from './pages/CommunityJoin';
+import ResearchProposeProject from './pages/ResearchProposeProject';
+import ResearchNewDiscussion from './pages/ResearchNewDiscussion';
 
 function App() {
   const [currentLanguage, setCurrentLanguage] = useState('en');
@@ -40,14 +48,14 @@ function App() {
             <Route path="/community/events" element={<CommunityEvents />} />
             <Route path="/contribute" element={<Contribute />} />
             <Route path="/profile/:id" element={<UserProfile />} />
-            <Route path="/privacy" element={<PlaceholderPage title="Privacy Policy" />} />
-            <Route path="/terms" element={<PlaceholderPage title="Terms of Service" />} />
-            <Route path="/accessibility" element={<PlaceholderPage title="Accessibility" />} />
-            <Route path="/community/new-post" element={<PlaceholderPage title="New Forum Post" />} />
-            <Route path="/community/register-event" element={<PlaceholderPage title="Register for Event" />} />
-            <Route path="/community/join" element={<PlaceholderPage title="Join Community" />} />
-            <Route path="/research/propose-project" element={<PlaceholderPage title="Propose Research Project" />} />
-            <Route path="/research/new-discussion" element={<PlaceholderPage title="New Research Discussion" />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/accessibility" element={<Accessibility />} />
+            <Route path="/community/new-post" element={<CommunityNewPost />} />
+            <Route path="/community/register-event" element={<CommunityRegisterEvent />} />
+            <Route path="/community/join" element={<CommunityJoin />} />
+            <Route path="/research/propose-project" element={<ResearchProposeProject />} />
+            <Route path="/research/new-discussion" element={<ResearchNewDiscussion />} />
           </Routes>
         </main>
         <Footer />
