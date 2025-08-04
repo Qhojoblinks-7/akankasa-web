@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useState, useMemo } from 'react';
 import { Search, Volume2, BookOpen, MapPin, Heart, Download, Filter, ArrowUpDown } from 'lucide-react';
 import { dictionaryData } from '../data/mockData';

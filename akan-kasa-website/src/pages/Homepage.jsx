@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -19,7 +21,7 @@ const Homepage = () => {
       title: t('adinkraSymbols'),
       description: t('adinkraSymbolsDesc'),
       category: t('culture'),
-      link: "/culture/arts",
+      link: "/culture",
       icon: Star,
       color: "#695e46"
     },
@@ -35,7 +37,7 @@ const Homepage = () => {
       title: t('culturalEvents'),
       description: t('culturalEventsDesc'),
       category: t('community'),
-      link: "/community/events",
+      link: "/community",
       icon: Calendar,
       color: "#c2ae81"
     }

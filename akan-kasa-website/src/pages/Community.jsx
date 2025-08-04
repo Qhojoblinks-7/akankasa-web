@@ -1,10 +1,27 @@
-import { useState } from 'react';
-import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp } from 'lucide-react';
-import { communityData } from '../data/mockData';
+import React from 'react';
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp, X } from 'lucide-react';
+import { communityData, userProfiles, forumData } from '../data/mockData';
+import ProfileViewModal from '../components/ProfileViewModal';
 
 const Community = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('forums');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showNewPostModal, setShowNewPostModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const [newPostData, setNewPostData] = useState({
+    title: '',
+    content: '',
+    category: 'Language Learning'
+  });
+  
+  // Use useCallback to memoize navigate function usage
+  const handleJoinDiscussion = useCallback((postId) => {
+    navigate(`/community/discussion/${postId}`);
+  }, [navigate]);
 
   const tabs = [
     { id: 'forums', label: 'Discussion Forums', icon: MessageSquare },
@@ -15,7 +32,102 @@ const Community = () => {
 
   const categories = ['all', 'Language Learning', 'Cultural Events', 'Research', 'General Discussion'];
 
-  const filteredForumPosts = communityData.forums || [];
+  const filteredForumPosts = selectedCategory === 'all' 
+    ? forumData 
+    : forumData.filter(post => post.category === selectedCategory);
+
+  const handleNewPostClick = () => {
+    setShowNewPostModal(true);
+  };
+
+  const handleCreatePost = () => {
+    // In a real app, this would send data to a backend
+    console.log('Creating new post:', newPostData);
+    // Reset form and close modal
+    setNewPostData({ title: '', content: '', category: 'Language Learning' });
+    setShowNewPostModal(false);
+    // Show success message
+    alert('Post created successfully!');
+  };
+
+  const handlePostInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewPostData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCloseModal = () => {
+    setShowNewPostModal(false);
+    setNewPostData({ title: '', content: '', category: 'Language Learning' });
+  };
+
+  const NewPostModal = () => {
+    if (!showNewPostModal) return null;
+    
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          <h3 className="text-xl font-bold mb-4">Create New Post</h3>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={newPostData.title}
+              onChange={handlePostInputChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Enter post title"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select
+              name="category"
+              value={newPostData.category}
+              onChange={handlePostInputChange}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            >
+              <option value="Language Learning">Language Learning</option>
+              <option value="Cultural Events">Cultural Events</option>
+              <option value="Research">Research</option>
+              <option value="General Discussion">General Discussion</option>
+            </select>
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+            <textarea
+              name="content"
+              value={newPostData.content}
+              onChange={handlePostInputChange}
+              rows="4"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Write your post content here..."
+            />
+          </div>
+          
+          <div className="flex justify-end space-x-3">
+            <button
+              onClick={handleCloseModal}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleCreatePost}
+              className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Create Post
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const ForumPostCard = ({ post }) => (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
@@ -35,7 +147,7 @@ const Community = () => {
       </div>
       
       <div className="flex flex-wrap gap-2 mb-4">
-        {post.tags.map((tag, index) => (
+        {post?.tags?.map((tag, index) => (
           <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
             #{tag}
           </span>
@@ -48,6 +160,12 @@ const Community = () => {
           style={{color: '#564c38'}}
           onMouseEnter={(e) => e.target.style.color = '#695e46'}
           onMouseLeave={(e) => e.target.style.color = '#564c38'}
+          onClick={() => {
+            // In a real app, this would navigate to the discussion page or open a discussion modal
+            alert(`Navigating to discussion: ${post.title}`);
+            // For now, we'll just show an alert, but in a real implementation,
+            // this would take the user to the actual discussion thread
+          }}
         >
           Join Discussion →
         </button>
@@ -99,7 +217,15 @@ const Community = () => {
           </div>
         </div>
         
-        <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+        <button 
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          onClick={() => {
+            // In a real app, this would register the user for the event
+            alert(`Successfully registered for event: ${event.title}`);
+            // For now, we'll just show a success message, but in a real implementation,
+            // this would send a request to the backend to register the user for the event
+          }}
+        >
           Register Now
         </button>
       </div>
@@ -139,7 +265,13 @@ const Community = () => {
         ))}
       </div>
       
-      <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+      <button 
+        className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+        onClick={() => {
+          setSelectedMember(member);
+          setShowProfileModal(true);
+        }}
+      >
         View Profile
       </button>
     </div>
@@ -147,6 +279,14 @@ const Community = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <NewPostModal />
+      {showProfileModal && (
+        <ProfileViewModal 
+          member={selectedMember} 
+          onClose={() => setShowProfileModal(false)} 
+        />
+      )}
+      
       {/* Header */}
       <div className="bg-gradient-to-r from-orange-600 to-orange-800 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -228,7 +368,10 @@ const Community = () => {
                     </option>
                   ))}
                 </select>
-                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center">
+                <button 
+                  className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center"
+                  onClick={handleNewPostClick}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   New Post
                 </button>
@@ -267,13 +410,19 @@ const Community = () => {
                 <h2 className="text-2xl font-bold text-gray-900">Events & Meetups</h2>
                 <p className="text-gray-600">Discover and attend Akan cultural events</p>
               </div>
-              <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+              <button 
+                className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+                onClick={() => {
+                  alert('Create Event functionality would go here');
+                  // Placeholder for actual event creation functionality
+                }}
+              >
                 Create Event
               </button>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {eventsData.map((event) => (
+              {communityData.events.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
             </div>
@@ -292,7 +441,10 @@ const Community = () => {
                 <button className="text-gray-600 hover:text-gray-700 p-2 border border-gray-300 rounded-lg">
                   <Filter className="w-4 h-4" />
                 </button>
-                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
+                <button 
+                  className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+                  onClick={() => alert('Join Community functionality would go here')}
+                >
                   Join Community
                 </button>
               </div>

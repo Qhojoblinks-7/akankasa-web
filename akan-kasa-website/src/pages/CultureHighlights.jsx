@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useState } from 'react';
 import { Calendar, MapPin, Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
 import { culturalData } from '../data/mockData';

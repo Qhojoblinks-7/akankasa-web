@@ -1,6 +1,8 @@
+import React from 'react';
+
 import { useState } from 'react';
 import { Search, Download, Filter, BookOpen, Users, GraduationCap, FileText, ExternalLink, MessageSquare } from 'lucide-react';
-import { researchData, communityData } from '../data/mockData';
+import { researchData, forumData } from '../data/mockData';
 
 const Research = () => {
   const [activeTab, setActiveTab] = useState('resources');
@@ -39,7 +41,7 @@ const Research = () => {
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">{resource.title}</h3>
           <p className="text-sm text-gray-600 mb-2">by {resource.author}</p>
-          <p className="text-gray-700 mb-4">{resource.description}</p>
+          <p className="text-gray-700 mb-4">{resource.abstract}</p>
         </div>
         <div className="flex flex-col items-end space-y-2 ml-4">
           <span className="px-2 py-1 rounded-full text-xs font-medium"
@@ -51,7 +53,7 @@ const Research = () => {
             {resource.level}
           </span>
           <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
-            {resource.type}
+            Paper
           </span>
         </div>
       </div>

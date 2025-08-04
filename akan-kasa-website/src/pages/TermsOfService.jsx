@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Scale, Users, Shield, AlertTriangle } from 'lucide-react';
 

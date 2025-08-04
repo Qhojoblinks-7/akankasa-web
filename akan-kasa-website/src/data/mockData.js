@@ -130,13 +130,60 @@ export const lessonsData = [
     level: "Beginner",
     duration: "15 minutes",
     content: {
+      overview: "This lesson introduces you to the essential greetings used in Akan language and culture. You'll learn when and how to use different greetings throughout the day.",
       objectives: [
         "Master basic greetings for different times of day",
         "Understand appropriate contexts for each greeting",
         "Practice pronunciation with audio examples",
         "Learn cultural significance of greetings in Akan society"
+      ],
+      sections: [
+        {
+          title: "Morning Greetings",
+          content: "In Akan culture, greetings are extremely important and show respect. The morning greeting 'Maakye' is used from sunrise until around 11 AM. It's important to greet elders first in any gathering."
+        },
+        {
+          title: "Afternoon and Evening Greetings",
+          content: "After 11 AM, you would use 'Maaha' for afternoon greetings. In the evening, after about 6 PM, you would use 'Maadwo'. These time-specific greetings show attention to the natural rhythms of the day."
+        },
+        {
+          title: "Cultural Context",
+          content: "Greetings in Akan culture are not just about saying hello. They acknowledge the well-being of the person and their family. When greeting someone, you might ask 'Ɛte sɛn?' (How are you?) and they would respond with 'Me ho yɛ' (I am fine)."
+        }
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "What greeting is used in the morning?",
+        options: [
+          "Maakye",
+          "Maaha",
+          "Maadwo",
+          "Akwaaba"
+        ],
+        correct: 0
+      },
+      {
+        question: "What does 'Ɛte sɛn?' mean?",
+        options: [
+          "Good morning",
+          "How are you?",
+          "I am fine",
+          "Thank you"
+        ],
+        correct: 1
+      },
+      {
+        question: "What is the appropriate response to 'Ɛte sɛn?'?",
+        options: [
+          "Maakye",
+          "Me ho yɛ",
+          "Akwaaba",
+          "Medaase"
+        ],
+        correct: 1
+      }
+    ]
   },
   {
     id: 2,
@@ -145,13 +192,60 @@ export const lessonsData = [
     level: "Beginner",
     duration: "20 minutes",
     content: {
+      overview: "This lesson covers essential family terms in Akan and introduces the unique matrilineal kinship system that is central to Akan culture.",
       objectives: [
         "Learn words for immediate family members",
         "Understand extended family terminology",
         "Explore matrilineal system in Akan culture",
         "Practice using family terms in sentences"
+      ],
+      sections: [
+        {
+          title: "Immediate Family Terms",
+          content: "In Akan, family terms distinguish between maternal and paternal relatives. 'Papa' means father, while 'Maame' means mother. 'Ɔba' means child, and 'Nua' refers to siblings."
+        },
+        {
+          title: "Extended Family and Kinship",
+          content: "The Akan kinship system is complex and based on lineage. Terms like 'Wɔfa' (uncle) and 'Sewaa' (aunt) can refer to multiple relatives depending on whether they're from the mother's or father's side."
+        },
+        {
+          title: "Matrilineal System",
+          content: "In Akan culture, inheritance and family name traditionally pass through the mother's line. This means children belong to their mother's family clan, and their most important male role model is their maternal uncle rather than their father."
+        }
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "What does 'Maame' mean in Akan?",
+        options: [
+          "Father",
+          "Mother",
+          "Child",
+          "Sibling"
+        ],
+        correct: 1
+      },
+      {
+        question: "In traditional Akan culture, which line determines family inheritance?",
+        options: [
+          "Paternal (father's) line",
+          "Maternal (mother's) line",
+          "Either line",
+          "Elder sibling's line"
+        ],
+        correct: 1
+      },
+      {
+        question: "What is the term for sibling in Akan?",
+        options: [
+          "Nana",
+          "Wɔfa",
+          "Nua",
+          "Agya"
+        ],
+        correct: 2
+      }
+    ]
   },
   {
     id: 3,
@@ -160,13 +254,60 @@ export const lessonsData = [
     level: "Beginner",
     duration: "25 minutes",
     content: {
+      overview: "Learn to count in Akan from 1 to 100, understanding the unique counting system and practical applications in daily life.",
       objectives: [
         "Count from 1 to 20 fluently",
         "Learn number combinations for larger numbers",
         "Practice using numbers in everyday contexts",
         "Understand traditional Akan counting systems"
+      ],
+      sections: [
+        {
+          title: "Numbers 1-10",
+          content: "Akan numbers 1-10 are foundational. 'Ɛnan' is one, 'Mmienu' is two, 'Mmiɛnsa' is three, 'Ɛnan' is four (again), 'Enum' is five, 'Ɛsia' is six, 'Ɛson' is seven, 'Ɛwɔtwe' is eight, 'Kwaku' is nine, and 'Ɛwo' is ten."
+        },
+        {
+          title: "Numbers 11-20",
+          content: "Numbers 11-19 are formed by adding to ten. For example, 11 is 'Ɛwo kɛnɛ Ɛnan' (ten and one). Twenty is 'Dua' which is an important base number in Akan counting."
+        },
+        {
+          title: "Higher Numbers",
+          content: "Numbers beyond 20 use multiples of 20. Forty is 'Dua nnɛ' (two twenties), sixty is 'Dua saba' (three twenties), and so on. This vigesimal (base-20) system reflects traditional Akan mathematics."
+        }
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "What is the Akan word for 'five'?",
+        options: [
+          "Ɛnan",
+          "Mmienu",
+          "Enum",
+          "Ɛsia"
+        ],
+        correct: 2
+      },
+      {
+        question: "What is the base number in the traditional Akan counting system?",
+        options: [
+          "10",
+          "12",
+          "20",
+          "25"
+        ],
+        correct: 2
+      },
+      {
+        question: "How would you say '11' in Akan?",
+        options: [
+          "Ɛwo kɛnɛ Ɛnan",
+          "Dua kɛnɛ Ɛnan",
+          "Enum kɛnɛ Ɛnan",
+          "Ɛson kɛnɛ Ɛnan"
+        ],
+        correct: 0
+      }
+    ]
   },
   {
     id: 4,
@@ -175,13 +316,60 @@ export const lessonsData = [
     level: "Intermediate",
     duration: "30 minutes",
     content: {
+      overview: "Learn how to conjugate verbs in the present tense in Akan, understanding subject prefixes and their application in forming sentences.",
       objectives: [
         "Understand basic verb structure",
         "Learn common everyday verbs",
         "Practice present tense conjugation",
         "Form simple sentences with verbs"
+      ],
+      sections: [
+        {
+          title: "Verb Structure Basics",
+          content: "Akan verbs don't change form based on tense but use subject prefixes to indicate who is performing the action. The basic structure is: Subject Prefix + Verb Root + (Object)."
+        },
+        {
+          title: "Subject Prefixes",
+          content: "Common subject prefixes include 'Me' (I), 'Wo' (You), 'Ɔ' (He/She), 'Yɛn' (We), 'Mon' (You all), and 'Wɔn' (They). For example, 'Me' + 'bue' (to buy) = 'Mebue' (I buy)."
+        },
+        {
+          title: "Common Verbs and Usage",
+          content: "Frequently used verbs include 'bue' (to buy), 'kɔ' (to go), 'ba' (to come), 'yɛ' (to do/make), and 'tumi' (can). These verbs are used in daily conversations and form the foundation for more complex sentences."
+        }
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "How would you say 'I buy' in Akan?",
+        options: [
+          "Wobue",
+          "Mebue",
+          "Ɔbue",
+          "Yɛnbue"
+        ],
+        correct: 1
+      },
+      {
+        question: "What does the subject prefix 'Wo' indicate?",
+        options: [
+          "I",
+          "You (singular)",
+          "He/She",
+          "We"
+        ],
+        correct: 1
+      },
+      {
+        question: "What is the meaning of the verb 'yɛ' in Akan?",
+        options: [
+          "To buy",
+          "To go",
+          "To do/make",
+          "To come"
+        ],
+        correct: 2
+      }
+    ]
   },
   {
     id: 5,
@@ -190,13 +378,60 @@ export const lessonsData = [
     level: "Advanced",
     duration: "35 minutes",
     content: {
+      overview: "Discover the rich tradition of Akan proverbs (Akan: 'mmerɛnw') and their role in conveying cultural wisdom, values, and life lessons.",
       objectives: [
         "Learn 10 common Akan proverbs",
         "Understand metaphorical meanings",
         "Explore cultural wisdom and values",
         "Practice using proverbs in context"
+      ],
+      sections: [
+        {
+          title: "Introduction to Akan Proverbs",
+          content: "Akan proverbs, known as 'mmerɛnw', are short, meaningful sayings that convey wisdom and cultural values. They are often used in conversation to make a point more effectively than direct speech."
+        },
+        {
+          title: "Common Proverbs and Meanings",
+          content: "Popular proverbs include 'Ɔkra kɛse ɛbɛn kɔɔrɔ' (A single stick does not make a fire), which emphasizes the importance of community. Another is 'Sɛ obiara ɔbɛn a, ɛnna ɔbɛn na ɔbɛn' (When a person is born, they don't come with a book of customs), meaning we learn culture through experience."
+        },
+        {
+          title: "Using Proverbs in Context",
+          content: "Proverbs are used in Akan culture to teach lessons, resolve conflicts, and express complex ideas. They are particularly important in traditional courts and family gatherings where elders use them to guide younger generations."
+        }
       ]
-    }
+    },
+    quiz: [
+      {
+        question: "What are Akan proverbs called in the local language?",
+        options: [
+          "Adwin",
+          "Mmerɛnw",
+          "Nsa",
+          "Akanfo"
+        ],
+        correct: 1
+      },
+      {
+        question: "What is the meaning of 'Ɔkra kɛse ɛbɛn kɔɔrɔ'?",
+        options: [
+          "A single stick does not make a fire",
+          "When you fall, you learn to stand",
+          "Words are stronger than actions",
+          "The early bird catches the worm"
+        ],
+        correct: 0
+      },
+      {
+        question: "In what contexts are proverbs commonly used in Akan culture?",
+        options: [
+          "Only in schools",
+          "Traditional courts and family gatherings",
+          "Only in religious ceremonies",
+          "Only in marketplaces"
+        ],
+        correct: 1
+      }
+    ]
   }
 ];
 
@@ -274,7 +509,8 @@ export const researchData = {
       year: 2023,
       level: "Advanced",
       abstract: "A comprehensive study of phonological differences across major Akan dialect groups.",
-      downloadUrl: "/papers/akan-phonology-2023.pdf"
+      downloadUrl: "/papers/akan-phonology-2023.pdf",
+      tags: ["phonology", "dialects", "linguistics"]
     },
     {
       id: 2,
@@ -283,7 +519,8 @@ export const researchData = {
       year: 2022,
       level: "Beginner",
       abstract: "A beginner-friendly guide to understanding basic Akan grammatical structures.",
-      downloadUrl: "/papers/akan-grammar-intro.pdf"
+      downloadUrl: "/papers/akan-grammar-intro.pdf",
+      tags: ["grammar", "syntax", "morphology"]
     }
   ],
   tools: [
@@ -301,6 +538,39 @@ export const researchData = {
     }
   ]
 };
+
+export const forumData = [
+  {
+    id: 1,
+    title: "Best practices for Akan language documentation",
+    content: "I'm looking for recommendations on how to properly document Akan language features for academic research.",
+    author: "Dr. Kofi Asante",
+    lastActivity: "2 hours ago",
+    replies: 12,
+    category: "Research Methods",
+    tags: ["documentation", "research", "methodology"]
+  },
+  {
+    id: 2,
+    title: "Resources for studying Akan proverbs",
+    content: "Does anyone know of good collections of Akan proverbs with translations and cultural context?",
+    author: "Akosua Mensah",
+    lastActivity: "5 hours ago",
+    replies: 8,
+    category: "Learning Resources",
+    tags: ["proverbs", "literature", "culture"]
+  },
+  {
+    id: 3,
+    title: "Collaboration on dialect comparison project",
+    content: "Seeking collaborators for a project comparing Akuapem and Asante dialects. Experience with fieldwork preferred.",
+    author: "Yaw Boateng",
+    lastActivity: "1 day ago",
+    replies: 15,
+    category: "Collaboration",
+    tags: ["dialects", "collaboration", "fieldwork"]
+  }
+];
 
 export const communityData = {
   events: [
@@ -340,3 +610,60 @@ export const communityData = {
     }
   ]
 };
+
+export const userProfiles = [
+  {
+    id: 1,
+    name: "Kwame Asante",
+    role: "Language Instructor",
+    location: "Accra, Ghana",
+    contributions: 124,
+    joined: "2023-01-15",
+    specialties: ["Grammar", "Pronunciation", "Cultural Context"]
+  },
+  {
+    id: 2,
+    name: "Adwoa Boateng",
+    role: "Research Scholar",
+    location: "Kumasi, Ghana",
+    contributions: 89,
+    joined: "2023-03-22",
+    specialties: ["Linguistics", "Historical Development", "Dialects"]
+  },
+  {
+    id: 3,
+    name: "Yaw Mensah",
+    role: "Community Moderator",
+    location: "London, UK",
+    contributions: 156,
+    joined: "2022-11-08",
+    specialties: ["Learning Resources", "Community Building", "Technology"]
+  },
+  {
+    id: 4,
+    name: "Akosua Darko",
+    role: "Cultural Ambassador",
+    location: "Washington, USA",
+    contributions: 97,
+    joined: "2023-05-30",
+    specialties: ["Traditions", "Festivals", "Cultural Exchange"]
+  },
+  {
+    id: 5,
+    name: "Kofi Appiah",
+    role: "Content Creator",
+    location: "Toronto, Canada",
+    contributions: 203,
+    joined: "2022-08-14",
+    specialties: ["Educational Videos", "Interactive Lessons", "Storytelling"]
+  },
+  {
+    id: 6,
+    name: "Afua Nyantakyi",
+    role: "Translation Specialist",
+    location: "Leiden, Netherlands",
+    contributions: 76,
+    joined: "2023-07-19",
+    specialties: ["Literature", "Academic Papers", "Technical Documents"]
+  }
+];

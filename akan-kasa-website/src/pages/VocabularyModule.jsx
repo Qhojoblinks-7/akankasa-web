@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Volume2, RotateCcw, CheckCircle, X, RefreshCw, Star, Eye, EyeOff } from 'lucide-react';
@@ -10,7 +12,6 @@ const VocabularyModule = () => {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [showTranslation, setShowTranslation] = useState(true);
   const [mastered, setMastered] = useState(new Set());
-  const [quizResults, setQuizResults] = useState({});
   const [playingAudio, setPlayingAudio] = useState(null);
 
   useEffect(() => {
@@ -298,24 +299,10 @@ const VocabularyModule = () => {
 
         {/* Quiz Mode */}
         {currentMode === 'quiz' && (
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Practice Quiz</h2>
-            <p className="text-gray-600 mb-6">Test your knowledge of the vocabulary words.</p>
-            
-            <div className="text-center py-12">
-              <RefreshCw className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Quiz Coming Soon!</h3>
-              <p className="text-gray-600 mb-6">
-                Interactive quizzes with multiple choice questions, audio recognition, and more are being developed.
-              </p>
-              <button
-                onClick={() => setCurrentMode('study')}
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                Continue Studying
-              </button>
-            </div>
-          </div>
+          <QuizMode 
+            module={module} 
+            setCurrentMode={setCurrentMode}
+          />
         )}
 
         {/* Progress Summary */}
@@ -343,6 +330,362 @@ const VocabularyModule = () => {
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const QuizMode = ({ module, mastered, setMastered, setCurrentMode }) => {
+  const [quizType, setQuizType] = useState('multiple'); // multiple, audio, reverse
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [userAnswers, setUserAnswers] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [options, setOptions] = useState([]);
+  const [questionWord, setQuestionWord] = useState(null);
+  const [playingAudio, setPlayingAudio] = useState(null);
+
+  // Initialize quiz
+  useEffect(() => {
+    if (module && module.words.length > 0) {
+      generateQuestion(0);
+    }
+  }, [module, quizType]);
+
+  // Generate a question
+  const generateQuestion = (questionIndex) => {
+    if (!module || !module.words || module.words.length === 0) return;
+    
+    const words = [...module.words];
+    const randomIndex = Math.floor(Math.random() * words.length);
+    const word = words[randomIndex];
+    
+    setQuestionWord(word);
+    setCurrentQuestion(questionIndex);
+    setSelectedOption(null);
+    
+    // Generate options based on quiz type
+    let opts = [];
+    if (quizType === 'multiple') {
+      // Multiple choice: Akan word shown, select English translation
+      opts = [word.english];
+      const otherWords = words.filter(w => w.english !== word.english);
+      while (opts.length < 4 && otherWords.length > 0) {
+        const randomWordIndex = Math.floor(Math.random() * otherWords.length);
+        const randomWord = otherWords[randomWordIndex];
+        if (!opts.includes(randomWord.english)) {
+          opts.push(randomWord.english);
+        }
+        otherWords.splice(randomWordIndex, 1);
+      }
+      // Shuffle options
+      opts = opts.sort(() => Math.random() - 0.5);
+    } else if (quizType === 'reverse') {
+      // Reverse translation: English word shown, select Akan translation
+      opts = [word.akan];
+      const otherWords = words.filter(w => w.akan !== word.akan);
+      while (opts.length < 4 && otherWords.length > 0) {
+        const randomWordIndex = Math.floor(Math.random() * otherWords.length);
+        const randomWord = otherWords[randomWordIndex];
+        if (!opts.includes(randomWord.akan)) {
+          opts.push(randomWord.akan);
+        }
+        otherWords.splice(randomWordIndex, 1);
+      }
+      // Shuffle options
+      opts = opts.sort(() => Math.random() - 0.5);
+    } else if (quizType === 'audio') {
+      // Audio recognition: Audio played, select Akan word
+      opts = [word.akan];
+      const otherWords = words.filter(w => w.akan !== word.akan);
+      while (opts.length < 4 && otherWords.length > 0) {
+        const randomWordIndex = Math.floor(Math.random() * otherWords.length);
+        const randomWord = otherWords[randomWordIndex];
+        if (!opts.includes(randomWord.akan)) {
+          opts.push(randomWord.akan);
+        }
+        otherWords.splice(randomWordIndex, 1);
+      }
+      // Shuffle options
+      opts = opts.sort(() => Math.random() - 0.5);
+    }
+    
+    setOptions(opts);
+  };
+
+  // Handle answer selection
+  const handleAnswer = (option) => {
+    if (showResults) return;
+    
+    setSelectedOption(option);
+    const newUserAnswers = [...userAnswers];
+    newUserAnswers[currentQuestion] = {
+      question: questionWord,
+      selected: option,
+      correct: 
+        quizType === 'multiple' ? questionWord.english === option :
+        quizType === 'reverse' ? questionWord.akan === option :
+        quizType === 'audio' ? questionWord.akan === option :
+        false
+    };
+    setUserAnswers(newUserAnswers);
+  };
+
+  // Move to next question or show results
+  const nextQuestion = () => {
+    if (currentQuestion < 9) { // 10 questions per quiz
+      generateQuestion(currentQuestion + 1);
+    } else {
+      setShowResults(true);
+    }
+  };
+
+  // Restart quiz
+  const restartQuiz = () => {
+    setUserAnswers([]);
+    setShowResults(false);
+    setCurrentQuestion(0);
+    setSelectedOption(null);
+    generateQuestion(0);
+  };
+
+  // Go back to study mode
+  const goBackToStudy = () => {
+    setCurrentMode('study');
+  };
+
+  // Play audio
+  const playAudio = (audioSrc) => {
+    setPlayingAudio(audioSrc);
+    setTimeout(() => setPlayingAudio(null), 1000);
+  };
+
+  // Calculate score
+  const calculateScore = () => {
+    if (userAnswers.length === 0) return 0;
+    const correctAnswers = userAnswers.filter(answer => answer.correct).length;
+    return Math.round((correctAnswers / userAnswers.length) * 100);
+  };
+
+  // Render quiz question
+  const renderQuestion = () => {
+    if (!questionWord) return null;
+
+    return (
+      <div className="space-y-6">
+        {/* Question header */}
+        <div className="text-center">
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Question {currentQuestion + 1} of 10
+          </h3>
+          {quizType === 'multiple' && (
+            <p className="text-gray-600">What is the English translation of this Akan word?</p>
+          )}
+          {quizType === 'reverse' && (
+            <p className="text-gray-600">What is the Akan translation of this English word?</p>
+          )}
+          {quizType === 'audio' && (
+            <p className="text-gray-600">What Akan word did you hear?</p>
+          )}
+        </div>
+
+        {/* Question content */}
+        <div className="bg-gray-50 rounded-lg p-6 text-center">
+          {quizType === 'multiple' && (
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{questionWord.akan}</h2>
+          )}
+          {quizType === 'reverse' && (
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">{questionWord.english}</h2>
+          )}
+          {quizType === 'audio' && (
+            <div>
+              <button
+                onClick={() => playAudio(questionWord.audio)}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center mx-auto mb-4"
+              >
+                <Volume2 className={`w-5 h-5 mr-2 ${playingAudio === questionWord.audio ? 'animate-pulse' : ''}`} />
+                Play Audio
+              </button>
+              <p className="text-gray-600">Click the button above to hear the pronunciation</p>
+            </div>
+          )}
+          {quizType !== 'audio' && (
+            <p className="text-lg text-gray-500">/{questionWord.pronunciation}/</p>
+          )}
+        </div>
+
+        {/* Options */}
+        <div className="space-y-3">
+          {options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => handleAnswer(option)}
+              disabled={selectedOption !== null}
+              className={`w-full text-left p-4 rounded-lg border transition-colors ${
+                selectedOption === option
+                  ? option === 
+                    (quizType === 'multiple' ? questionWord.english :
+                     quizType === 'reverse' ? questionWord.akan :
+                     questionWord.akan)
+                    ? 'border-green-500 bg-green-50 text-green-700'
+                    : 'border-red-500 bg-red-50 text-red-700'
+                  : selectedOption && option === 
+                    (quizType === 'multiple' ? questionWord.english :
+                     quizType === 'reverse' ? questionWord.akan :
+                     questionWord.akan)
+                    ? 'border-green-500 bg-green-50 text-green-700'
+                    : 'border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-medium">{option}</span>
+                {selectedOption === option && (
+                  <CheckCircle className="w-5 h-5" />
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+
+        {/* Navigation */}
+        <div className="flex justify-between">
+          <button
+            onClick={goBackToStudy}
+            className="text-gray-600 hover:text-gray-800"
+          >
+            Back to Study
+          </button>
+          {selectedOption !== null && (
+            <button
+              onClick={nextQuestion}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              {currentQuestion < 9 ? 'Next Question' : 'See Results'}
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Render quiz results
+  const renderResults = () => {
+    const score = calculateScore();
+    const correctAnswers = userAnswers.filter(answer => answer.correct).length;
+    
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Quiz Results</h2>
+          <div className={`text-4xl font-bold ${
+            score >= 70 ? 'text-green-600' : score >= 50 ? 'text-yellow-600' : 'text-red-600'
+          }`}>
+            {score}%
+          </div>
+          <p className="text-gray-600">
+            You got {correctAnswers} out of {userAnswers.length} questions correct
+          </p>
+        </div>
+
+        {/* Detailed results */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium text-gray-900">Review Your Answers</h3>
+          {userAnswers.map((answer, index) => (
+            <div key={index} className="border rounded-lg p-4">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <h4 className="font-medium text-gray-900">
+                    {answer.question.akan} → {answer.question.english}
+                  </h4>
+                  <p className="text-sm text-gray-500">/{answer.question.pronunciation}/</p>
+                </div>
+                <div className={`px-2 py-1 rounded-full text-sm ${
+                  answer.correct 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  {answer.correct ? 'Correct' : 'Incorrect'}
+                </div>
+              </div>
+              <div className="text-sm text-gray-600">
+                Your answer: {answer.selected}
+              </div>
+              {!answer.correct && (
+                <div className="text-sm text-green-600 mt-1">
+                  Correct answer: {
+                    answer.question.akan === answer.selected ? 
+                      answer.question.english : 
+                      answer.question.english === answer.selected ? 
+                        answer.question.akan : 
+                        (answer.question.akan || answer.question.english)
+                  }
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button
+            onClick={restartQuiz}
+            className="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Take Quiz Again
+          </button>
+          <button
+            onClick={goBackToStudy}
+            className="flex-1 bg-gray-200 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-300 transition-colors"
+          >
+            Back to Study
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // Render quiz type selector
+  const renderQuizTypeSelector = () => {
+    if (showResults) return null;
+    
+    return (
+      <div className="mb-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-3">Select Quiz Type</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {['multiple', 'audio', 'reverse'].map((type) => (
+            <button
+              key={type}
+              onClick={() => setQuizType(type)}
+              className={`p-3 rounded-lg border transition-colors ${
+                quizType === type
+                  ? 'border-green-500 bg-green-50 text-green-700'
+                  : 'border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              <div className="font-medium">
+                {type === 'multiple' && 'Multiple Choice'}
+                {type === 'audio' && 'Audio Recognition'}
+                {type === 'reverse' && 'Reverse Translation'}
+              </div>
+              <div className="text-sm text-gray-500 mt-1">
+                {type === 'multiple' && 'Akan → English'}
+                {type === 'audio' && 'Listen & Select'}
+                {type === 'reverse' && 'English → Akan'}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg p-6">
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">Practice Quiz</h2>
+      <p className="text-gray-600 mb-6">Test your knowledge of the vocabulary words.</p>
+      
+      {renderQuizTypeSelector()}
+      
+      {showResults ? renderResults() : renderQuestion()}
     </div>
   );
 };
