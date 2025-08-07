@@ -1,18 +1,22 @@
+import React from 'react';
+
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, BookOpen, Users, Search, Home, Book, Lightbulb } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
-const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { currentLanguage, setCurrentLanguage, t } = useLanguage();
 
   const navigationItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/learn', label: 'Learn Akan', icon: BookOpen },
-    { path: '/culture', label: 'Culture', icon: Users },
-    { path: '/dictionary', label: 'Dictionary', icon: Book },
-    { path: '/research', label: 'Research', icon: Search },
-    { path: '/community', label: 'Community', icon: Lightbulb }
+    { path: '/', label: t('home'), icon: Home },
+    { path: '/learn', label: t('learnAkan'), icon: BookOpen },
+    { path: '/culture', label: t('culture'), icon: Users },
+    { path: '/dictionary', label: t('dictionary'), icon: Book },
+    { path: '/research', label: t('research'), icon: Search },
+    { path: '/community', label: t('community'), icon: Lightbulb }
   ];
 
   const isActive = (path) => {
@@ -23,13 +27,13 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-akan-red via-akan-gold to-akan-green shadow-lg sticky top-0 z-50">
+    <nav className="shadow-lg sticky top-0 z-50" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-              <span className="text-akan-red font-bold text-xl">অ</span>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundColor: '#f1d799'}}>
+              <span className="font-bold text-xl" style={{color: '#564c38'}}>অ</span>
             </div>
             <div className="text-white">
               <h1 className="font-bold text-xl">Akan Kasa</h1>
@@ -45,11 +49,20 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${
-                    isActive(item.path)
-                      ? 'bg-white text-akan-red shadow-md'
-                      : 'text-white hover:bg-white/20'
-                  }`}
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2"
+                  style={isActive(item.path) 
+                    ? {backgroundColor: '#f1d799', color: '#564c38', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'} 
+                    : {color: 'white'}}
+                  onMouseEnter={(e) => {
+                    if (!isActive(item.path)) {
+                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive(item.path)) {
+                      e.target.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{item.label}</span>
@@ -65,10 +78,16 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
               <select
                 value={currentLanguage}
                 onChange={(e) => setCurrentLanguage(e.target.value)}
-                className="bg-white/20 text-white border border-white/30 rounded-lg px-3 py-1 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-white/50"
+                className="rounded-lg px-3 py-1 text-sm appearance-none focus:outline-none focus:ring-2"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.2)', 
+                  color: 'white', 
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  focusRingColor: 'rgba(255, 255, 255, 0.5)'
+                }}
               >
-                <option value="en" className="text-gray-800">English</option>
-                <option value="tw" className="text-gray-800">Twi</option>
+                <option value="en" style={{color: '#564c38'}}>English</option>
+                <option value="tw" style={{color: '#564c38'}}>Twi</option>
               </select>
               <Globe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white pointer-events-none" />
             </div>
@@ -94,11 +113,20 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-3 ${
-                      isActive(item.path)
-                        ? 'bg-white text-akan-red'
-                        : 'text-white hover:bg-white/20'
-                    }`}
+                    className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-3"
+                    style={isActive(item.path) 
+                      ? {backgroundColor: '#f1d799', color: '#564c38'} 
+                      : {color: 'white'}}
+                    onMouseEnter={(e) => {
+                      if (!isActive(item.path)) {
+                        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive(item.path)) {
+                        e.target.style.backgroundColor = 'transparent';
+                      }
+                    }}
                   >
                     <Icon className="w-5 h-5" />
                     <span>{item.label}</span>
@@ -111,7 +139,7 @@ const Navbar = ({ currentLanguage, setCurrentLanguage }) => {
       </div>
 
       {/* Decorative Adinkra Pattern */}
-      <div className="h-1 bg-gradient-to-r from-akan-gold via-white to-akan-gold opacity-50"></div>
+      <div className="h-1 opacity-50" style={{background: 'linear-gradient(90deg, #f1d799 0%, #c2ae81 50%, #f1d799 100%)'}}></div>
     </nav>
   );
 };

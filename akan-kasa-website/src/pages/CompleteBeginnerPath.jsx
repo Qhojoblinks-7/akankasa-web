@@ -1,11 +1,9 @@
-import React from 'react';
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Volume2, Book, Users, Star, Clock, ArrowRight, CheckCircle } from 'lucide-react';
 import { alphabetData, greetingsData, vocabularyModules, lessonsData } from '../data/mockData';
 
-const LanguageLearning = () => {
+const CompleteBeginnerPath = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [playingAudio, setPlayingAudio] = useState(null);
 
@@ -16,45 +14,30 @@ const LanguageLearning = () => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: Star },
+    { id: 'overview', label: 'Path Overview', icon: Star },
     { id: 'alphabet', label: 'Alphabet', icon: Book },
     { id: 'greetings', label: 'Greetings', icon: Users },
     { id: 'vocabulary', label: 'Vocabulary', icon: Volume2 },
     { id: 'lessons', label: 'Lessons', icon: CheckCircle }
   ];
 
-  const learningPaths = [
-    {
-      title: "Complete Beginner",
-      description: "Perfect for those new to Akan language",
-      duration: "8-12 weeks",
-      modules: ["Alphabet", "Basic Greetings", "Family Words", "Numbers", "Simple Conversations"],
-      color: "#564c38"
-    },
-    {
-      title: "Heritage Speaker",
-      description: "For those reconnecting with their roots",
-      duration: "6-8 weeks",
-      modules: ["Cultural Context", "Advanced Vocabulary", "Traditional Expressions", "Proverbs"],
-      color: "#695e46"
-    },
-    {
-      title: "Academic Learner",
-      description: "Comprehensive linguistic approach",
-      duration: "12-16 weeks",
-      modules: ["Grammar", "Phonology", "Dialectal Variations", "Research Methods"],
-      color: "#77705c"
-    }
-  ];
+  // Filter content for this learning path
+  const beginnerVocabularyModules = vocabularyModules.filter(module => 
+    ['family', 'numbers', 'food'].includes(module.id)
+  );
+
+  const beginnerLessons = lessonsData.filter(lesson => 
+    [1, 2, 3].includes(lesson.id) // First three lessons are beginner
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Learn Akan Language</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Complete Beginner Path</h1>
           <p className="text-xl opacity-90 max-w-3xl">
-            Master the beautiful Akan language through interactive lessons, cultural context, and engaging exercises
+            Perfect for those new to Akan language - 8-12 weeks to build a solid foundation
           </p>
         </div>
       </div>
@@ -96,75 +79,76 @@ const LanguageLearning = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Overview Tab */}
+        {/* Path Overview Tab */}
         {activeTab === 'overview' && (
           <div className="space-y-12">
-            {/* Learning Paths */}
-            <section>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Choose Your Learning Path</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {learningPaths.map((path, index) => (
-                  <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                    <div className="h-32 relative" style={{backgroundColor: path.color}}>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <h3 className="text-white text-xl font-bold text-center">{path.title}</h3>
-                      </div>
+            <section className="bg-white rounded-lg shadow-lg p-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Path Overview</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">What You'll Learn</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
+                      <span>Akan alphabet and pronunciation fundamentals</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
+                      <span>Essential daily greetings and polite expressions</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
+                      <span>Basic vocabulary for family, numbers, and common objects</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
+                      <span>Simple sentence structures and conversation patterns</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
+                      <span>Cultural context for appropriate language use</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Path Structure</h3>
+                  <div className="space-y-4">
+                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#f1d799'}}>
+                      <h4 className="font-semibold text-gray-900">Weeks 1-2: Foundations</h4>
+                      <p className="text-gray-600 text-sm">Alphabet, pronunciation, basic greetings</p>
                     </div>
-                    <div className="p-6">
-                      <p className="text-gray-600 mb-4">{path.description}</p>
-                      <div className="flex items-center text-sm text-gray-500 mb-4">
-                        <Clock className="w-4 h-4 mr-2" />
-                        {path.duration}
-                      </div>
-                      <div className="space-y-2 mb-6">
-                        {path.modules.map((module, idx) => (
-                          <div key={idx} className="flex items-center text-sm">
-                            <CheckCircle className="w-4 h-4 mr-2" style={{color: '#f1d799'}} />
-                            {module}
-                          </div>
-                        ))}
-                      </div>
-                      <Link 
-                        to={
-                          path.title === "Complete Beginner" ? "/learn/beginner" :
-                          path.title === "Heritage Speaker" ? "/learn/heritage" :
-                          "/learn/academic"
-                        }
-                        className="w-full text-white py-3 rounded-lg transition-colors text-center block"
-                        style={{backgroundColor: '#564c38'}}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
-                      >
-                        Start This Path
-                      </Link>
+                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#c2ae81'}}>
+                      <h4 className="font-semibold text-gray-900">Weeks 3-6: Core Vocabulary</h4>
+                      <p className="text-gray-600 text-sm">Family terms, numbers, common objects</p>
+                    </div>
+                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#77705c'}}>
+                      <h4 className="font-semibold text-gray-900">Weeks 7-12: Simple Conversations</h4>
+                      <p className="text-gray-600 text-sm">Basic sentence structures, practical dialogues</p>
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
             </section>
 
-            {/* Quick Start */}
             <section>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Quick Start Options</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Learning Journey</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                  { title: "Learn Alphabet", desc: "Master Akan letters and sounds", link: "#alphabet", icon: "অ" },
-                  { title: "Basic Greetings", desc: "Essential daily greetings", link: "#greetings", icon: "👋" },
-                  { title: "Family Words", desc: "Learn family relationships", link: "#vocabulary", icon: "👨‍👩‍👧‍👦" },
-                  { title: "Numbers 1-10", desc: "Count in Akan", link: "#vocabulary", icon: "🔢" }
+                  { title: "Alphabet Mastery", desc: "Learn all 22 Akan letters", progress: "0%", color: "#564c38" },
+                  { title: "Greetings Fluency", desc: "Master 8 essential greetings", progress: "0%", color: "#695e46" },
+                  { title: "Vocabulary Builder", desc: "Learn 150+ core words", progress: "0%", color: "#77705c" }
                 ].map((item, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveTab(item.link.replace('#', ''))}
-                    className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group"
-                  >
-                    <div className="text-4xl mb-4">{item.icon}</div>
-                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:transition-colors" 
-                        onMouseEnter={(e) => e.target.style.color = '#564c38'}
-                        onMouseLeave={(e) => e.target.style.color = '#111827'}
-                    >{item.title}</h3>
-                    <p className="text-gray-600 text-sm">{item.desc}</p>
-                  </button>
+                  <div key={index} className="bg-white rounded-lg shadow-lg p-6 text-center">
+                    <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl font-bold" style={{backgroundColor: item.color}}>
+                      {index + 1}
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-gray-600 mb-4">{item.desc}</p>
+                    <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                      <div className="bg-green-500 h-2 rounded-full" style={{width: item.progress}}></div>
+                    </div>
+                    <p className="text-sm text-gray-500">Not started</p>
+                  </div>
                 ))}
               </div>
             </section>
@@ -240,9 +224,9 @@ const LanguageLearning = () => {
         {/* Vocabulary Tab */}
         {activeTab === 'vocabulary' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Vocabulary Modules</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Beginner Vocabulary Modules</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {vocabularyModules.map((module) => (
+              {beginnerVocabularyModules.map((module) => (
                 <div key={module.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
                   <div className="p-6 text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
                     <h3 className="text-xl font-bold mb-2">{module.title}</h3>
@@ -292,9 +276,9 @@ const LanguageLearning = () => {
         {/* Lessons Tab */}
         {activeTab === 'lessons' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Structured Lessons</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Beginner Lessons</h2>
             <div className="space-y-6">
-              {lessonsData.map((lesson) => (
+              {beginnerLessons.map((lesson) => (
                 <div key={lesson.id} className="bg-white rounded-lg shadow-lg p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -340,4 +324,4 @@ const LanguageLearning = () => {
   );
 };
 
-export default LanguageLearning;
+export default CompleteBeginnerPath;

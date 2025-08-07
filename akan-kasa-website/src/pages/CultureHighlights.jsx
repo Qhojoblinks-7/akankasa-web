@@ -1,7 +1,10 @@
+import React from 'react';
+
 import { useState } from 'react';
 import { Calendar, MapPin, Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
-import { cultureData } from '../data/mockData';
+
 import { useNavigate } from 'react-router-dom';
+import { culturalData } from '../data/mockData';
 
 const CultureHighlights = () => {
   const [activeSection, setActiveSection] = useState('traditions');
@@ -10,16 +13,16 @@ const CultureHighlights = () => {
   const navigate = useNavigate();
 
   const sections = [
-    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: 'bg-red-500' },
-    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: 'bg-blue-500' },
-    { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: 'bg-green-500' },
-    { id: 'music', label: 'Music & Dance', icon: Music, color: 'bg-purple-500' }
+    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
+    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#695e46' },
+    { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#77705c' },
+    { id: 'music', label: 'Music & Dance', icon: Music, color: '#c2ae81' }
   ];
 
   const regions = ['all', 'Ashanti Region', 'Eastern Region', 'Central Region', 'Western Region'];
 
   const getCurrentSectionData = () => {
-    return cultureData[activeSection] || [];
+    return culturalData[activeSection] || [];
   };
 
   const filteredContent = getCurrentSectionData().filter(item => {
@@ -35,7 +38,7 @@ const CultureHighlights = () => {
 
   const CultureCard = ({ item, sectionType }) => (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="relative h-48 bg-gradient-to-r from-akan-gold to-akan-red">
+      <div className="relative h-48" style={{background: 'linear-gradient(135deg, #f1d799 0%, #564c38 100%)'}}>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-white text-center">
             <h3 className="text-xl font-bold mb-2">{item.title}</h3>
@@ -90,7 +93,7 @@ const CultureHighlights = () => {
             <h4 className="font-semibold text-gray-900 mb-2">Instruments:</h4>
             <div className="flex flex-wrap gap-2">
               {item.instruments.map((instrument, index) => (
-                <span key={index} className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-sm">
+                <span key={index} className="px-2 py-1 rounded-full text-sm" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
                   {instrument}
                 </span>
               ))}
@@ -109,7 +112,12 @@ const CultureHighlights = () => {
         )}
 
         <div className="mt-4 pt-4 border-t border-gray-200">
-          <button className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center">
+          <button 
+            className="font-medium text-sm flex items-center transition-colors"
+            style={{color: '#564c38'}}
+            onMouseEnter={(e) => e.target.style.color = '#695e46'}
+            onMouseLeave={(e) => e.target.style.color = '#564c38'}
+          >
             Learn More
             <ChevronRight className="w-4 h-4 ml-1" />
           </button>
@@ -121,7 +129,7 @@ const CultureHighlights = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-akan-red via-akan-gold to-akan-green text-white">
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Akan Culture Highlights</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -140,11 +148,22 @@ const CultureHighlights = () => {
                 <button
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
-                  className={`flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
-                    activeSection === section.id
-                      ? 'border-akan-gold text-akan-red'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                  className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
+                  style={activeSection === section.id 
+                    ? {borderColor: '#f1d799', color: '#564c38'} 
+                    : {borderColor: 'transparent', color: '#6b7280'}}
+                  onMouseEnter={(e) => {
+                    if (activeSection !== section.id) {
+                      e.target.style.color = '#374151';
+                      e.target.style.borderColor = '#d1d5db';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeSection !== section.id) {
+                      e.target.style.color = '#6b7280';
+                      e.target.style.borderColor = 'transparent';
+                    }
+                  }}
                 >
                   <Icon className="w-5 h-5" />
                   <span>{section.label}</span>

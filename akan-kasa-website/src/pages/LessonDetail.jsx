@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Play, CheckCircle, Clock, Book, Users, Star, ArrowRight } from 'lucide-react';

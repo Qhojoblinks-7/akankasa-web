@@ -1,66 +1,128 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Book, Search, Play, Star, Calendar, MessageCircle, Users, ArrowRight, BookOpen } from 'lucide-react';
 import Hero from '../components/layout/Hero';
+
 import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Homepage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+  
   const featuredContent = [
     {
-      title: "Learn Basic Greetings",
-      description: "Start your Akan journey with essential daily greetings",
-      category: "Language Learning",
+      title: t('basicGreetings'),
+      description: t('basicGreetingsDesc'),
+      category: t('languageLearning'),
       link: "/learn/greetings",
       icon: MessageCircle,
-      color: "bg-blue-500"
+      color: "#564c38"
     },
     {
-      title: "Adinkra Symbols",
-      description: "Discover the wisdom embedded in traditional Akan symbols",
-      category: "Culture",
-      link: "/culture/arts",
+      title: t('adinkraSymbols'),
+      description: t('adinkraSymbolsDesc'),
+      category: t('culture'),
+      link: "/culture",
       icon: Star,
-      color: "bg-green-500"
+      color: "#695e46"
     },
     {
-      title: "Akan Dictionary",
-      description: "Explore our comprehensive bilingual dictionary",
-      category: "Dictionary",
+      title: t('akanDictionary'),
+      description: t('akanDictionaryDesc'),
+      category: t('dictionary'),
       link: "/dictionary",
       icon: Book,
-      color: "bg-purple-500"
+      color: "#77705c"
     },
     {
-      title: "Cultural Events",
-      description: "Join upcoming Akan cultural celebrations",
-      category: "Community",
-      link: "/community/events",
+      title: t('culturalEvents'),
+      description: t('culturalEventsDesc'),
+      category: t('community'),
+      link: "/community",
       icon: Calendar,
-      color: "bg-orange-500"
+      color: "#c2ae81"
     }
   ];
 
   const stats = [
-    { number: "500+", label: "Vocabulary Words" },
-    { number: "50+", label: "Cultural Articles" },
-    { number: "20+", label: "Interactive Lessons" },
-    { number: "1000+", label: "Community Members" }
+    { number: "500+", label: t('vocabularyWords') },
+    { number: "50+", label: t('culturalArticles') },
+    { number: "20+", label: t('interactiveLessons') },
+    { number: "1000+", label: t('communityMembers') }
   ];
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <Hero />
+      <section className="relative overflow-hidden" style={{background: 'linear-gradient(135deg, #695e46 0%, #564c38 100%)'}}>
+        <div className="absolute inset-0 akan-pattern opacity-10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="text-center">
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-6xl font-bold text-white mb-6"
+            >
+              {t('welcomeTitle')}
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto"
+            >
+              {t('welcomeDescription')}
+            </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            >
+              <Link 
+                to="/learn" 
+                className="px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2 shadow-lg"
+                style={{backgroundColor: '#f1d799', color: '#564c38'}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#c2ae81'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#f1d799'}
+              >
+                <BookOpen className="w-5 h-5" />
+                <span>{t('startLearning')}</span>
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link 
+                to="/culture" 
+                className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2"
+                style={{borderColor: '#f1d799', color: '#f1d799'}}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#f1d799';
+                  e.target.style.color = '#564c38';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#f1d799';
+                }}
+              >
+                <Users className="w-5 h-5" />
+                <span>{t('exploreCulture')}</span>
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
+      </section>
 
       {/* Quick Start Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Start Your Akan Journey
+              {t('quickStartTitle')}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Choose your path to explore the beautiful Akan language and culture
+              {t('quickStartDescription')}
             </p>
           </div>
           
@@ -70,29 +132,30 @@ const Homepage = () => {
                 icon: Book,
                 title: "Learn Language",
                 description: "Interactive lessons, alphabet, and vocabulary",
+
                 link: "/learn",
-                color: "from-blue-500 to-blue-600"
+                color: "linear-gradient(135deg, #564c38 0%, #695e46 100%)"
               },
               {
                 icon: Users,
-                title: "Explore Culture",
-                description: "Traditions, history, arts, and customs",
+                title: t('exploreCulture'),
+                description: t('exploreCultureDesc'),
                 link: "/culture",
-                color: "from-green-500 to-green-600"
+                color: "linear-gradient(135deg, #695e46 0%, #77705c 100%)"
               },
               {
                 icon: Book,
-                title: "Use Dictionary",
-                description: "Comprehensive Akan-English dictionary",
+                title: t('useDictionary'),
+                description: t('useDictionaryDesc'),
                 link: "/dictionary",
-                color: "from-purple-500 to-purple-600"
+                color: "linear-gradient(135deg, #77705c 0%, #c2ae81 100%)"
               },
               {
                 icon: Search,
-                title: "Research Hub",
-                description: "Academic resources and research tools",
+                title: t('researchHub'),
+                description: t('researchHubDesc'),
                 link: "/research",
-                color: "from-orange-500 to-orange-600"
+                color: "linear-gradient(135deg, #c2ae81 0%, #f1d799 100%)"
               }
             ].map((item, index) => {
               return (
@@ -111,11 +174,12 @@ const Homepage = () => {
                       {item.title === 'Explore Culture' && <Users className="w-6 h-6 text-white" />}
                       {item.title === 'Use Dictionary' && <Book className="w-6 h-6 text-white" />}
                       {item.title === 'Research Hub' && <Search className="w-6 h-6 text-white" />}
+
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.description}</p>
-                    <div className="mt-4 flex items-center text-blue-600 group-hover:text-blue-700">
-                      <span className="text-sm font-medium">Get Started</span>
+                    <div className="mt-4 flex items-center transition-colors" style={{color: '#564c38'}}>
+                      <span className="text-sm font-medium">{t('getStarted')}</span>
                       <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </Link>
@@ -131,10 +195,10 @@ const Homepage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Featured Content
+              {t('featuredContentTitle')}
             </h2>
             <p className="text-xl text-gray-600">
-              Discover the most popular and engaging content on our platform
+              {t('featuredContentDesc')}
             </p>
           </div>
           
@@ -152,16 +216,16 @@ const Homepage = () => {
                     to={content.link}
                     className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden group"
                   >
-                    <div className={`h-32 ${content.color} relative`}>
+                    <div className="h-32 relative" style={{backgroundColor: content.color}}>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <Icon className="w-12 h-12 text-white" />
                       </div>
                     </div>
                     <div className="p-6">
-                      <span className="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full mb-3">
+                      <span className="inline-block px-3 py-1 text-xs font-medium rounded-full mb-3" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
                         {content.category}
                       </span>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:transition-colors" style={{'&:hover': {color: '#564c38'}}}>
                         {content.title}
                       </h3>
                       <p className="text-gray-600 text-sm">{content.description}</p>
@@ -181,14 +245,14 @@ const Homepage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-akan-red text-white">
+      <section className="py-16 text-white" style={{backgroundColor: '#564c38'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Growing Together
+              {t('growingTogetherTitle')}
             </h2>
             <p className="text-xl opacity-90">
-              Join thousands of learners preserving and celebrating Akan heritage
+              {t('growingTogetherDesc')}
             </p>
           </div>
           
@@ -213,26 +277,38 @@ const Homepage = () => {
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            Ready to Begin Your Akan Journey?
+            {t('readyToBegin')}
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join our community of learners, researchers, and culture enthusiasts
+            {t('readyToBeginDesc')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/learn"
-              className="bg-akan-red text-white px-8 py-4 rounded-lg font-semibold hover:bg-red-700 transition-colors inline-flex items-center justify-center space-x-2"
-            >
-              <Play className="w-5 h-5" />
-              <span>Start Learning Now</span>
-            </Link>
-            <Link
-              to="/community"
-              className="border-2 border-akan-red text-akan-red px-8 py-4 rounded-lg font-semibold hover:bg-akan-red hover:text-white transition-colors inline-flex items-center justify-center space-x-2"
-            >
-              <Users className="w-5 h-5" />
-              <span>Join Community</span>
-            </Link>
+              className="px-8 py-4 rounded-lg font-semibold text-white transition-colors inline-flex items-center justify-center space-x-2"
+              style={{backgroundColor: '#564c38'}}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
+                          >
+                <Play className="w-5 h-5" />
+                <span>{t('startLearningNow')}</span>
+              </Link>
+              <Link
+                to="/community"
+                className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center justify-center space-x-2"
+                style={{borderColor: '#564c38', color: '#564c38'}}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#564c38';
+                  e.target.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#564c38';
+                }}
+              >
+                <Users className="w-5 h-5" />
+                <span>{t('joinCommunity')}</span>
+              </Link>
           </div>
         </div>
       </section>
