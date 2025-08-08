@@ -1,7 +1,8 @@
+import React from 'react'
 import { Link } from 'react-router-dom';
 import { BookOpen, ArrowRight, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
-import ReactLogo from '../../assets/react.svg';
+import ReactLogo from '../../assets/hero.jpg';
 
 const Hero = () => (
   <section className="relative bg-gradient-to-br from-akan-red via-akan-gold to-akan-green overflow-hidden">

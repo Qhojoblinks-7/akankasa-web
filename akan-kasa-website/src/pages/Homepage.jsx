@@ -1,4 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import  { Link, useNavigate } from 'react-router-dom';
 import { Book, Search, Play, Star, Calendar, MessageCircle, Users, ArrowRight, BookOpen } from 'lucide-react';
 import Hero from '../components/layout/Hero';
 

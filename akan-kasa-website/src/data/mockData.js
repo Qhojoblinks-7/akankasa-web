@@ -667,3 +667,10 @@ export const userProfiles = [
     specialties: ["Literature", "Academic Papers", "Technical Documents"]
   }
 ];
+
+export const cultureData = {
+  
+}
+
+
+export const eventsData ={}

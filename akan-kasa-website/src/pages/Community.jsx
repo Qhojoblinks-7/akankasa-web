@@ -1,7 +1,9 @@
+import React, { useCallback } from 'react';
 import { useState } from 'react';
 import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp } from 'lucide-react';
-import { forumData, eventsData, userProfiles } from '../data/mockData';
+import { forumData, userProfiles, communityData } from '../data/mockData';
 import { useNavigate } from 'react-router-dom';
+
 
 
 const Community = () => {
@@ -217,7 +219,7 @@ const Community = () => {
         </div>
         
         <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          onClick={() => navigate('/community/register-event');
+          onClick={() => navigate('/community/register-event')}
         >
           Register Now
         </button>
