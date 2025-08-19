@@ -1,13 +1,17 @@
 import React from 'react';
+<<<<<<< HEAD:src/pages/Homepage.jsx
 import  { Link, useNavigate } from 'react-router-dom';
 import { Book, Search, Play, Star, Calendar, MessageCircle, Users, ArrowRight, BookOpen } from 'lucide-react';
 import Hero from '../components/layout/Hero';
+=======
+>>>>>>> parent of 70a8612 (Merge pull request #3 from Qhojoblinks-7/cursor/provide-repository-context-27d3):akan-kasa-website/src/pages/Homepage.jsx
 
+import { Link } from 'react-router-dom';
+import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Homepage = () => {
-  const navigate = useNavigate();
   const { t } = useLanguage();
   
   const featuredContent = [
@@ -55,7 +59,6 @@ const Homepage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <Hero />
       <section className="relative overflow-hidden" style={{background: 'linear-gradient(135deg, #695e46 0%, #564c38 100%)'}}>
         <div className="absolute inset-0 akan-pattern opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -130,10 +133,9 @@ const Homepage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                icon: Book,
-                title: "Learn Language",
-                description: "Interactive lessons, alphabet, and vocabulary",
-
+                icon: BookOpen,
+                title: t('learnLanguage'),
+                description: t('learnLanguageDesc'),
                 link: "/learn",
                 color: "linear-gradient(135deg, #564c38 0%, #695e46 100%)"
               },
@@ -159,6 +161,7 @@ const Homepage = () => {
                 color: "linear-gradient(135deg, #c2ae81 0%, #f1d799 100%)"
               }
             ].map((item, index) => {
+              const Icon = item.icon;
               return (
                 <motion.div
                   key={item.title}
@@ -170,12 +173,8 @@ const Homepage = () => {
                     to={item.link}
                     className="block p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-gray-200 group"
                   >
-                    <div className={`w-12 h-12 bg-gradient-to-r ${item.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      {item.title === 'Learn Language' && <BookOpen className="w-6 h-6 text-white" />}
-                      {item.title === 'Explore Culture' && <Users className="w-6 h-6 text-white" />}
-                      {item.title === 'Use Dictionary' && <Book className="w-6 h-6 text-white" />}
-                      {item.title === 'Research Hub' && <Search className="w-6 h-6 text-white" />}
-
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300" style={{background: item.color}}>
+                      <Icon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.description}</p>
@@ -230,12 +229,6 @@ const Homepage = () => {
                         {content.title}
                       </h3>
                       <p className="text-gray-600 text-sm">{content.description}</p>
-                      <button
-                        className="mt-4 text-blue-600 hover:text-blue-700 font-medium text-sm"
-                        onClick={e => { e.preventDefault(); navigate(content.link); }}
-                      >
-                        Learn More
-                      </button>
                     </div>
                   </Link>
                 </motion.div>

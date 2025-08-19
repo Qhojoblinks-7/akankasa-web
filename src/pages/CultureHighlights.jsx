@@ -2,15 +2,12 @@ import React from 'react';
 
 import { useState } from 'react';
 import { Calendar, MapPin, Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
-
-import { useNavigate } from 'react-router-dom';
 import { culturalData } from '../data/mockData';
 
 const CultureHighlights = () => {
   const [activeSection, setActiveSection] = useState('traditions');
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
 
   const sections = [
     { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
@@ -302,10 +299,7 @@ const CultureHighlights = () => {
             <p className="text-lg opacity-90 mb-6">
               Help preserve Akan culture by contributing your stories, photos, and knowledge
             </p>
-            <button
-              className="bg-white text-akan-red px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-              onClick={() => navigate('/contribute')}
-            >
+            <button className="bg-white text-akan-red px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Contribute Content
             </button>
           </div>

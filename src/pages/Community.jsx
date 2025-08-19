@@ -1,15 +1,22 @@
+<<<<<<< HEAD:src/pages/Community.jsx
 import React, { useCallback } from 'react';
 import { useState } from 'react';
 import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp } from 'lucide-react';
 import { forumData, userProfiles, communityData } from '../data/mockData';
+=======
+import React from 'react';
+import { useState, useCallback } from 'react';
+>>>>>>> parent of 70a8612 (Merge pull request #3 from Qhojoblinks-7/cursor/provide-repository-context-27d3):akan-kasa-website/src/pages/Community.jsx
 import { useNavigate } from 'react-router-dom';
-
+import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp, X } from 'lucide-react';
+import { communityData, userProfiles, forumData } from '../data/mockData';
+import ProfileViewModal from '../components/ProfileViewModal';
 
 
 const Community = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('forums');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const navigate = useNavigate();
   const [showNewPostModal, setShowNewPostModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
@@ -218,8 +225,19 @@ const Community = () => {
           </div>
         </div>
         
+<<<<<<< HEAD:src/pages/Community.jsx
         <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
           onClick={() => navigate('/community/register-event')}
+=======
+        <button 
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          onClick={() => {
+            // In a real app, this would register the user for the event
+            alert(`Successfully registered for event: ${event.title}`);
+            // For now, we'll just show a success message, but in a real implementation,
+            // this would send a request to the backend to register the user for the event
+          }}
+>>>>>>> parent of 70a8612 (Merge pull request #3 from Qhojoblinks-7/cursor/provide-repository-context-27d3):akan-kasa-website/src/pages/Community.jsx
         >
           Register Now
         </button>
@@ -260,8 +278,12 @@ const Community = () => {
         ))}
       </div>
       
-      <button className="text-blue-600 hover:text-blue-700 font-medium text-sm"
-        onClick={() => navigate(`/profile/${member.id}`)}
+      <button 
+        className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+        onClick={() => {
+          setSelectedMember(member);
+          setShowProfileModal(true);
+        }}
       >
         View Profile
       </button>
@@ -359,9 +381,9 @@ const Community = () => {
                     </option>
                   ))}
                 </select>
-                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center"
-                  onClick={() => navigate('/community/new-post')}
-
+                <button 
+                  className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center"
+                  onClick={handleNewPostClick}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   New Post
@@ -432,9 +454,9 @@ const Community = () => {
                 <button className="text-gray-600 hover:text-gray-700 p-2 border border-gray-300 rounded-lg">
                   <Filter className="w-4 h-4" />
                 </button>
-                <button className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
-                  onClick={() => navigate('/community/join')}
-
+                <button 
+                  className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+                  onClick={() => alert('Join Community functionality would go here')}
                 >
                   Join Community
                 </button>

@@ -3,14 +3,12 @@ import React from 'react';
 import { useState } from 'react';
 import { Search, Download, Filter, BookOpen, Users, GraduationCap, FileText, ExternalLink, MessageSquare } from 'lucide-react';
 import { researchData, forumData } from '../data/mockData';
-import { useNavigate } from 'react-router-dom';
 
 const Research = () => {
   const [activeTab, setActiveTab] = useState('resources');
   const [selectedLevel, setSelectedLevel] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
 
   const tabs = [
     { id: 'resources', label: 'Resource Library', icon: BookOpen },
@@ -270,9 +268,7 @@ const Research = () => {
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Research Discussions</h2>
-              <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-                onClick={() => navigate('/research/new-discussion')}
-              >
+              <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                 Start New Discussion
               </button>
             </div>
@@ -351,7 +347,6 @@ const Research = () => {
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
                     disabled={tool.status !== 'Available'}
-                    onClick={() => tool.status === 'Available' && alert('Demo: Tool would launch here!')}
                   >
                     {tool.status === 'Available' ? 'Launch Tool' : tool.status}
                   </button>
@@ -403,9 +398,7 @@ const Research = () => {
                     </div>
                   ))}
                 </div>
-                <button className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
-                  onClick={() => navigate('/research/propose-project')}
-                >
+                <button className="w-full mt-4 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors">
                   Propose New Project
                 </button>
               </div>
