@@ -334,7 +334,7 @@ const VocabularyModule = () => {
   );
 };
 
-const QuizMode = ({ module, setCurrentMode }) => {
+const QuizMode = ({ module, mastered, setMastered, setCurrentMode }) => {
   const [quizType, setQuizType] = useState('multiple'); // multiple, audio, reverse
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userAnswers, setUserAnswers] = useState([]);
