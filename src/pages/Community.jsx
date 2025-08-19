@@ -1,12 +1,5 @@
-<<<<<<< HEAD:src/pages/Community.jsx
-import React, { useCallback } from 'react';
-import { useState } from 'react';
-import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp } from 'lucide-react';
-import { forumData, userProfiles, communityData } from '../data/mockData';
-=======
 import React from 'react';
 import { useState, useCallback } from 'react';
->>>>>>> parent of 70a8612 (Merge pull request #3 from Qhojoblinks-7/cursor/provide-repository-context-27d3):akan-kasa-website/src/pages/Community.jsx
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp, X } from 'lucide-react';
 import { communityData, userProfiles, forumData } from '../data/mockData';
@@ -225,10 +218,6 @@ const Community = () => {
           </div>
         </div>
         
-<<<<<<< HEAD:src/pages/Community.jsx
-        <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          onClick={() => navigate('/community/register-event')}
-=======
         <button 
           className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
           onClick={() => {
@@ -237,7 +226,6 @@ const Community = () => {
             // For now, we'll just show a success message, but in a real implementation,
             // this would send a request to the backend to register the user for the event
           }}
->>>>>>> parent of 70a8612 (Merge pull request #3 from Qhojoblinks-7/cursor/provide-repository-context-27d3):akan-kasa-website/src/pages/Community.jsx
         >
           Register Now
         </button>

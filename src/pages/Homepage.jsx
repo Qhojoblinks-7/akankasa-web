@@ -1,10 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD:src/pages/Homepage.jsx
-import  { Link, useNavigate } from 'react-router-dom';
-import { Book, Search, Play, Star, Calendar, MessageCircle, Users, ArrowRight, BookOpen } from 'lucide-react';
-import Hero from '../components/layout/Hero';
-=======
->>>>>>> parent of 70a8612 (Merge pull request #3 from Qhojoblinks-7/cursor/provide-repository-context-27d3):akan-kasa-website/src/pages/Homepage.jsx
 
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
