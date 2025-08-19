@@ -142,7 +142,7 @@ const Community = () => {
             <span>{post.replies} replies</span>
           </div>
         </div>
-        <span className="px-2 py-1 rounded-full text-xs font-medium ml-4" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
+        <span className="px-2 py-1 rounded-full text-xs font-medium ml-4" style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}>
           {post.category}
         </span>
       </div>
@@ -158,9 +158,9 @@ const Community = () => {
       <div className="flex justify-between items-center">
         <button 
           className="font-medium text-sm transition-colors"
-          style={{color: '#564c38'}}
-          onMouseEnter={(e) => e.target.style.color = '#695e46'}
-          onMouseLeave={(e) => e.target.style.color = '#564c38'}
+          style={{color: '#8B0000'}}
+          onMouseEnter={(e) => e.target.style.color = '#3B7A57'}
+          onMouseLeave={(e) => e.target.style.color = '#8B0000'}
           onClick={() => {
             // In a real app, this would navigate to the discussion page or open a discussion modal
             alert(`Navigating to discussion: ${post.title}`);
@@ -168,7 +168,7 @@ const Community = () => {
             // this would take the user to the actual discussion thread
           }}
         >
-          Join Discussion →
+          Read More
         </button>
         <div className="flex items-center space-x-2">
           <button className="text-gray-400 hover:text-red-500 transition-colors">
