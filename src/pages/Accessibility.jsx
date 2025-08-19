@@ -1,9 +1,9 @@
 const Accessibility = () => (
-  <div className="min-h-screen bg-gray-50 py-12 flex flex-col items-center">
+  <div className="min-h-screen py-12 flex flex-col items-center" style={{background: '#FDF6EC'}}>
     <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
-      <h1 className="text-3xl font-bold text-akan-red mb-6">Accessibility Statement</h1>
+      <h1 className="text-3xl font-bold mb-6" style={{color: '#C19A6B', fontFamily: 'Georama, sans-serif'}}>Accessibility Statement</h1>
       <p className="mb-4">We are committed to making this demo website accessible to everyone. The site is designed to be WCAG 2.1 compliant, with semantic HTML, keyboard navigation, and high-contrast options.</p>
-      <h2 className="font-semibold mb-2 mt-6">Features</h2>
+      <h2 className="font-semibold mb-2 mt-6" style={{color: '#1C1C1C'}}>Features</h2>
       <ul className="list-disc pl-6 mb-4">
         <li>Semantic HTML structure</li>
         <li>Keyboard navigation support</li>
@@ -13,7 +13,7 @@ const Accessibility = () => (
         <li>Alternative text for all images</li>
         <li>Focus indicators for interactive elements</li>
       </ul>
-      <h2 className="font-semibold mb-2 mt-6">Contact</h2>
+      <h2 className="font-semibold mb-2 mt-6" style={{color: '#1C1C1C'}}>Contact</h2>
       <p>If you encounter any accessibility issues, please contact us at info@akankasa.org.</p>
     </div>
   </div>

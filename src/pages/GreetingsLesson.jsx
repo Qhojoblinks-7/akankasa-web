@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Volume2, Play, CheckCircle, RotateCcw } from 'lucide-react';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const GreetingsLesson = () => {
@@ -38,7 +39,7 @@ const GreetingsLesson = () => {
       akan: "Maadwo",
       english: "Good evening",
       pronunciation: "MAH-dwo",
-      context: "Evening greeting, used after 6 PM",
+      context: "Evening greeting, used from 6 PM onwards",
       audio: "/audio/maadwo.mp3"
     },
     {
@@ -101,13 +102,13 @@ const GreetingsLesson = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="sticky top-0 z-10 px-4 py-4" style={{backgroundColor: '#f1d799'}}>
+      <div className="sticky top-0 z-10 px-4 py-4" style={{backgroundColor: '#C19A6B'}}>
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link 
             to="/learn" 
             className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
-            style={{color: '#564c38'}}
-            onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(86, 76, 56, 0.1)'}
+            style={{color: '#1C1C1C'}}
+            onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(28, 28, 28, 0.1)'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
           >
             <ArrowLeft className="w-5 h-5" />
@@ -115,13 +116,13 @@ const GreetingsLesson = () => {
           </Link>
           
           <div className="flex items-center space-x-4">
-            <div className="text-sm font-medium" style={{color: '#564c38'}}>
+            <div className="text-sm font-medium" style={{color: '#1C1C1C'}}>
               Progress: {currentGreeting + 1}/{greetings.length}
             </div>
-            <div className="w-32 h-2 rounded-full" style={{backgroundColor: 'rgba(86, 76, 56, 0.2)'}}>
+            <div className="w-32 h-2 rounded-full" style={{backgroundColor: 'rgba(28, 28, 28, 0.2)'}}>
               <div 
                 className="h-2 rounded-full transition-all duration-300"
-                style={{backgroundColor: '#564c38', width: `${progress}%`}}
+                style={{backgroundColor: '#C19A6B', width: `${progress}%`}}
               ></div>
             </div>
           </div>
@@ -131,38 +132,35 @@ const GreetingsLesson = () => {
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Lesson Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4" style={{color: '#564c38'}}>
+          <h1 className="text-4xl font-bold mb-4" style={{color: '#C19A6B', fontFamily: 'Georama, sans-serif'}}>
             Basic Akan Greetings
           </h1>
           <p className="text-xl text-gray-600">
             Learn essential daily greetings to start conversations in Akan
           </p>
           <div className="mt-4 inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" 
-               style={{backgroundColor: '#c2ae81', color: '#564c38'}}>
+               style={{backgroundColor: '#3B7A57', color: 'white'}}>
             {completedGreetings.size} of {greetings.length} completed
           </div>
         </div>
 
         {/* Main Content Card */}
-        <motion.div 
+        <div 
           key={currentGreeting}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
           className="bg-white rounded-2xl shadow-lg p-8 mb-8"
         >
           <div className="text-center">
             {/* Akan Text */}
             <div className="mb-6">
-              <h2 className="text-5xl font-bold mb-4" style={{color: '#564c38'}}>
+              <h2 className="text-5xl font-bold mb-4" style={{color: '#C19A6B', fontFamily: 'Georama, sans-serif'}}>
                 {currentData.akan}
               </h2>
               <button
                 onClick={() => playAudio(currentData.audio)}
-                className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors"
-                style={{backgroundColor: '#f1d799', color: '#564c38'}}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#c2ae81'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#f1d799'}
+                className="btn-primary px-4 py-2 rounded-lg"
+                style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#a98253'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = '#C19A6B'}
               >
                 <Volume2 className="w-5 h-5" />
                 <span>Play Audio</span>
@@ -172,7 +170,7 @@ const GreetingsLesson = () => {
             {/* Pronunciation */}
             <div className="mb-6">
               <p className="text-lg text-gray-600 mb-2">Pronunciation:</p>
-              <p className="text-2xl font-mono" style={{color: '#695e46'}}>
+              <p className="text-2xl font-mono" style={{color: '#1C1C1C'}}>
                 [{currentData.pronunciation}]
               </p>
             </div>
@@ -183,7 +181,7 @@ const GreetingsLesson = () => {
                 onClick={() => setShowTranslation(!showTranslation)}
                 className="px-6 py-3 rounded-lg font-medium transition-colors"
                 style={{
-                  backgroundColor: showTranslation ? '#564c38' : '#77705c',
+                  backgroundColor: showTranslation ? '#C19A6B' : '#1C1C1C',
                   color: 'white'
                 }}
               >
@@ -191,25 +189,23 @@ const GreetingsLesson = () => {
               </button>
               
               {showTranslation && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <div
                   className="mt-4"
                 >
-                  <p className="text-3xl font-semibold" style={{color: '#564c38'}}>
+                  <p className="text-3xl font-semibold" style={{color: '#1C1C1C'}}>
                     "{currentData.english}"
                   </p>
-                </motion.div>
+                </div>
               )}
             </div>
 
             {/* Context */}
-            <div className="p-4 rounded-lg" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
+            <div className="p-4 rounded-lg" style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}>
               <p className="font-medium mb-1">When to use:</p>
               <p>{currentData.context}</p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Navigation and Actions */}
         <div className="flex justify-between items-center mb-8">
@@ -217,7 +213,7 @@ const GreetingsLesson = () => {
             onClick={prevGreeting}
             disabled={currentGreeting === 0}
             className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{backgroundColor: '#77705c', color: 'white'}}
+            style={{backgroundColor: '#1C1C1C', color: 'white'}}
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Previous</span>
@@ -229,7 +225,7 @@ const GreetingsLesson = () => {
               disabled={completedGreetings.has(currentGreeting)}
               className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
               style={{
-                backgroundColor: completedGreetings.has(currentGreeting) ? '#c2ae81' : '#564c38',
+                backgroundColor: completedGreetings.has(currentGreeting) ? '#3B7A57' : '#C19A6B',
                 color: 'white'
               }}
             >
@@ -240,7 +236,7 @@ const GreetingsLesson = () => {
             <button
               onClick={() => setShowTranslation(false)}
               className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors"
-              style={{backgroundColor: '#695e46', color: 'white'}}
+              style={{backgroundColor: '#8B0000', color: 'white'}}
             >
               <RotateCcw className="w-5 h-5" />
               <span>Practice Again</span>
@@ -251,7 +247,7 @@ const GreetingsLesson = () => {
             onClick={nextGreeting}
             disabled={currentGreeting === greetings.length - 1}
             className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{backgroundColor: '#77705c', color: 'white'}}
+            style={{backgroundColor: '#1C1C1C', color: 'white'}}
           >
             <span>Next</span>
             <ArrowLeft className="w-5 h-5 rotate-180" />
@@ -260,7 +256,7 @@ const GreetingsLesson = () => {
 
         {/* Progress Overview */}
         <div className="bg-white rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4" style={{color: '#564c38'}}>
+          <h3 className="text-xl font-semibold mb-4" style={{color: '#C19A6B', fontFamily: 'Georama, sans-serif'}}>
             Lesson Progress
           </h3>
           <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
@@ -273,14 +269,14 @@ const GreetingsLesson = () => {
                 }`}
                 style={{
                   backgroundColor: completedGreetings.has(index) 
-                    ? '#c2ae81' 
+                    ? '#3B7A57' 
                     : index === currentGreeting 
-                      ? '#f1d799' 
-                      : '#77705c',
+                      ? '#C19A6B' 
+                      : '#1C1C1C',
                   color: completedGreetings.has(index) || index === currentGreeting 
-                    ? '#564c38' 
+                    ? '#1C1C1C' 
                     : 'white',
-                  ringColor: '#564c38'
+                  ringColor: '#C19A6B'
                 }}
               >
                 {index + 1}
@@ -294,14 +290,12 @@ const GreetingsLesson = () => {
 
         {/* Completion Message */}
         {completedGreetings.size === greetings.length && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+          <div
             className="mt-8 bg-white rounded-lg p-6 text-center border-2"
-            style={{borderColor: '#f1d799'}}
+            style={{borderColor: '#C19A6B'}}
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h3 className="text-2xl font-bold mb-2" style={{color: '#564c38'}}>
+            <h3 className="text-2xl font-bold mb-2" style={{color: '#C19A6B', fontFamily: 'Georama, sans-serif'}}>
               Congratulations!
             </h3>
             <p className="text-gray-600 mb-4">
@@ -310,11 +304,11 @@ const GreetingsLesson = () => {
             <Link
               to="/learn"
               className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors"
-              style={{backgroundColor: '#564c38', color: 'white'}}
+              style={{backgroundColor: '#1C1C1C', color: 'white'}}
             >
               <span>Continue to Next Lesson</span>
             </Link>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
