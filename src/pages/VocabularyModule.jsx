@@ -223,7 +223,7 @@ const VocabularyModule = () => {
               <div 
                 className="bg-white rounded-lg shadow-lg p-8 text-center cursor-pointer transform transition-transform hover:scale-105"
                 onClick={() => setShowTranslation(!showTranslation)}
-                style={{ minHeight: '300px' }}
+                style={{ minHeight: '300px', backgroundColor: '#FDF6EC' }}
               >
                 <div className="flex justify-center mb-4">
                   <button className="text-gray-400 hover:text-gray-600">

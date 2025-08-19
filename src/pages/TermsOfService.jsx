@@ -7,7 +7,7 @@ const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="px-4 py-6" style={{backgroundColor: '#564c38'}}>
+      <div className="px-4 py-6" style={{backgroundColor: '#C19A6B'}}>
         <div className="max-w-4xl mx-auto">
           <Link 
             to="/" 
@@ -19,7 +19,7 @@ const TermsOfService = () => {
             <span>Back to Home</span>
           </Link>
           <h1 className="text-4xl font-bold text-white">Terms of Service</h1>
-          <p className="text-xl mt-2" style={{color: '#f1d799'}}>
+          <p className="text-xl mt-2" style={{color: '#8B0000'}}>
             Terms and conditions for using Akan Kasa ne Amammere
           </p>
         </div>
@@ -27,7 +27,7 @@ const TermsOfService = () => {
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Last Updated */}
-        <div className="bg-white rounded-lg p-6 mb-8 border-l-4" style={{borderColor: '#f1d799'}}>
+        <div className="bg-white rounded-lg p-6 mb-8 border-l-4" style={{borderColor: '#8B0000'}}>
           <p className="text-sm text-gray-600">
             <strong>Last Updated:</strong> January 15, 2025
           </p>
@@ -39,8 +39,8 @@ const TermsOfService = () => {
         {/* Acceptance of Terms */}
         <div className="bg-white rounded-lg p-8 mb-8">
           <div className="flex items-center space-x-3 mb-6">
-            <Scale className="w-8 h-8" style={{color: '#564c38'}} />
-            <h2 className="text-2xl font-bold" style={{color: '#564c38'}}>Acceptance of Terms</h2>
+            <Scale className="w-8 h-8" style={{color: '#1C1C1C'}} />
+            <h2 className="text-2xl font-bold" style={{color: '#1C1C1C'}}>Acceptance of Terms</h2>
           </div>
           <p className="text-gray-700 leading-relaxed mb-4">
             By accessing and using the Akan Kasa ne Amammere website ("Service"), you accept and agree to be bound by the terms and provision of this agreement.
