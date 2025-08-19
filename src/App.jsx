@@ -39,7 +39,7 @@ function App() {
   return (
     <LanguageProvider>
       <Router>
-        <div className="min-h-screen" style={{background: 'var(--color-background)', color: 'var(--color-highlight)'}}>
+        <div className="min-h-screen" style={{background: '#FDF6EC', color: '#1C1C1C'}}>
           <Navbar />
           <main className="flex-1">
             <Routes>

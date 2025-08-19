@@ -28,16 +28,16 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="shadow-lg sticky top-0 z-50" style={{background: 'var(--color-background)'}}>
+    <nav className="shadow-lg sticky top-0 z-50" style={{background: '#FDF6EC'}}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundColor: 'var(--color-primary)'}}>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundColor: '#C19A6B'}}>
               <img src={gyeNyame} alt="Gye Nyame" className="w-6 h-6" />
             </div>
-            <div style={{color: 'var(--color-highlight)'}}>
-              <h1 className="font-bold text-xl" style={{fontFamily: 'var(--font-display)'}}>AkanKasa</h1>
+            <div style={{color: '#1C1C1C'}}>
+              <h1 className="font-bold text-xl" style={{fontFamily: 'Georama, sans-serif'}}>AkanKasa</h1>
               <p className="text-xs opacity-90">ne Amammere</p>
             </div>
           </Link>
@@ -52,8 +52,8 @@ const Navbar = () => {
                   to={item.path}
                   className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2"
                   style={isActive(item.path)
-                    ? {backgroundColor: 'var(--color-primary)', color: 'var(--color-highlight)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'}
-                    : {color: 'var(--color-highlight)'}}
+                    ? {backgroundColor: '#C19A6B', color: '#1C1C1C', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'}
+                    : {color: '#1C1C1C'}}
                   onMouseEnter={(e) => {
                     if (!isActive(item.path)) {
                       e.target.style.backgroundColor = 'rgba(28, 28, 28, 0.05)';
@@ -81,13 +81,13 @@ const Navbar = () => {
                 onChange={(e) => setCurrentLanguage(e.target.value)}
                 className="rounded-lg px-3 py-1 text-sm appearance-none focus:outline-none focus:ring-2"
                 style={{
-                  backgroundColor: 'var(--color-background)',
-                  color: 'var(--color-highlight)',
-                  border: '1px solid var(--color-highlight)'
+                  backgroundColor: '#FDF6EC',
+                  color: '#1C1C1C',
+                  border: '1px solid #1C1C1C'
                 }}
               >
-                <option value="en" style={{color: 'var(--color-highlight)'}}>English</option>
-                <option value="tw" style={{color: 'var(--color-highlight)'}}>Twi</option>
+                <option value="en" style={{color: '#1C1C1C'}}>English</option>
+                <option value="tw" style={{color: '#1C1C1C'}}>Twi</option>
               </select>
               <Globe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black pointer-events-none" />
             </div>
@@ -115,8 +115,8 @@ const Navbar = () => {
                     onClick={() => setIsMenuOpen(false)}
                     className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-3"
                     style={isActive(item.path)
-                      ? {backgroundColor: 'var(--color-primary)', color: 'var(--color-highlight)'}
-                      : {color: 'var(--color-highlight)'}}
+                      ? {backgroundColor: '#C19A6B', color: '#1C1C1C'}
+                      : {color: '#1C1C1C'}}
                     onMouseEnter={(e) => {
                       if (!isActive(item.path)) {
                         e.target.style.backgroundColor = 'rgba(28, 28, 28, 0.05)';
@@ -139,7 +139,7 @@ const Navbar = () => {
       </div>
 
       {/* Decorative Adinkra Pattern */}
-      <div className="h-1 opacity-60" style={{background: 'linear-gradient(90deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-secondary) 100%)'}}></div>
+      <div className="h-1 opacity-60" style={{background: 'linear-gradient(90deg, #8B0000 0%, #C19A6B 50%, #3B7A57 100%)'}}></div>
     </nav>
   );
 };

@@ -1,24 +1,7 @@
-:root {
-  --color-primary: #C19A6B; /* Earthy Gold */
-  --color-accent: #8B0000; /* Deep Red */
-  --color-background: #FDF6EC; /* Warm Ivory */
-  --color-highlight: #1C1C1C; /* Adinkra Black */
-  --color-secondary: #3B7A57; /* Forest Green */
-
-  --font-display: 'Georama', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-accent: 'EB Garamond', serif;
-
-  --spacing-base: 16px;
-  --spacing-section: 32px;
-
-  --max-width: 1280px;
-}
-
 body {
-  background-color: var(--color-background);
-  color: var(--color-highlight);
-  font-family: var(--font-body);
+  background-color: #FDF6EC;
+  color: #1C1C1C;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   line-height: 1.5;
   margin: 0;
@@ -26,12 +9,12 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  color: var(--color-primary);
+  font-family: 'Georama', sans-serif;
+  color: #C19A6B;
 }
 
 a {
-  color: var(--color-accent);
+  color: #8B0000;
   text-decoration: none;
 }
 
@@ -40,20 +23,20 @@ a:hover {
 }
 
 button {
-  background-color: var(--color-primary);
-  color: var(--color-background);
+  background-color: #C19A6B;
+  color: #FDF6EC;
   border: none;
-  padding: var(--spacing-base);
-  font-family: var(--font-body);
+  padding: 16px;
+  font-family: 'Inter', sans-serif;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: var(--color-accent);
+  background-color: #8B0000;
 }
 
 #root {
-  max-width: var(--max-width);
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
