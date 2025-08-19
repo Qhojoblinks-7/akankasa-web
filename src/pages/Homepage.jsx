@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import  { Link, useNavigate } from 'react-router-dom';
 import { Book, Search, Play, Star, Calendar, MessageCircle, Users, ArrowRight, BookOpen } from 'lucide-react';
@@ -5,6 +6,7 @@ import Hero from '../components/layout/Hero';
 
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
+import { BrandButton } from '../components/ui/BrandButton';
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -84,20 +86,18 @@ const Homepage = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
-              <Link 
-                to="/learn" 
-                className="px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2 shadow-lg btn-primary"
-              >
-                <BookOpen className="w-5 h-5" />
-                <span>{t('startLearning')}</span>
-                <ArrowRight className="w-5 h-5" />
+              <Link to="/learn">
+                <BrandButton className="shadow-lg">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  <span>{t('startLearning')}</span>
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </BrandButton>
               </Link>
-              <Link 
-                to="/culture" 
-                className="px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2 btn-secondary"
-              >
-                <Users className="w-5 h-5" />
-                <span>{t('exploreCulture')}</span>
+              <Link to="/culture">
+                <BrandButton variant="secondary">
+                  <Users className="w-5 h-5 mr-2" />
+                  <span>{t('exploreCulture')}</span>
+                </BrandButton>
               </Link>
             </motion.div>
           </div>

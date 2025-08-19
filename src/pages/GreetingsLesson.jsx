@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Volume2, Play, CheckCircle, RotateCcw } from 'lucide-react';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const GreetingsLesson = () => {
@@ -38,7 +39,7 @@ const GreetingsLesson = () => {
       akan: "Maadwo",
       english: "Good evening",
       pronunciation: "MAH-dwo",
-      context: "Evening greeting, used after 6 PM",
+      context: "Evening greeting, used from 6 PM onwards",
       audio: "/audio/maadwo.mp3"
     },
     {
@@ -144,11 +145,8 @@ const GreetingsLesson = () => {
         </div>
 
         {/* Main Content Card */}
-        <motion.div 
+        <div 
           key={currentGreeting}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
           className="bg-white rounded-2xl shadow-lg p-8 mb-8"
         >
           <div className="text-center">
@@ -191,15 +189,13 @@ const GreetingsLesson = () => {
               </button>
               
               {showTranslation && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <div
                   className="mt-4"
                 >
                   <p className="text-3xl font-semibold" style={{color: '#1C1C1C'}}>
                     "{currentData.english}"
                   </p>
-                </motion.div>
+                </div>
               )}
             </div>
 
@@ -209,7 +205,7 @@ const GreetingsLesson = () => {
               <p>{currentData.context}</p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Navigation and Actions */}
         <div className="flex justify-between items-center mb-8">
@@ -294,9 +290,7 @@ const GreetingsLesson = () => {
 
         {/* Completion Message */}
         {completedGreetings.size === greetings.length && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+          <div
             className="mt-8 bg-white rounded-lg p-6 text-center border-2"
             style={{borderColor: '#C19A6B'}}
           >
@@ -314,7 +308,7 @@ const GreetingsLesson = () => {
             >
               <span>Continue to Next Lesson</span>
             </Link>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
