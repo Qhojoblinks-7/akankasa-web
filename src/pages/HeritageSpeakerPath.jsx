@@ -29,12 +29,14 @@ const HeritageSpeakerPath = () => {
   );
 
   return (
-    <div className="min-h-screen" style={{background: '#FDF6EC'}}>
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="text-white" style={{background: 'linear-gradient(135deg, #8B0000 0%, #C19A6B 100%)'}}>
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Heritage Speaker Path</h1>
-          <p className="text-xl opacity-90 max-w-3xl">Deepen your connection to Akan traditions and expressions</p>
+          <p className="text-xl opacity-90 max-w-3xl">
+            For those reconnecting with their roots - 6-8 weeks to deepen your cultural connection
+          </p>
         </div>
       </div>
 
@@ -50,7 +52,7 @@ const HeritageSpeakerPath = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
                   style={activeTab === tab.id 
-                    ? {borderColor: '#C19A6B', color: '#1C1C1C'} 
+                    ? {borderColor: '#695e46', color: '#695e46'} 
                     : {borderColor: 'transparent', color: '#6b7280'}}
                   onMouseEnter={(e) => {
                     if (activeTab !== tab.id) {
@@ -85,23 +87,23 @@ const HeritageSpeakerPath = () => {
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">What You'll Learn</h3>
                   <ul className="space-y-3">
                     <li className="flex items-start">
-                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#C19A6B'}} />
+                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
                       <span>Deepen your understanding of cultural context and traditions</span>
                     </li>
                     <li className="flex items-start">
-                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#C19A6B'}} />
+                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
                       <span>Advanced vocabulary for meaningful conversations</span>
                     </li>
                     <li className="flex items-start">
-                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#C19A6B'}} />
+                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
                       <span>Traditional expressions and their significance</span>
                     </li>
                     <li className="flex items-start">
-                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#C19A6B'}} />
+                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
                       <span>Wisdom through traditional Akan proverbs</span>
                     </li>
                     <li className="flex items-start">
-                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#C19A6B'}} />
+                      <Heart className="w-5 h-5 mr-3 mt-0.5" style={{color: '#f1d799'}} />
                       <span>Connecting with your heritage through language</span>
                     </li>
                   </ul>
@@ -109,15 +111,15 @@ const HeritageSpeakerPath = () => {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">Path Structure</h3>
                   <div className="space-y-4">
-                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#C19A6B'}}>
+                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#f1d799'}}>
                       <h4 className="font-semibold text-gray-900">Weeks 1-2: Cultural Foundations</h4>
                       <p className="text-gray-600 text-sm">Understanding traditions and context</p>
                     </div>
-                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#3B7A57'}}>
+                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#c2ae81'}}>
                       <h4 className="font-semibold text-gray-900">Weeks 3-4: Advanced Vocabulary</h4>
                       <p className="text-gray-600 text-sm">Expanding your expressive capabilities</p>
                     </div>
-                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#1C1C1C'}}>
+                    <div className="border-l-4 pl-4 py-1" style={{borderColor: '#77705c'}}>
                       <h4 className="font-semibold text-gray-900">Weeks 5-6: Proverbs & Wisdom</h4>
                       <p className="text-gray-600 text-sm">Traditional wisdom and expressions</p>
                     </div>
@@ -130,9 +132,9 @@ const HeritageSpeakerPath = () => {
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Your Heritage Journey</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                  { title: "Cultural Mastery", desc: "Understand traditions deeply", progress: "0%", color: "#3B7A57" },
-                  { title: "Expression Builder", desc: "Learn 100+ heritage words", progress: "0%", color: "#1C1C1C" },
-                  { title: "Wisdom Keeper", desc: "Master 15 traditional proverbs", progress: "0%", color: "#8B0000" }
+                  { title: "Cultural Mastery", desc: "Understand traditions deeply", progress: "0%", color: "#695e46" },
+                  { title: "Expression Builder", desc: "Learn 100+ heritage words", progress: "0%", color: "#77705c" },
+                  { title: "Wisdom Keeper", desc: "Master 15 traditional proverbs", progress: "0%", color: "#564c38" }
                 ].map((item, index) => (
                   <div key={index} className="bg-white rounded-lg shadow-lg p-6 text-center">
                     <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl font-bold" style={{backgroundColor: item.color}}>
@@ -163,7 +165,7 @@ const HeritageSpeakerPath = () => {
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{tradition.title}</h3>
                       <p className="text-gray-600 mb-4">{tradition.content}</p>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span className="px-3 py-1 rounded-full" style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}>
+                        <span className="px-3 py-1 rounded-full" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
                           {tradition.importance} Importance
                         </span>
                         <span className="text-gray-500">{tradition.region}</span>
@@ -189,10 +191,10 @@ const HeritageSpeakerPath = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {heritageVocabularyModules.map((module) => (
                 <div key={module.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                  <div className="p-6 text-white" style={{background: 'linear-gradient(135deg, #8B0000 0%, #C19A6B 100%)'}}>
+                  <div className="p-6 text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
                     <h3 className="text-xl font-bold mb-2">{module.title}</h3>
-                    <p style={{color: '#FDF6EC'}}>{module.description}</p>
-                    <p className="text-sm mt-2" style={{color: '#FDF6EC'}}>{module.words.length} words</p>
+                    <p style={{color: '#f1d799'}}>{module.description}</p>
+                    <p className="text-sm mt-2" style={{color: '#c2ae81'}}>{module.words.length} words</p>
                   </div>
                   <div className="p-6">
                     <div className="space-y-3 mb-6">
@@ -205,9 +207,9 @@ const HeritageSpeakerPath = () => {
                           <button
                             onClick={() => playAudio(word.audio)}
                             className="transition-colors"
-                            style={{color: '#8B0000'}}
-                            onMouseEnter={(e) => e.target.style.color = '#3B7A57'}
-                            onMouseLeave={(e) => e.target.style.color = '#8B0000'}
+                            style={{color: '#695e46'}}
+                            onMouseEnter={(e) => e.target.style.color = '#564c38'}
+                            onMouseLeave={(e) => e.target.style.color = '#695e46'}
                           >
                             <Volume2 className="w-4 h-4" />
                           </button>
@@ -219,10 +221,10 @@ const HeritageSpeakerPath = () => {
                     </div>
                     <Link
                       to={`/learn/vocabulary/${module.id}`}
-                      className="w-full py-3 rounded-lg transition-colors flex items-center justify-center btn-primary"
-                      style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#a98253'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#C19A6B'}
+                      className="w-full text-white py-3 rounded-lg transition-colors flex items-center justify-center"
+                      style={{backgroundColor: '#695e46'}}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#564c38'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#695e46'}
                     >
                       Study Module
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -271,7 +273,7 @@ const HeritageSpeakerPath = () => {
                         <h3 className="text-xl font-bold text-gray-900 mb-2">{proverb.akan}</h3>
                         <p className="text-lg text-gray-600 mb-2">{proverb.english}</p>
                       </div>
-                      <div className="text-4xl" style={{color: '#C19A6B'}}>
+                      <div className="text-4xl" style={{color: '#f1d799'}}>
                         ※
                       </div>
                     </div>
@@ -304,19 +306,19 @@ const HeritageSpeakerPath = () => {
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{lesson.title}</h3>
                       <p className="text-gray-600 mb-4">{lesson.description}</p>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span className="px-3 py-1 rounded-full" style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}>{lesson.level}</span>
+                        <span className="px-3 py-1 rounded-full" style={{backgroundColor: '#f1d799', color: '#564c38'}}>{lesson.level}</span>
                         <span className="flex items-center">
                           <Clock className="w-4 h-4 mr-1" />
-                          <span>{lesson.duration}</span>
+                          {lesson.duration}
                         </span>
                       </div>
                     </div>
                     <Link
                       to={`/learn/lesson/${lesson.id}`}
-                      className="px-6 py-3 rounded-lg transition-colors flex items-center btn-primary"
-                      style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#a98253'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#C19A6B'}
+                      className="text-white px-6 py-3 rounded-lg transition-colors flex items-center"
+                      style={{backgroundColor: '#695e46'}}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#564c38'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = '#695e46'}
                     >
                       Start Lesson
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -327,7 +329,7 @@ const HeritageSpeakerPath = () => {
                     <ul className="space-y-1">
                       {lesson.content.objectives.map((objective, index) => (
                         <li key={index} className="flex items-center text-gray-600">
-                          <Heart className="w-4 h-4 mr-2" style={{color: '#C19A6B'}} />
+                          <Heart className="w-4 h-4 mr-2" style={{color: '#f1d799'}} />
                           {objective}
                         </li>
                       ))}

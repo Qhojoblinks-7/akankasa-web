@@ -13,10 +13,10 @@ const CultureHighlights = () => {
   const navigate = useNavigate();
 
   const sections = [
-    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#C19A6B' },
-    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#8B0000' },
-    { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#3B7A57' },
-    { id: 'music', label: 'Music & Dance', icon: Music, color: '#1C1C1C' }
+    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
+    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#695e46' },
+    { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#77705c' },
+    { id: 'music', label: 'Music & Dance', icon: Music, color: '#c2ae81' }
   ];
 
   const regions = ['all', 'Ashanti Region', 'Eastern Region', 'Central Region', 'Western Region'];
@@ -38,7 +38,7 @@ const CultureHighlights = () => {
 
   const CultureCard = ({ item, sectionType }) => (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="relative h-48" style={{background: 'linear-gradient(135deg, #8B0000 0%, #C19A6B 100%)'}}>
+      <div className="relative h-48" style={{background: 'linear-gradient(135deg, #f1d799 0%, #564c38 100%)'}}>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-white text-center">
             <h3 className="text-xl font-bold mb-2">{item.title}</h3>
@@ -93,7 +93,7 @@ const CultureHighlights = () => {
             <h4 className="font-semibold text-gray-900 mb-2">Instruments:</h4>
             <div className="flex flex-wrap gap-2">
               {item.instruments.map((instrument, index) => (
-                <span key={index} className="px-2 py-1 rounded-full text-sm" style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}>
+                <span key={index} className="px-2 py-1 rounded-full text-sm" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
                   {instrument}
                 </span>
               ))}
@@ -114,9 +114,9 @@ const CultureHighlights = () => {
         <div className="mt-4 pt-4 border-t border-gray-200">
           <button 
             className="font-medium text-sm flex items-center transition-colors"
-            style={{color: '#8B0000'}}
-            onMouseEnter={(e) => e.target.style.color = '#3B7A57'}
-            onMouseLeave={(e) => e.target.style.color = '#8B0000'}
+            style={{color: '#564c38'}}
+            onMouseEnter={(e) => e.target.style.color = '#695e46'}
+            onMouseLeave={(e) => e.target.style.color = '#564c38'}
           >
             Learn More
             <ChevronRight className="w-4 h-4 ml-1" />
@@ -129,7 +129,7 @@ const CultureHighlights = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="text-white" style={{background: 'linear-gradient(135deg, #8B0000 0%, #C19A6B 100%)'}}>
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Akan Culture Highlights</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -150,7 +150,7 @@ const CultureHighlights = () => {
                   onClick={() => setActiveSection(section.id)}
                   className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
                   style={activeSection === section.id 
-                    ? {borderColor: '#C19A6B', color: '#1C1C1C'} 
+                    ? {borderColor: '#f1d799', color: '#564c38'} 
                     : {borderColor: 'transparent', color: '#6b7280'}}
                   onMouseEnter={(e) => {
                     if (activeSection !== section.id) {

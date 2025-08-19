@@ -71,18 +71,18 @@ const Research = () => {
       <div className="flex justify-between items-center">
         <button 
           className="font-medium text-sm flex items-center transition-colors"
-          style={{color: '#8B0000'}}
-          onMouseEnter={(e) => e.target.style.color = '#3B7A57'}
-          onMouseLeave={(e) => e.target.style.color = '#8B0000'}
+          style={{color: '#564c38'}}
+          onMouseEnter={(e) => e.target.style.color = '#695e46'}
+          onMouseLeave={(e) => e.target.style.color = '#564c38'}
         >
           <ExternalLink className="w-4 h-4 mr-2" />
           View Details
         </button>
         <button 
           className="text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm"
-          style={{backgroundColor: '#C19A6B', color: '#1C1C1C'}}
-          onMouseEnter={(e) => e.target.style.backgroundColor = '#a98253'}
-          onMouseLeave={(e) => e.target.style.backgroundColor = '#C19A6B'}
+          style={{backgroundColor: '#564c38'}}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
         >
           <Download className="w-4 h-4 mr-2" />
           Download
@@ -125,7 +125,7 @@ const Research = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="text-white" style={{background: 'linear-gradient(135deg, #8B0000 0%, #C19A6B 100%)'}}>
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Research Hub</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -146,7 +146,7 @@ const Research = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
                   style={activeTab === tab.id 
-                    ? {borderColor: '#1C1C1C', color: '#1C1C1C'} 
+                    ? {borderColor: '#564c38', color: '#564c38'} 
                     : {borderColor: 'transparent', color: '#6b7280'}}
                   onMouseEnter={(e) => {
                     if (activeTab !== tab.id) {

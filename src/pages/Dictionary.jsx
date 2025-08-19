@@ -67,9 +67,9 @@ const Dictionary = () => {
   }, [searchTerm, searchDirection]);
 
   return (
-    <div className="min-h-screen" style={{background: '#FDF6EC'}}>
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="text-white" style={{background: 'linear-gradient(135deg, #8B0000 0%, #C19A6B 100%)'}}>
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Akan Dictionary</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -88,7 +88,7 @@ const Dictionary = () => {
                 onClick={() => setSearchDirection('akan-english')}
                 className="px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 style={searchDirection === 'akan-english' 
-                  ? {backgroundColor: '#C19A6B', color: '#1C1C1C'} 
+                  ? {backgroundColor: '#564c38', color: 'white'} 
                   : {color: '#6b7280'}}
                 onMouseEnter={(e) => {
                   if (searchDirection !== 'akan-english') {
@@ -107,7 +107,7 @@ const Dictionary = () => {
                 onClick={() => setSearchDirection('english-akan')}
                 className="px-4 py-2 rounded-md text-sm font-medium transition-colors"
                 style={searchDirection === 'english-akan' 
-                  ? {backgroundColor: '#C19A6B', color: '#1C1C1C'} 
+                  ? {backgroundColor: '#564c38', color: 'white'} 
                   : {color: '#6b7280'}}
                 onMouseEnter={(e) => {
                   if (searchDirection !== 'english-akan') {
@@ -134,8 +134,8 @@ const Dictionary = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder={`Search in ${searchDirection === 'akan-english' ? 'Akan' : 'English'}...`}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-                  style={{'--tw-ring-color': '#C19A6B'}}
-                  onFocus={(e) => e.target.style.ringColor = '#C19A6B'}
+                  style={{'--tw-ring-color': '#564c38'}}
+                  onFocus={(e) => e.target.style.ringColor = '#564c38'}
                 />
               </div>
               
