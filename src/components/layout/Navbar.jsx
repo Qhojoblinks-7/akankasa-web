@@ -2,7 +2,8 @@ import React from 'react';
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, BookOpen, Users, Search, Home, Book, Lightbulb } from 'lucide-react';
+import { Menu, X, Globe, BookOpen, Users, Home, Book, Lightbulb } from 'lucide-react';
+import featureFlags from '../../config/featureFlags';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const Navbar = () => {
@@ -13,10 +14,12 @@ const Navbar = () => {
   const navigationItems = [
     { path: '/', label: t('home'), icon: Home },
     { path: '/learn', label: t('learnAkan'), icon: BookOpen },
+    // culture main page kept but subpages hidden by flags
     { path: '/culture', label: t('culture'), icon: Users },
     { path: '/dictionary', label: t('dictionary'), icon: Book },
-    { path: '/research', label: t('research'), icon: Search },
-    { path: '/community', label: t('community'), icon: Lightbulb }
+    { path: '/community', label: t('community'), icon: Lightbulb },
+    // include research link only when the feature flag is enabled
+    ...(featureFlags.showResearch ? [{ path: '/research', label: t('research'), icon: Lightbulb }] : [])
   ];
 
   const isActive = (path) => {
@@ -27,15 +30,15 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="shadow-lg sticky top-0 z-50" style={{background: 'var(--color-primary)'}}>
+    <nav className="shadow-lg sticky top-0 z-50 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundColor: 'var(--color-accent)'}}>
-              <span className="font-bold text-xl" style={{color: 'var(--color-background)'}}>অ</span>
+            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[#F1D799]">
+              <span className="font-bold text-xl text-black">অ</span>
             </div>
-            <div style={{color: 'var(--color-background)'}}>
+            <div className="text-black">
               <h1 className="font-bold text-xl">Akan Kasa</h1>
               <p className="text-xs opacity-90">ne Amammere</p>
             </div>
@@ -49,18 +52,15 @@ const Navbar = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2"
-                  style={isActive(item.path) 
-                    ? {backgroundColor: 'var(--color-accent)', color: 'var(--color-background)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'} 
-                    : {color: 'var(--color-background)'}}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${isActive(item.path) ? 'bg-[#F1D799] text-black shadow-[0_4px_6px_-1px_rgba(0,0,0,0.08)]' : 'text-black hover:bg-black/5'}`}
                   onMouseEnter={(e) => {
                     if (!isActive(item.path)) {
-                      e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                      e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive(item.path)) {
-                      e.target.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.backgroundColor = 'transparent';
                     }
                   }}
                 >
@@ -80,22 +80,21 @@ const Navbar = () => {
                 onChange={(e) => setCurrentLanguage(e.target.value)}
                 className="rounded-lg px-3 py-1 text-sm appearance-none focus:outline-none focus:ring-2"
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.2)', 
-                  color: 'var(--color-background)', 
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  focusRingColor: 'rgba(255, 255, 255, 0.5)'
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  color: '#000',
+                  border: '1px solid rgba(0, 0, 0, 0.08)'
                 }}
               >
-                <option value="en" style={{color: 'var(--color-highlight)'}}>English</option>
-                <option value="tw" style={{color: 'var(--color-highlight)'}}>Twi</option>
+                <option value="en" style={{color: '#1C1C1C'}}>English</option>
+                <option value="tw" style={{color: '#1C1C1C'}}>Twi</option>
               </select>
-              <Globe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white pointer-events-none" />
+              <Globe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black pointer-events-none" />
             </div>
 
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-white hover:bg-white/20 transition-colors"
+              className="md:hidden p-2 rounded-lg text-black hover:bg-black/5 transition-colors"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -104,7 +103,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/20">
+          <div className="md:hidden py-4 border-t border-black/10">
             <div className="flex flex-col space-y-2">
               {navigationItems.map((item) => {
                 const Icon = item.icon;
@@ -113,18 +112,15 @@ const Navbar = () => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className="px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-3"
-                    style={isActive(item.path) 
-                      ? {backgroundColor: 'var(--color-accent)', color: 'var(--color-background)'} 
-                      : {color: 'var(--color-background)'}}
+                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-3 ${isActive(item.path) ? 'bg-[#F1D799] text-black' : 'text-black hover:bg-black/5'}`}
                     onMouseEnter={(e) => {
                       if (!isActive(item.path)) {
-                        e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                        e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!isActive(item.path)) {
-                        e.target.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.backgroundColor = 'transparent';
                       }
                     }}
                   >
@@ -138,8 +134,8 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Decorative Adinkra Pattern */}
-      <div className="h-1 opacity-50" style={{background: 'linear-gradient(90deg, var(--color-accent) 0%, var(--color-primary) 50%, var(--color-accent) 100%)'}}></div>
+      {/* Decorative accent line */}
+      <div className="h-1 opacity-80 bg-[#F1D799]"></div>
     </nav>
   );
 };

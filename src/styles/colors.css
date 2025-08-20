@@ -1,0 +1,105 @@
+/* Centralized Color Palette for Akankasa Web Application */
+:root {
+  /* Primary Color Palette from Homepage */
+  --color-yellow-600: #ca8a04;
+  --color-yellow-500: #f59e0b;
+  --color-yellow-400: #fbbf24;
+  
+  /* Neutral Colors */
+  --color-gray-900: #111827;
+  --color-gray-800: #1f2937;
+  --color-gray-700: #374151;
+  --color-gray-600: #4b5563;
+  --color-gray-500: #6b7280;
+  --color-gray-400: #9ca3af;
+  --color-gray-300: #d1d5db;
+  --color-gray-200: #e5e7eb;
+  --color-gray-100: #f3f4f6;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  
+  /* Background Colors */
+  --color-background: #f9f9f9;
+  --color-background-dark: #1a1a1a;
+  --color-surface: #ffffff;
+  --color-surface-dark: #262626;
+  
+  /* Semantic Colors */
+  --color-primary: var(--color-yellow-600);
+  --color-primary-hover: var(--color-yellow-500);
+  --color-secondary: var(--color-gray-700);
+  --color-accent: var(--color-yellow-600);
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-muted: var(--color-gray-500);
+  --color-border: var(--color-gray-300);
+  --color-border-light: var(--color-gray-200);
+  
+  /* Interactive States */
+  --color-hover: var(--color-yellow-500);
+  --color-active: var(--color-yellow-600);
+  --color-focus: var(--color-yellow-400);
+  
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0f172a;
+    --color-background-dark: #020617;
+    --color-surface: #1e293b;
+    --color-surface-dark: #0f172a;
+    --color-text-primary: var(--color-gray-100);
+    --color-text-secondary: var(--color-gray-300);
+    --color-text-muted: var(--color-gray-400);
+    --color-border: var(--color-gray-700);
+    --color-border-light: var(--color-gray-600);
+  }
+}
+
+/* Utility classes for consistent styling */
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary-hover { background-color: var(--color-primary-hover); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-surface { background-color: var(--color-surface); }
+.bg-surface-dark { background-color: var(--color-surface-dark); }
+
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-muted); }
+.text-primary-brand { color: var(--color-primary); }
+
+.border-primary { border-color: var(--color-primary); }
+.border-secondary { border-color: var(--color-border); }
+
+.hover\:bg-primary:hover { background-color: var(--color-primary-hover); }
+.hover\:text-primary:hover { color: var(--color-primary); }
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}

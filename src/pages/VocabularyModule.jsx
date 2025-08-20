@@ -223,7 +223,7 @@ const VocabularyModule = () => {
               <div 
                 className="bg-white rounded-lg shadow-lg p-8 text-center cursor-pointer transform transition-transform hover:scale-105"
                 onClick={() => setShowTranslation(!showTranslation)}
-                style={{ minHeight: '300px', backgroundColor: '#FDF6EC' }}
+                style={{ minHeight: '300px', backgroundColor: 'var(--color-background)' }}
               >
                 <div className="flex justify-center mb-4">
                   <button className="text-gray-400 hover:text-gray-600">
@@ -249,7 +249,10 @@ const VocabularyModule = () => {
                       e.stopPropagation();
                       playAudio(currentWord.audio);
                     }}
-                    className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center mx-auto"
+                    className="text-white px-6 py-2 rounded-lg transition-colors flex items-center mx-auto"
+                    style={{backgroundColor: 'var(--color-accent)'}}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.85)'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-accent)'}
                   >
                     <Volume2 className="w-4 h-4 mr-2" />
                     Listen

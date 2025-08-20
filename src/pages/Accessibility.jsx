@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Accessibility = () => (
   <div className="min-h-screen bg-gray-50 py-12 flex flex-col items-center">
     <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">

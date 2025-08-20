@@ -477,26 +477,264 @@ export const dictionaryData = [
     id: 1,
     akan: "Adwo",
     english: "Peace",
-    category: "Abstract Concepts",
+    partOfSpeech: "noun",
+    dialect: "Twi",
     pronunciation: "ah-DWOH",
-    etymology: "From ancient Akan root meaning 'calm'",
+    etymology: "From an Akan root meaning 'calm', used in greetings and blessings.",
     examples: [
-      { akan: "Yɛpɛ adwo", english: "We want peace" },
-      { akan: "Adwo wɔ fie", english: "There is peace at home" }
+      { akan: "Yɛpɛ adwo", english: "We want peace", audio: "/audio/adwo_example1.mp3" },
+      { akan: "Adwo wɔ fie", english: "There is peace at home", audio: "/audio/adwo_example2.mp3" }
     ],
-    audio: "/audio/adwo.mp3"
+    audio: "/audio/adwo.mp3",
+    related: ["asomdwoe", "ahomeka"]
   },
   {
     id: 2,
     akan: "Abrewa",
     english: "Old woman",
-    category: "People",
+    partOfSpeech: "noun",
+    dialect: "Twi",
     pronunciation: "ah-BRAY-wah",
-    etymology: "Compound word: 'abere' (old) + 'baa' (woman)",
+    etymology: "Compound word: 'abre' (old) + 'wa' (woman)",
     examples: [
-      { akan: "Abrewa no yɛ nyansafoɔ", english: "The old woman is wise" }
+      { akan: "Abrewa no yɛ nyansafoɔ", english: "The old woman is wise", audio: "/audio/abrewa_example1.mp3" }
     ],
-    audio: "/audio/abrewa.mp3"
+    audio: "/audio/abrewa.mp3",
+    related: ["nana"]
+  },
+  {
+    id: 3,
+    akan: "Papa",
+    english: "Father",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "PAH-pah",
+    examples: [
+      { akan: "Papa no yɛ dɔfo", english: "Father is loving", audio: "/audio/papa_example1.mp3" }
+    ],
+    audio: "/audio/papa.mp3",
+    related: ["agya"]
+  },
+  {
+    id: 4,
+    akan: "Maame",
+    english: "Mother",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "MAH-may",
+    examples: [
+      { akan: "Maame no w) adwuma", english: "Mother is at work", audio: "/audio/maame_example1.mp3" }
+    ],
+    audio: "/audio/maame.mp3",
+    related: ["ɛna"]
+  },
+  {
+    id: 5,
+    akan: "Ɔba",
+    english: "Child",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "AW-bah",
+    examples: [
+      { akan: "Ɔba no rebɔ asuade", english: "The child is studying", audio: "/audio/oba_example1.mp3" }
+    ],
+    audio: "/audio/oba.mp3",
+    related: ["mmofra"]
+  },
+  {
+    id: 6,
+    akan: "Kasa",
+    english: "Speak / Language",
+    partOfSpeech: "verb/noun",
+    dialect: "Twi",
+    pronunciation: "KAH-sah",
+    examples: [
+      { akan: "Kasa kyerɛ me", english: "Speak to me", audio: "/audio/kasa_example1.mp3" }
+    ],
+    audio: "/audio/kasa.mp3",
+    related: ["kasakoa"]
+  },
+  {
+    id: 7,
+    akan: "Nsuo",
+    english: "Water",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "nn-SOO-oh",
+    examples: [
+      { akan: "Fa nsuo ma me", english: "Give me water", audio: "/audio/nsuo_example1.mp3" }
+    ],
+    audio: "/audio/nsuo.mp3",
+    related: ["nsu"]
+  },
+  {
+    id: 8,
+    akan: "Aduane",
+    english: "Food",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "ah-DOO-ah-nay",
+    examples: [
+      { akan: "Wopɛ aduane?", english: "Do you want food?", audio: "/audio/aduane_example1.mp3" }
+    ],
+    audio: "/audio/aduane.mp3",
+    related: ["εduane"]
+  },
+  {
+    id: 9,
+    akan: "Nkwan",
+    english: "Soup / Stew",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "nn-KWAHN",
+    examples: [
+      { akan: "Mepɛ nkwan", english: "I like soup", audio: "/audio/nkwan_example1.mp3" }
+    ],
+    audio: "/audio/nkwan.mp3",
+    related: ["ɛmo"]
+  },
+  {
+    id: 10,
+    akan: "Akwaaba",
+    english: "Welcome",
+    partOfSpeech: "interjection",
+    dialect: "Twi",
+    pronunciation: "ah-KWAH-bah",
+    examples: [
+      { akan: "Akwaaba!", english: "Welcome!", audio: "/audio/akwaaba_example1.mp3" }
+    ],
+    audio: "/audio/akwaaba.mp3",
+    related: ["akwaaba"]
+  },
+  {
+    id: 11,
+    akan: "Maakye",
+    english: "Good morning",
+    partOfSpeech: "interjection",
+    dialect: "Twi",
+    pronunciation: "MAH-chay",
+    examples: [
+      { akan: "Maakye, anka wo ho te sɛn?", english: "Good morning, how are you?", audio: "/audio/maakye_example1.mp3" }
+    ],
+    audio: "/audio/maakye.mp3",
+    related: ["maaha", "maadwo"]
+  },
+  {
+    id: 12,
+    akan: "Maaha",
+    english: "Good afternoon",
+    partOfSpeech: "interjection",
+    dialect: "Twi",
+    pronunciation: "MAH-hah",
+    examples: [
+      { akan: "Maaha, wo din de sɛn?", english: "Good afternoon, what's your name?", audio: "/audio/maaha_example1.mp3" }
+    ],
+    audio: "/audio/maaha.mp3",
+    related: ["maakye", "maadwo"]
+  },
+  {
+    id: 13,
+    akan: "Maadwo",
+    english: "Good evening",
+    partOfSpeech: "interjection",
+    dialect: "Twi",
+    pronunciation: "MAH-dwo",
+    examples: [
+      { akan: "Maadwo, meda wo ase", english: "Good evening, thank you", audio: "/audio/maadwo_example1.mp3" }
+    ],
+    audio: "/audio/maadwo.mp3",
+    related: ["maakye", "maaha"]
+  },
+  {
+    id: 14,
+    akan: "Ɛte sɛn?",
+    english: "How are you?",
+    partOfSpeech: "phrase",
+    dialect: "Twi",
+    pronunciation: "eh-tay-sen",
+    examples: [
+      { akan: "Ɛte sɛn?", english: "How are you?", audio: "/audio/etesen_example1.mp3" }
+    ],
+    audio: "/audio/etesen.mp3",
+    related: ["me ho yɛ"]
+  },
+  {
+    id: 15,
+    akan: "Me ho yɛ",
+    english: "I am fine",
+    partOfSpeech: "phrase",
+    dialect: "Twi",
+    pronunciation: "may-ho-yay",
+    examples: [
+      { akan: "Me ho yɛ, meda wo ase", english: "I am fine, thank you", audio: "/audio/mehoye_example1.mp3" }
+    ],
+    audio: "/audio/mehoye.mp3",
+    related: ["etesen"]
+  },
+  {
+    id: 16,
+    akan: "Agya",
+    english: "Father (formal)",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "AH-jah",
+    examples: [
+      { akan: "Agya no kɔ adwuma", english: "Father went to work", audio: "/audio/agya_example1.mp3" }
+    ],
+    audio: "/audio/agya.mp3",
+    related: ["papa"]
+  },
+  {
+    id: 17,
+    akan: "Nana",
+    english: "Grandparent / Elder",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "NAH-nah",
+    examples: [
+      { akan: "Nana no yɛ onimuonyam", english: "The elder is honorable", audio: "/audio/nana_example1.mp3" }
+    ],
+    audio: "/audio/nana.mp3",
+    related: ["abrewa"]
+  },
+  {
+    id: 18,
+    akan: "Wɔfa",
+    english: "Uncle",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "WAW-fah",
+    examples: [
+      { akan: "Wɔfa no reba", english: "Uncle is coming", audio: "/audio/wofa_example1.mp3" }
+    ],
+    audio: "/audio/wofa.mp3",
+    related: ["sewaa"]
+  },
+  {
+    id: 19,
+    akan: "Sewaa",
+    english: "Aunt",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "say-WAH",
+    examples: [
+      { akan: "Sewaa no yɛ adwuma", english: "Aunt is working", audio: "/audio/sewaa_example1.mp3" }
+    ],
+    audio: "/audio/sewaa.mp3",
+    related: ["wofa"]
+  },
+  {
+    id: 20,
+    akan: "Nua",
+    english: "Sibling",
+    partOfSpeech: "noun",
+    dialect: "Twi",
+    pronunciation: "NOO-ah",
+    examples: [
+      { akan: "Nua no te fie", english: "Sibling is at home", audio: "/audio/nua_example1.mp3" }
+    ],
+    audio: "/audio/nua.mp3",
+    related: ["mmofra"]
   }
 ];
 

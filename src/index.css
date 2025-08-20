@@ -2,8 +2,16 @@
 
 @layer base {
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'sans-serif';
     background-color: #f9f9f9;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georama', 'Inter', system-ui, sans-serif;
+  }
+
+  .accent-font {
+    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
   }
 }
 

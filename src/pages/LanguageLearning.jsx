@@ -50,7 +50,7 @@ const LanguageLearning = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
+      <div className="text-white" style={{background: 'linear-gradient(135deg, #ca8a04 0%, #f59e0b 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Learn Akan Language</h1>
           <p className="text-xl opacity-90 max-w-3xl">
@@ -71,7 +71,7 @@ const LanguageLearning = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
                   style={activeTab === tab.id 
-                    ? {borderColor: '#564c38', color: '#564c38'} 
+                    ? {borderColor: '#f59e0b', color: '#564c38'} 
                     : {borderColor: 'transparent', color: '#6b7280'}}
                   onMouseEnter={(e) => {
                     if (activeTab !== tab.id) {
@@ -132,7 +132,7 @@ const LanguageLearning = () => {
                         }
                         className="w-full text-white py-3 rounded-lg transition-colors text-center block"
                         style={{backgroundColor: '#564c38'}}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f59e0b'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
                       >
                         Start This Path
@@ -276,7 +276,7 @@ const LanguageLearning = () => {
                       to={`/learn/vocabulary/${module.id}`}
                       className="w-full text-white py-3 rounded-lg transition-colors flex items-center justify-center"
                       style={{backgroundColor: '#564c38'}}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f59e0b'}
                       onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
                     >
                       Study Module

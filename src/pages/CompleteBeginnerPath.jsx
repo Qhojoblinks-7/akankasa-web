@@ -260,7 +260,7 @@ const CompleteBeginnerPath = () => {
                       to={`/learn/vocabulary/${module.id}`}
                       className="w-full text-white py-3 rounded-lg transition-colors flex items-center justify-center"
                       style={{backgroundColor: '#564c38'}}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f59e0b'}
                       onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
                     >
                       Study Module

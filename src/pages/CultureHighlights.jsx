@@ -12,8 +12,8 @@ const CultureHighlights = () => {
   const sections = [
     { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
     { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#695e46' },
-    { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#77705c' },
-    { id: 'music', label: 'Music & Dance', icon: Music, color: '#c2ae81' }
+    // { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#77705c' },
+    // { id: 'music', label: 'Music & Dance', icon: Music, color: '#c2ae81' }
   ];
 
   const regions = ['all', 'Ashanti Region', 'Eastern Region', 'Central Region', 'Western Region'];
@@ -147,7 +147,7 @@ const CultureHighlights = () => {
                   onClick={() => setActiveSection(section.id)}
                   className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
                   style={activeSection === section.id 
-                    ? {borderColor: '#f1d799', color: '#564c38'} 
+                    ? {borderColor: '#f59e0b', color: '#564c38'} 
                     : {borderColor: 'transparent', color: '#6b7280'}}
                   onMouseEnter={(e) => {
                     if (activeSection !== section.id) {
@@ -254,7 +254,7 @@ const CultureHighlights = () => {
         </div>
 
         {/* Cultural Map Section */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+        {/* <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Interactive Cultural Map</h3>
           <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center">
             <div className="text-center">
@@ -263,43 +263,47 @@ const CultureHighlights = () => {
               <p className="text-sm text-gray-500">Coming soon: Click on regions to explore local customs</p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Multimedia Gallery */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Multimedia Gallery</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { type: 'video', title: 'Traditional Drumming', description: 'Learn about Akan drumming traditions' },
-              { type: 'audio', title: 'Folk Stories', description: 'Listen to traditional Akan stories' },
-              { type: 'image', title: 'Festival Photos', description: 'Browse photos from cultural festivals' },
-              { type: 'document', title: 'Research Papers', description: 'Academic studies on Akan culture' }
+              { type: 'video', title: 'Traditional Drumming', description: 'Learn about Akan drumming traditions', link: '/culture/music' },
+              { type: 'audio', title: 'Folk Stories', description: 'Listen to traditional Akan stories', link: '/culture/folklore' },
+              { type: 'image', title: 'Festival Photos', description: 'Browse photos from cultural festivals', link: '/festival-photos' },
+              { type: 'document', title: 'Research Papers', description: 'Academic studies on Akan culture', link: '/research' }
             ].map((media, index) => (
-              <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <a
+                key={index}
+                href={media.link}
+                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow block"
+              >
                 <div className="flex items-center mb-3">
-                  {media.type === 'video' && <Play className="w-6 h-6 text-red-500 mr-2" />}
-                  {media.type === 'audio' && <Music className="w-6 h-6 text-blue-500 mr-2" />}
-                  {media.type === 'image' && <Image className="w-6 h-6 text-green-500 mr-2" />}
-                  {media.type === 'document' && <BookOpen className="w-6 h-6 text-purple-500 mr-2" />}
+                  {media.type === 'video' && <Play className="w-6 h-6 text-yellow-600 mr-2" />}
+                  {media.type === 'audio' && <Music className="w-6 h-6 text-yellow-600 mr-2" />}
+                  {media.type === 'image' && <Image className="w-6 h-6 text-yellow-600 mr-2" />}
+                  {media.type === 'document' && <BookOpen className="w-6 h-6 text-yellow-600 mr-2" />}
                   <h4 className="font-semibold text-gray-900">{media.title}</h4>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">{media.description}</p>
-                <button className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                <span className="text-yellow-600 hover:text-yellow-700 text-sm font-medium">
                   Explore →
-                </button>
-              </div>
+                </span>
+              </a>
             ))}
           </div>
         </div>
 
         {/* User Contribution Section */}
-        <div className="bg-gradient-to-r from-akan-gold to-akan-red text-white rounded-lg p-8 mt-8">
+        <div className="bg-gradient-to-r from-yellow-700 to-yellow-600 text-white rounded-lg p-8 mt-8">
           <div className="text-center">
             <h3 className="text-2xl font-bold mb-4">Share Your Knowledge</h3>
             <p className="text-lg opacity-90 mb-6">
               Help preserve Akan culture by contributing your stories, photos, and knowledge
             </p>
-            <button className="bg-white text-akan-red px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+            <button className="bg-white text-yellow-500 px-6 py-3 rounded-lg font-semibold hover:text-gray-100 hover:bg-gray-500 transition-colors">
               Contribute Content
             </button>
           </div>

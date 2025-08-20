@@ -1,7 +1,9 @@
 import React from 'react';
 
-import { useState, useMemo } from 'react';
-import { Search, Volume2, BookOpen, MapPin, Heart, Download, Filter, ArrowUpDown } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Search, Volume2, BookOpen, MapPin, Heart, Download, Filter, ArrowUpDown, X } from 'lucide-react';
+import AudioPlayer from '../components/AudioPlayer';
+import { getDictionary, getFavorites, saveFavorites } from '../api';
 import { dictionaryData } from '../data/mockData';
 
 const Dictionary = () => {
@@ -13,18 +15,28 @@ const Dictionary = () => {
   const [favorites, setFavorites] = useState([]);
   const [playingAudio, setPlayingAudio] = useState(null);
 
-  const playAudio = (audioSrc) => {
-    setPlayingAudio(audioSrc);
-    setTimeout(() => setPlayingAudio(null), 1000);
-  };
+  // Load dictionary & favorites via API wrapper
+  useEffect(() => {
+    let mounted = true;
+  getDictionary().then(() => {});
+
+    getFavorites().then(list => {
+      if (mounted) setFavorites(list || []);
+    });
+
+    return () => { mounted = false; };
+  }, []);
+
 
   const toggleFavorite = (wordId) => {
-    setFavorites(prev => 
-      prev.includes(wordId) 
-        ? prev.filter(id => id !== wordId)
-        : [...prev, wordId]
-    );
+    setFavorites(prev => {
+      const next = prev.includes(wordId) ? prev.filter(id => id !== wordId) : [...prev, wordId];
+      saveFavorites(next);
+      return next;
+    });
   };
+
+  // No global audio cleanup needed; AudioPlayer manages its own audio instances
 
   const dialects = ['all', 'Twi', 'Fante', 'Akuapem'];
   const partsOfSpeech = ['all', 'noun', 'verb', 'adjective', 'adverb', 'interjection'];
@@ -53,6 +65,28 @@ const Dictionary = () => {
     return filtered;
   }, [searchTerm, selectedDialect, selectedPartOfSpeech, sortBy, searchDirection]);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSizeOptions = [10, 20, 50];
+  const [pageSize, setPageSize] = useState(10);
+
+  // Reset to first page when filters/search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedDialect, selectedPartOfSpeech, sortBy, searchDirection, pageSize]);
+
+  const totalResults = filteredWords.length;
+  const totalPages = Math.max(1, Math.ceil(totalResults / pageSize));
+
+  // Ensure currentPage is within bounds
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(totalResults, startIndex + pageSize);
+  const paginatedWords = filteredWords.slice(startIndex, endIndex);
+
   const searchSuggestions = useMemo(() => {
     if (searchTerm.length < 2) return [];
     
@@ -78,7 +112,7 @@ const Dictionary = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search Section */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 mb-6">
@@ -181,7 +215,7 @@ const Dictionary = () => {
               <select
                 value={selectedPartOfSpeech}
                 onChange={(e) => setSelectedPartOfSpeech(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
               >
                 {partsOfSpeech.map(pos => (
                   <option key={pos} value={pos}>
@@ -197,7 +231,7 @@ const Dictionary = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
               >
                 <option value="alphabetical">Alphabetical</option>
                 <option value="relevance">Relevance</option>
@@ -206,7 +240,7 @@ const Dictionary = () => {
 
             {/* Quick Actions */}
             <div className="flex items-end space-x-2">
-              <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center">
+              <button className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors flex items-center">
                 <Download className="w-4 h-4 mr-2" />
                 Export
               </button>
@@ -214,32 +248,32 @@ const Dictionary = () => {
           </div>
         </div>
 
-        {/* Dictionary Features */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  {/* Dictionary Features */}
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <BookOpen className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+            <BookOpen className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
             <h3 className="font-semibold text-gray-900 mb-2">Comprehensive</h3>
             <p className="text-sm text-gray-600">Over 500+ words with detailed definitions</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <Volume2 className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+            <Volume2 className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
             <h3 className="font-semibold text-gray-900 mb-2">Audio Pronunciation</h3>
             <p className="text-sm text-gray-600">Native speaker recordings for every word</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <MapPin className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+            <MapPin className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
             <h3 className="font-semibold text-gray-900 mb-2">Regional Variants</h3>
             <p className="text-sm text-gray-600">Different dialects and pronunciations</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <Heart className="w-8 h-8 text-purple-600 mx-auto mb-3" />
+            <Heart className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
             <h3 className="font-semibold text-gray-900 mb-2">Etymology</h3>
             <p className="text-sm text-gray-600">Word origins and historical development</p>
           </div>
         </div>
 
-        {/* Results */}
-        <div className="bg-white rounded-lg shadow-lg">
+  {/* Results */}
+  <div className="bg-white rounded-lg shadow-lg">
           {/* Results Header */}
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex justify-between items-center">
@@ -256,8 +290,9 @@ const Dictionary = () => {
           </div>
 
           {/* Word Entries */}
-          <div className="divide-y divide-gray-200">
-            {filteredWords.length === 0 ? (
+          <div className="divide-y divide-gray-200 md:grid md:grid-cols-3">
+            <div className="md:col-span-2">
+              {totalResults === 0 ? (
               <div className="px-6 py-12 text-center">
                 <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
@@ -266,19 +301,21 @@ const Dictionary = () => {
                 </p>
               </div>
             ) : (
-              filteredWords.map((word) => (
+              paginatedWords.map((word) => (
                 <div key={word.id} className="px-6 py-6 hover:bg-gray-50 transition-colors">
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
                       <div className="flex items-center space-x-4 mb-2">
                         <h3 className="text-2xl font-bold text-gray-900">{word.akan}</h3>
-                        <button
-                          onClick={() => playAudio(word.audio)}
-                          className="text-purple-600 hover:text-purple-700 transition-colors"
-                        >
-                          <Volume2 className={`w-5 h-5 ${playingAudio === word.audio ? 'animate-pulse' : ''}`} />
-                        </button>
-                        <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium">
+                        <div>
+                          <AudioPlayer
+                            src={word.audio}
+                            playing={playingAudio === word.audio}
+                            onPlay={() => setPlayingAudio(word.audio)}
+                            onPause={() => setPlayingAudio(null)}
+                          />
+                        </div>
+                        <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">
                           {word.partOfSpeech}
                         </span>
                         <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
@@ -302,12 +339,12 @@ const Dictionary = () => {
                                   <p className="font-medium text-gray-900">{example.akan}</p>
                                   <p className="text-gray-600">{example.english}</p>
                                 </div>
-                                <button
-                                  onClick={() => playAudio(example.audio)}
-                                  className="text-purple-600 hover:text-purple-700"
-                                >
-                                  <Volume2 className="w-4 h-4" />
-                                </button>
+                                <AudioPlayer
+                                  src={example.audio}
+                                  playing={playingAudio === example.audio}
+                                  onPlay={() => setPlayingAudio(example.audio)}
+                                  onPause={() => setPlayingAudio(null)}
+                                />
                               </div>
                             </div>
                           ))}
@@ -328,7 +365,7 @@ const Dictionary = () => {
                           <h4 className="font-semibold text-gray-900 mb-2">Related Words:</h4>
                           <div className="flex flex-wrap gap-2">
                             {word.related.map((relatedWord, index) => (
-                              <span key={index} className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-sm">
+                              <span key={index} className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-sm">
                                 {relatedWord}
                               </span>
                             ))}
@@ -338,28 +375,116 @@ const Dictionary = () => {
                     </div>
 
                     {/* Favorite Button */}
-                    <button
-                      onClick={() => toggleFavorite(word.id)}
-                      className={`ml-4 p-2 rounded-full transition-colors ${
-                        favorites.includes(word.id)
-                          ? 'text-red-500 bg-red-50 hover:bg-red-100'
-                          : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                      }`}
-                    >
-                      <Heart className={`w-5 h-5 ${favorites.includes(word.id) ? 'fill-current' : ''}`} />
-                    </button>
+                    <div className="ml-4 flex flex-col items-center space-y-2">
+                      <button
+                        onClick={() => toggleFavorite(word.id)}
+                        className={`p-2 rounded-full transition-colors ${
+                          favorites.includes(word.id)
+                            ? 'text-red-500 bg-red-50 hover:bg-red-100'
+                            : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+                        }`}
+                        aria-pressed={favorites.includes(word.id)}
+                      >
+                        <Heart className={`w-5 h-5 ${favorites.includes(word.id) ? 'fill-current' : ''}`} />
+                      </button>
+                      {favorites.includes(word.id) && (
+                        <button
+                          onClick={() => setFavorites(prev => prev.filter(id => id !== word.id))}
+                          className="text-xs text-gray-500 hover:text-gray-700"
+                          aria-label={`Remove ${word.akan} from favorites`}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))
             )}
+            </div>
+
+            {/* Favorites panel */}
+            <aside className="md:col-span-1 border-l border-gray-100 p-4 bg-gray-50">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Favorites ({favorites.length})</h3>
+                <button onClick={() => setFavorites([])} className="text-sm text-gray-500 hover:text-gray-700">Clear</button>
+              </div>
+              {favorites.length === 0 ? (
+                <p className="text-sm text-gray-600">No favorites yet. Click the heart next to a word to save it here.</p>
+              ) : (
+                <ul className="space-y-3">
+                  {favorites.map(fid => {
+                    const w = dictionaryData.find(d => d.id === fid);
+                    if (!w) return null;
+                    return (
+                      <li key={fid} className="bg-white p-3 rounded shadow-sm flex justify-between items-center">
+                        <div>
+                          <div className="font-medium">{w.akan}</div>
+                          <div className="text-sm text-gray-500">{w.english}</div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <button onClick={() => { setPlayingAudio(w.audio); }} className="text-yellow-600">Play</button>
+                          <button onClick={() => setFavorites(prev => prev.filter(id => id !== fid))} className="text-gray-400 hover:text-red-500">{<X className="w-4 h-4" />}</button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </aside>
           </div>
         </div>
 
-        {/* Pagination placeholder */}
-        {filteredWords.length > 10 && (
-          <div className="mt-8 flex justify-center">
-            <div className="bg-white px-6 py-3 rounded-lg shadow-md">
-              <p className="text-gray-600">Showing first 10 results. More pagination coming soon!</p>
+        {/* Pagination Controls */}
+        {totalResults > 0 && (
+          <div className="mt-6 flex flex-col-reverse md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center space-x-2">
+              <label className="text-sm text-gray-600">Page size:</label>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+                className="border border-gray-300 rounded px-2 py-1 text-sm"
+              >
+                {pageSizeOptions.map(opt => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+              <div className="text-sm text-gray-600">Showing {startIndex + 1}-{endIndex} of {totalResults}</div>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded border ${currentPage === 1 ? 'text-gray-400 border-gray-200' : 'text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              >Prev</button>
+
+              {/* page numbers, show up to 7 with windowing */}
+              <div className="flex items-center space-x-1">
+                {(() => {
+                  const pages = [];
+                  const maxButtons = 7;
+                  let start = Math.max(1, currentPage - 3);
+                  let end = Math.min(totalPages, start + maxButtons - 1);
+                  if (end - start < maxButtons - 1) start = Math.max(1, end - maxButtons + 1);
+                  for (let p = start; p <= end; p++) {
+                    pages.push(
+                      <button
+                        key={p}
+                        onClick={() => setCurrentPage(p)}
+                        className={`px-3 py-1 rounded ${p === currentPage ? 'bg-[#564c38] text-white' : 'text-gray-700 hover:bg-gray-50'}`}
+                      >{p}</button>
+                    );
+                  }
+                  return pages;
+                })()}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded border ${currentPage === totalPages ? 'text-gray-400 border-gray-200' : 'text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+              >Next</button>
             </div>
           </div>
         )}

@@ -1,9 +1,38 @@
 :root {
-  --color-primary: #C19A6B; /* Earthy Gold */
-  --color-accent: #8B0000; /* Deep Red */
-  --color-background: #FDF6EC; /* Warm Ivory */
-  --color-highlight: #1C1C1C; /* Adinkra Black */
-  --color-secondary: #3B7A57; /* Forest Green */
+  /* Updated Color Palette */
+  --color-yellow-600: #ca8a04;
+  --color-yellow-500: #f59e0b;
+  --color-yellow-400: #fbbf24;
+  
+  --color-gray-900: #111827;
+  --color-gray-800: #1f2937;
+  --color-gray-700: #374151;
+  --color-gray-600: #4b5563;
+  --color-gray-500: #6b7280;
+  --color-gray-400: #9ca3af;
+  --color-gray-300: #d1d5db;
+  --color-gray-200: #e5e7eb;
+  --color-gray-100: #f3f4f6;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  
+  --color-background: #f9f9f9;
+  --color-surface: #ffffff;
+  --color-surface-dark: #262626;
+  
+  /* Primary semantic colors */
+  --color-primary: var(--color-yellow-600);
+  --color-primary-hover: var(--color-yellow-500);
+  --color-secondary: var(--color-gray-700);
+  --color-accent: var(--color-yellow-600);
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-muted: var(--color-gray-500);
+  --color-border: var(--color-gray-300);
+  
+  /* Footer specific tokens */
+  --color-footer-bg: var(--color-gray-900);
+  --color-footer-text: var(--color-white);
 
   --font-display: 'Georama', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -17,7 +46,7 @@
 
 body {
   background-color: var(--color-background);
-  color: var(--color-highlight);
+  color: var(--color-text-primary);
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
@@ -37,19 +66,21 @@ a {
 
 a:hover {
   text-decoration: underline;
+  color: var(--color-primary-hover);
 }
 
 button {
   background-color: var(--color-primary);
-  color: var(--color-background);
+  color: var(--color-white);
   border: none;
   padding: var(--spacing-base);
   font-family: var(--font-body);
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 button:hover {
-  background-color: var(--color-accent);
+  background-color: var(--color-primary-hover);
 }
 
 #root {

@@ -7,7 +7,7 @@ const TermsOfService = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="px-4 py-6" style={{backgroundColor: '#C19A6B'}}>
+  <div className="px-4 py-6" style={{backgroundColor: 'var(--color-primary)'}}>
         <div className="max-w-4xl mx-auto">
           <Link 
             to="/" 
@@ -19,7 +19,7 @@ const TermsOfService = () => {
             <span>Back to Home</span>
           </Link>
           <h1 className="text-4xl font-bold text-white">Terms of Service</h1>
-          <p className="text-xl mt-2" style={{color: '#8B0000'}}>
+          <p className="text-xl mt-2" style={{color: 'var(--color-accent)'}}>
             Terms and conditions for using Akan Kasa ne Amammere
           </p>
         </div>
@@ -53,13 +53,13 @@ const TermsOfService = () => {
         {/* Use License */}
         <div className="bg-white rounded-lg p-8 mb-8">
           <div className="flex items-center space-x-3 mb-6">
-            <Users className="w-8 h-8" style={{color: '#564c38'}} />
-            <h2 className="text-2xl font-bold" style={{color: '#564c38'}}>Use License</h2>
+            <Users className="w-8 h-8" style={{color: 'var(--color-highlight)'}} />
+            <h2 className="text-2xl font-bold" style={{color: 'var(--color-highlight)'}}>Use License</h2>
           </div>
           
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold mb-3" style={{color: '#695e46'}}>
+              <h3 className="text-lg font-semibold mb-3" style={{color: 'var(--color-secondary)'}}>
                 Permitted Uses
               </h3>
               <ul className="list-disc list-inside space-y-2 text-gray-700 ml-4">
@@ -88,20 +88,20 @@ const TermsOfService = () => {
         {/* User Responsibilities */}
         <div className="bg-white rounded-lg p-8 mb-8">
           <div className="flex items-center space-x-3 mb-6">
-            <Shield className="w-8 h-8" style={{color: '#564c38'}} />
-            <h2 className="text-2xl font-bold" style={{color: '#564c38'}}>User Responsibilities</h2>
+            <Shield className="w-8 h-8" style={{color: 'var(--color-highlight)'}} />
+            <h2 className="text-2xl font-bold" style={{color: 'var(--color-highlight)'}}>User Responsibilities</h2>
           </div>
           
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="p-4 rounded-lg" style={{backgroundColor: '#f1d799'}}>
-              <h3 className="font-semibold mb-2" style={{color: '#564c38'}}>Account Security</h3>
-              <p className="text-sm" style={{color: '#564c38'}}>
+            <div className="p-4 rounded-lg" style={{backgroundColor: 'var(--color-primary)'}}>
+              <h3 className="font-semibold mb-2" style={{color: 'var(--color-highlight)'}}>Account Security</h3>
+              <p className="text-sm" style={{color: 'var(--color-highlight)'}}>
                 You are responsible for maintaining the confidentiality of your account credentials.
               </p>
             </div>
             <div className="p-4 rounded-lg" style={{backgroundColor: '#c2ae81'}}>
-              <h3 className="font-semibold mb-2" style={{color: '#564c38'}}>Content Guidelines</h3>
-              <p className="text-sm" style={{color: '#564c38'}}>
+              <h3 className="font-semibold mb-2" style={{color: 'var(--color-highlight)'}}>Content Guidelines</h3>
+              <p className="text-sm" style={{color: 'var(--color-highlight)'}}>
                 All user-generated content must be respectful and culturally appropriate.
               </p>
             </div>
@@ -122,10 +122,10 @@ const TermsOfService = () => {
 
         {/* Intellectual Property */}
         <div className="bg-white rounded-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold mb-6" style={{color: '#564c38'}}>Intellectual Property</h2>
+          <h2 className="text-2xl font-bold mb-6" style={{color: 'var(--color-highlight)'}}>Intellectual Property</h2>
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{backgroundColor: '#f1d799'}}></div>
+              <div className="w-2 h-2 rounded-full mt-2 flex-shrink-0" style={{backgroundColor: 'var(--color-primary)'}}></div>
               <p className="text-gray-700"><strong>Original Content:</strong> All original educational materials, designs, and code are owned by Akan Kasa ne Amammere</p>
             </div>
             <div className="flex items-start space-x-3">
@@ -146,8 +146,8 @@ const TermsOfService = () => {
         {/* Disclaimer */}
         <div className="bg-white rounded-lg p-8 mb-8">
           <div className="flex items-center space-x-3 mb-6">
-            <AlertTriangle className="w-8 h-8" style={{color: '#564c38'}} />
-            <h2 className="text-2xl font-bold" style={{color: '#564c38'}}>Disclaimer</h2>
+            <AlertTriangle className="w-8 h-8" style={{color: 'var(--color-highlight)'}} />
+            <h2 className="text-2xl font-bold" style={{color: 'var(--color-highlight)'}}>Disclaimer</h2>
           </div>
           <p className="text-gray-700 leading-relaxed mb-4">
             The information on this website is provided on an "as is" basis. To the fullest extent permitted by law, we:
@@ -173,7 +173,7 @@ const TermsOfService = () => {
         </div>
 
         {/* Contact Information */}
-        <div className="rounded-lg p-8 text-center" style={{backgroundColor: '#564c38', color: 'white'}}>
+  <div className="rounded-lg p-8 text-center" style={{backgroundColor: 'var(--color-highlight)', color: 'white'}}>
           <h2 className="text-2xl font-bold mb-4">Questions About These Terms?</h2>
           <p className="mb-6">
             If you have any questions about these Terms of Service, please contact us.
@@ -182,21 +182,21 @@ const TermsOfService = () => {
             <a 
               href="mailto:legal@akankasa.org"
               className="px-6 py-3 rounded-lg font-medium transition-colors"
-              style={{backgroundColor: '#f1d799', color: '#564c38'}}
+              style={{backgroundColor: 'var(--color-primary)', color: 'var(--color-highlight)'}}
             >
               Email Legal Team
             </a>
             <Link
               to="/community"
               className="px-6 py-3 rounded-lg font-medium transition-colors border"
-              style={{borderColor: '#f1d799', color: '#f1d799'}}
+              style={{borderColor: 'var(--color-primary)', color: 'var(--color-primary)'}}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#f1d799';
-                e.target.style.color = '#564c38';
+                e.target.style.backgroundColor = 'var(--color-primary)';
+                e.target.style.color = 'var(--color-highlight)';
               }}
               onMouseLeave={(e) => {
                 e.target.style.backgroundColor = 'transparent';
-                e.target.style.color = '#f1d799';
+                e.target.style.color = 'var(--color-primary)';
               }}
             >
               Join Community Discussion

@@ -25,7 +25,9 @@
     "vite": "^7.0.4"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "framer-motion": "^12.23.12",
+    "heroicons": "^2.2.0",
     "lucide-react": "^0.536.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

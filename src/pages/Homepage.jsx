@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
+import HeroSection from '../components/layout/Hero'
+import FeatureSection from '../components/FeatureSection';
 
 const Homepage = () => {
   const { t } = useLanguage();
@@ -14,32 +16,32 @@ const Homepage = () => {
       description: t('basicGreetingsDesc'),
       category: t('languageLearning'),
       link: "/learn/greetings",
-      icon: MessageCircle,
-      color: "#564c38"
+  icon: MessageCircle,
+  color: "var(--color-yellow-600)"
     },
     {
       title: t('adinkraSymbols'),
       description: t('adinkraSymbolsDesc'),
       category: t('culture'),
       link: "/culture",
-      icon: Star,
-      color: "#695e46"
+  icon: Star,
+  color: "var(--color-yellow-500)"
     },
     {
       title: t('akanDictionary'),
       description: t('akanDictionaryDesc'),
       category: t('dictionary'),
       link: "/dictionary",
-      icon: Book,
-      color: "#77705c"
+  icon: Book,
+  color: "var(--color-yellow-400)"
     },
     {
       title: t('culturalEvents'),
       description: t('culturalEventsDesc'),
       category: t('community'),
       link: "/community",
-      icon: Calendar,
-      color: "#c2ae81"
+  icon: Calendar,
+  color: "var(--color-yellow-600)"
     }
   ];
 
@@ -52,140 +54,13 @@ const Homepage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden" style={{background: 'linear-gradient(135deg, #695e46 0%, #564c38 100%)'}}>
-        <div className="absolute inset-0 akan-pattern opacity-10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center">
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-4xl md:text-6xl font-bold text-white mb-6"
-            >
-              {t('welcomeTitle')}
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto"
-            >
-              {t('welcomeDescription')}
-            </motion.p>
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            >
-              <Link 
-                to="/learn" 
-                className="px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2 shadow-lg"
-                style={{backgroundColor: '#f1d799', color: '#564c38'}}
-                onMouseEnter={(e) => e.target.style.backgroundColor = '#c2ae81'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = '#f1d799'}
-              >
-                <BookOpen className="w-5 h-5" />
-                <span>{t('startLearning')}</span>
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link 
-                to="/culture" 
-                className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center space-x-2"
-                style={{borderColor: '#f1d799', color: '#f1d799'}}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#f1d799';
-                  e.target.style.color = '#564c38';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.color = '#f1d799';
-                }}
-              >
-                <Users className="w-5 h-5" />
-                <span>{t('exploreCulture')}</span>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
-      </section>
+  {/* Hero Section (shared component) */}
+  <HeroSection />
 
-      {/* Quick Start Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {t('quickStartTitle')}
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {t('quickStartDescription')}
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: BookOpen,
-                title: t('learnLanguage'),
-                description: t('learnLanguageDesc'),
-                link: "/learn",
-                color: "linear-gradient(135deg, #564c38 0%, #695e46 100%)"
-              },
-              {
-                icon: Users,
-                title: t('exploreCulture'),
-                description: t('exploreCultureDesc'),
-                link: "/culture",
-                color: "linear-gradient(135deg, #695e46 0%, #77705c 100%)"
-              },
-              {
-                icon: Book,
-                title: t('useDictionary'),
-                description: t('useDictionaryDesc'),
-                link: "/dictionary",
-                color: "linear-gradient(135deg, #77705c 0%, #c2ae81 100%)"
-              },
-              {
-                icon: Search,
-                title: t('researchHub'),
-                description: t('researchHubDesc'),
-                link: "/research",
-                color: "linear-gradient(135deg, #c2ae81 0%, #f1d799 100%)"
-              }
-            ].map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
-                  <Link
-                    to={item.link}
-                    className="block p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-gray-200 group"
-                  >
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300" style={{background: item.color}}>
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
-                    <p className="text-gray-600">{item.description}</p>
-                    <div className="mt-4 flex items-center transition-colors" style={{color: '#564c38'}}>
-                      <span className="text-sm font-medium">{t('getStarted')}</span>
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+  <FeatureSection />
 
       {/* Featured Content */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-black-70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -212,11 +87,11 @@ const Homepage = () => {
                   >
                     <div className="h-32 relative" style={{backgroundColor: content.color}}>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Icon className="w-12 h-12 text-white" />
+                        <Icon className="w-12 h-12 text-black" />
                       </div>
                     </div>
                     <div className="p-6">
-                      <span className="inline-block px-3 py-1 text-xs font-medium rounded-full mb-3" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
+                      <span className="inline-block px-3 py-1 text-xs font-medium rounded-full mb-3" style={{backgroundColor: 'var(--color-primary)', color: 'var(--color-highlight)'}}>
                         {content.category}
                       </span>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:transition-colors" style={{'&:hover': {color: '#564c38'}}}>
@@ -233,7 +108,7 @@ const Homepage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 text-white" style={{backgroundColor: '#564c38'}}>
+  {/* <section className="py-16 text-white" style={{backgroundColor: 'var(--color-highlight)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -259,7 +134,7 @@ const Homepage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Call to Action */}
       <section className="py-16 bg-white">
@@ -274,9 +149,9 @@ const Homepage = () => {
             <Link
               to="/learn"
               className="px-8 py-4 rounded-lg font-semibold text-white transition-colors inline-flex items-center justify-center space-x-2"
-              style={{backgroundColor: '#564c38'}}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
+              style={{backgroundColor: '#ca8a04'}}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#ca8a04'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#f59e0b'}
                           >
                 <Play className="w-5 h-5" />
                 <span>{t('startLearningNow')}</span>
@@ -284,14 +159,14 @@ const Homepage = () => {
               <Link
                 to="/community"
                 className="border-2 px-8 py-4 rounded-lg font-semibold transition-colors inline-flex items-center justify-center space-x-2"
-                style={{borderColor: '#564c38', color: '#564c38'}}
+                style={{borderColor: 'var(--color-highlight)', color: 'var(--color-highlight)'}}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#564c38';
+                  e.target.style.backgroundColor = '#f59e0b';
                   e.target.style.color = 'white';
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.backgroundColor = 'transparent';
-                  e.target.style.color = '#564c38';
+                  e.target.style.color = 'var(--color-highlight)';
                 }}
               >
                 <Users className="w-5 h-5" />

@@ -4,12 +4,27 @@ import { ArrowLeft } from 'lucide-react';
 import { forumData } from '../data/mockData';
 
 const DiscussionView = () => {
-  const { postId } = useParams();
-  const post = forumData.find(p => p.id === parseInt(postId));
-  const [replies, setReplies] = useState(post ? post.repliesList || [] : []);
+  const { id } = useParams();
+  const post = forumData.find(p => p.id === parseInt(id));
+
+  // Demo fallback post and replies for simulation when a post is not found
+  const demoPost = {
+    id: 9999,
+    title: 'How can I improve my Akan pronunciation? 🎙️',
+    content: 'I struggle with tone and vowel length. What exercises have worked for you?',
+    author: 'Kofi',
+    repliesList: [
+      { id: 1, author: 'Ama', content: "Practice with native audio and shadow-speak sentence-by-sentence. I use recordings from the lessons.", time: '2h' },
+      { id: 2, author: 'Yaw', content: "Try recording yourself and compare waveforms — also slow playback helps.", time: '1h' },
+      { id: 3, author: 'Abena', content: "A language partner helped me a lot. We do 15-minute sessions 3x/week.", time: '20m' }
+    ]
+  };
+
+  const initialPost = post || demoPost;
+  const [replies, setReplies] = useState(initialPost ? (initialPost.repliesList || []) : []);
   const [newReply, setNewReply] = useState('');
 
-  if (!post) {
+  if (!initialPost) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -22,7 +37,13 @@ const DiscussionView = () => {
 
   const handleAddReply = () => {
     if (newReply.trim() === '') return;
-    setReplies([...replies, { id: Date.now(), content: newReply }]);
+    const reply = {
+      id: Date.now(),
+      author: 'You',
+      content: newReply,
+      time: 'now'
+    };
+    setReplies([...replies, reply]);
     setNewReply('');
   };
 
@@ -31,20 +52,39 @@ const DiscussionView = () => {
       <Link to="/community" className="flex items-center text-blue-600 hover:underline mb-4">
         <ArrowLeft className="mr-2" /> Back to Community
       </Link>
-      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-      <p className="mb-4">{post.content}</p>
+
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <h1 className="text-3xl font-bold mb-2">{initialPost.title}</h1>
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-sm text-gray-600">by {initialPost.author || 'Community'}</div>
+          <div className="text-sm text-gray-500">{initialPost.repliesList ? `${initialPost.repliesList.length} replies` : `${replies.length} replies`}</div>
+        </div>
+        <p className="mb-4 text-gray-700">{initialPost.content}</p>
+      </div>
+
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">Replies</h2>
+        <h2 className="text-xl font-semibold mb-4">Conversation</h2>
+
         {replies.length === 0 ? (
           <p className="text-gray-600">No replies yet. Be the first to reply!</p>
         ) : (
           <ul className="space-y-4">
-            {replies.map(reply => (
-              <li key={reply.id} className="border p-3 rounded">{reply.content}</li>
+      {replies.map(reply => (
+              <li key={reply.id} className="flex gap-4">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold" style={{backgroundColor: 'var(--color-primary)'}}>{(reply.author || 'U').slice(0,1)}</div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-medium text-gray-900">{reply.author}</div>
+                    <div className="text-xs text-gray-500">{reply.time || ''}</div>
+                  </div>
+                  <div className="mt-1 text-gray-700 p-3 bg-gray-50 rounded">{reply.content}</div>
+                </div>
+              </li>
             ))}
           </ul>
         )}
       </div>
+
       <div>
         <textarea
           className="w-full border rounded p-2 mb-2"
@@ -53,12 +93,26 @@ const DiscussionView = () => {
           onChange={e => setNewReply(e.target.value)}
           placeholder="Write your reply here..."
         />
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          onClick={handleAddReply}
-        >
-          Add Reply
-        </button>
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-gray-500">Posting as <strong>You</strong></div>
+          <div className="flex items-center space-x-3">
+            <button
+              className="px-4 py-2 rounded border text-gray-700 hover:bg-gray-100"
+              onClick={() => setNewReply('')}
+            >
+              Clear
+            </button>
+            <button
+              className="px-4 py-2 rounded"
+              style={{backgroundColor: 'var(--color-accent)', color: 'var(--color-background)'}}
+              onClick={handleAddReply}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.85)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--color-accent)'}
+            >
+              Add Reply
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

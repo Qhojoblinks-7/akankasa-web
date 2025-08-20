@@ -9,10 +9,10 @@
 }
 
 .hero-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+.hero-button-primary {
+  background-color: var(--color-primary);
+  color: var(--color-highlight);
+}
   height: 100%;
   background-image: url('../assets/hero.jpg');
   background-size: cover;
@@ -88,13 +88,13 @@
 }
 
 .hero-button-secondary {
-  border: 2px solid #f1d799;
-  color: #f1d799;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
 }
 
 .hero-button-secondary:hover {
-  background-color: #f1d799;
-  color: #564c38;
+  background-color: var(--color-primary);
+  color: var(--color-highlight);
   transform: translateY(-2px);
 }
 
