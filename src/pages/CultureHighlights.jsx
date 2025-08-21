@@ -270,10 +270,10 @@ const CultureHighlights = () => {
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Multimedia Gallery</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { type: 'video', title: 'Traditional Drumming', description: 'Learn about Akan drumming traditions', link: '/culture/music' },
-              { type: 'audio', title: 'Folk Stories', description: 'Listen to traditional Akan stories', link: '/culture/folklore' },
+              { type: 'video', title: 'Traditional Drumming', description: 'Learn about Akan drumming traditions', link: '/culture/drumming' },
+              { type: 'audio', title: 'Folk Stories', description: 'Listen to traditional Akan stories', link: '/culture/folk-stories' },
               { type: 'image', title: 'Festival Photos', description: 'Browse photos from cultural festivals', link: '/festival-photos' },
-              { type: 'document', title: 'Research Papers', description: 'Academic studies on Akan culture', link: '/research' }
+              { type: 'document', title: 'Research Papers', description: 'Academic studies on Akan culture', link: '/culture/research-papers' }
             ].map((media, index) => (
               <a
                 key={index}

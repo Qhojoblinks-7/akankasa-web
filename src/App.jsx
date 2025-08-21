@@ -34,6 +34,10 @@ import EventCreation from './pages/EventCreation';
 import EventsPage from './pages/EventsPage';
 import EventRegistration from './pages/EventRegistration';
 import CultureArts from './pages/CultureArts';
+import CultureDrumming from './pages/CultureDrumming';
+import CultureFolkStories from './pages/CultureFolkStories';
+import CultureResearchPapers from './pages/CultureResearchPapers';
+import FestivalPhotosPage from './pages/FestivalPhotosPage';
 import featureFlags from './config/featureFlags';
 
 function App() {
@@ -66,6 +70,10 @@ function App() {
                   <Route path="/culture/arts" element={<CultureArts />} />
                   <Route path="/culture/music" element={<CultureMusic />} />
                   <Route path="/culture/folklore" element={<CultureFolklore />} />
+                  <Route path="/culture/drumming" element={<CultureDrumming />} />
+                  <Route path="/culture/folk-stories" element={<CultureFolkStories />} />
+                  <Route path="/culture/research-papers" element={<CultureResearchPapers />} />
+                  <Route path="/festival-photos" element={<FestivalPhotosPage />} />
                 </>
               )}
               <Route path="/learn/alphabet" element={<LearnAlphabet />} />
