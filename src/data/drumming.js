@@ -1,0 +1,72 @@
+const drummingLessons = [
+  {
+    id: 1,
+    title: "Introduction to Kagan Drum",
+    description: "Learn the basics of the Kagan, a double-headed drum used in storytelling",
+    thumbnail: "/images/kagan-drum.jpg",
+    instrument: "Kagan",
+    difficulty: "Beginner",
+    bpm: 80,
+    type: "video",
+    videoUrl: "/video/kagan-intro.mp4",
+    audioUrl: "/audio/kagan-intro.mp3",
+    patternNotation: "Tone - Tone - Slap - Tone - Tone - Slap",
+    transcript: "The Kagan drum is a double-headed drum with a unique hourglass shape...",
+    instructor: "Kofi Asante",
+    duration: "15 minutes",
+    region: "Ashanti"
+  },
+  {
+    id: 2,
+    title: "Dondo Rhythms for Beginners",
+    description: "Master the fundamental rhythms of the Dondo drum",
+    thumbnail: "/images/dondo-drum.jpg",
+    instrument: "Dondo",
+    difficulty: "Beginner",
+    bpm: 100,
+    type: "video",
+    videoUrl: "/video/dondo-beginner.mp4",
+    audioUrl: "/audio/dondo-beginner.mp3",
+    patternNotation: "Bass - Tone - Tone - Bass - Tone - Tone",
+    transcript: "The Dondo is a cylindrical drum that produces deep, resonant sounds...",
+    instructor: "Yaw Mensah",
+    duration: "12 minutes",
+    region: "Akuapem"
+  },
+  {
+    id: 3,
+    title: "Advanced Atumpan Techniques",
+    description: "Learn complex polyrhythms with the Atumpan talking drums",
+    thumbnail: "/images/atumpan-drum.jpg",
+    instrument: "Atumpan",
+    difficulty: "Advanced",
+    bpm: 120,
+    type: "video",
+    videoUrl: "/video/atumpan-advanced.mp4",
+    audioUrl: "/audio/atumpan-advanced.mp3",
+    patternNotation: "Tone - Slap - Bass - Slap - Tone - Bass",
+    transcript: "The Atumpan are talking drums that can mimic the tonal patterns of Akan speech...",
+    instructor: "Kwame Boateng",
+    duration: "20 minutes",
+    region: "Ashanti"
+  },
+  {
+    id: 4,
+    title: "Fontomfrom Ensemble Playing",
+    description: "Learn to play in a traditional Fontomfrom drum ensemble",
+    thumbnail: "/images/fontomfrom-drum.jpg",
+    instrument: "Fontomfrom",
+    difficulty: "Intermediate",
+    bpm: 90,
+    type: "video",
+    videoUrl: "/video/fontomfrom-ensemble.mp4",
+    audioUrl: "/audio/fontomfrom-ensemble.mp3",
+    patternNotation: "Bass - Bass - Tone - Tone - Slap - Slap",
+    transcript: "The Fontomfrom is a large ceremonial drum played in pairs during important occasions...",
+    instructor: "Afua Darko",
+    duration: "18 minutes",
+    region: "Ashanti"
+  }
+];
+
+export default drummingLessons;
