@@ -1,10 +1,11 @@
 // src/components/CultureHighlights.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, X,Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
 import { culturalData } from '../data/mockData';
 import ContributeModal from './ContributeModal';
 
 const MOD_QUEUE_KEY = 'akan:moderation-queue:culture';
+const PUBLISHED_CULTURE_KEY = 'akan:published:culture';
 
 const CultureHighlights = () => {
 	const [activeSection, setActiveSection] = useState('traditions');
@@ -12,6 +13,7 @@ const CultureHighlights = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // New state to hold the selected item
+  const [published, setPublished] = useState([]);
 
 	const sections = [
 		{ id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
@@ -22,8 +24,18 @@ const CultureHighlights = () => {
 
 	const regions = ['all', 'Ashanti Region', 'Eastern Region', 'Central Region', 'Western Region'];
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PUBLISHED_CULTURE_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      setPublished(list.filter(i => !i.publishAt || new Date(i.publishAt) <= new Date()));
+    } catch { setPublished([]); }
+  }, []);
+
 	const getCurrentSectionData = () => {
-		return culturalData[activeSection] || [];
+		const base = culturalData[activeSection] || [];
+    const extra = published.filter(p => p.section === activeSection);
+		return [...base, ...extra];
 	};
 
 	const filteredContent = getCurrentSectionData().filter(item => {
@@ -59,7 +71,7 @@ const CultureHighlights = () => {
 
 
   const CultureCard = ({ item, sectionType }) => (
-		<div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+		<div className="bg.white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
 			<div className="relative h-48" style={{background: 'linear-gradient(135deg, #f1d799 0%, #564c38 100%)'}}>
 				<div className="absolute inset-0 flex items-center justify-center">
 					<div className="text-white text-center">
@@ -68,7 +80,7 @@ const CultureHighlights = () => {
 					</div>
 				</div>
 				<div className="absolute top-4 right-4">
-					<span className="bg-white/20 text-white px-2 py-1 rounded-full text-xs">
+					<span className="bg-white/20 text.white px-2 py-1 rounded-full text-xs">
 						{item.region || 'All Regions'}
 					</span>
 				</div>
@@ -98,7 +110,7 @@ const CultureHighlights = () => {
 						<h4 className="font-semibold text-gray-900 mb-2">Examples:</h4>
 						<div className="space-y-2">
 							{item.examples.map((example, index) => (
-								<div key={index} className="bg-gray-50 p-3 rounded-lg">
+								<div key={index} className="bg.gray-50 p-3 rounded-lg">
 									<div className="font-medium text-gray-900">{example.symbol}</div>
 									<div className="text-sm text-gray-600">{example.meaning}</div>
 									<div className="text-xs text-gray-500">{example.description}</div>
@@ -124,7 +136,7 @@ const CultureHighlights = () => {
 				{item.tags && (
 					<div className="flex flex-wrap gap-2">
 						{item.tags.map((tag, index) => (
-							<span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+							<span key={index} className="bg.gray-100 text-gray-700 px-2 py-1 rounded text-xs">
 								#{tag}
 							</span>
 						))}
@@ -156,7 +168,7 @@ const CultureHighlights = () => {
 
     return (
       <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
-        <div className="relative p-8 w-full max-w-2xl bg-white rounded-lg shadow-xl m-4">
+        <div className="relative p-8 w-full max-w-2xl bg.white rounded-lg shadow-xl m-4">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -225,18 +237,6 @@ const CultureHighlights = () => {
                   style={activeSection === section.id 
                     ? {borderColor: '#564c38', color: '#564c38'} 
                     : {borderColor: 'transparent', color: '#6b7280'}}
-                  onMouseEnter={(e) => {
-                    if (activeSection !== section.id) {
-                      e.target.style.color = '#374151';
-                      e.target.style.borderColor = '#d1d5db';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activeSection !== section.id) {
-                      e.target.style.color = '#6b7280';
-                      e.target.style.borderColor = 'transparent';
-                    }
-                  }}
                 >
                   <Icon className="w-5 h-5" />
                   <span>{section.label}</span>

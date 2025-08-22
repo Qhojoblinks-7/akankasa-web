@@ -3,6 +3,8 @@ import React from 'react';
 const MOD_QUEUE_KEY = 'akan:moderation-queue:culture';
 const DICT_QUEUE_KEY = 'akan:moderation-queue:dictionary';
 const RESEARCH_QUEUE_KEY = 'akan:moderation-queue:research';
+const PUBLISHED_CULTURE_KEY = 'akan:published:culture';
+const PUBLISHED_RESEARCH_KEY = 'akan:published:research';
 
 const AdminModeration = () => {
 	const [queue, setQueue] = React.useState([]);
@@ -55,6 +57,21 @@ const AdminModeration = () => {
 		persist(key, next);
 	};
 
+	const schedulePublish = (queueKey, setQueueState, list, id, dateStr, publishedKey) => {
+		const next = list.map(item => item.id === id ? { ...item, publishAt: dateStr } : item);
+		setQueueState(next);
+		persist(queueKey, next);
+		// if scheduled in past or now, move to published
+		if (dateStr && new Date(dateStr) <= new Date()) {
+			try {
+				const rawPub = localStorage.getItem(publishedKey);
+				const published = rawPub ? JSON.parse(rawPub) : [];
+				const target = next.find(i => i.id === id);
+				localStorage.setItem(publishedKey, JSON.stringify([...published, { ...target, status: 'published' }]));
+			} catch {}
+		}
+	};
+
 	const TabButton = ({ id, children }) => (
 		<button
 			onClick={() => setActiveTab(id)}
@@ -89,13 +106,14 @@ const AdminModeration = () => {
 							<ul className="space-y-3">
 								{queue.map(item => (
 									<li key={item.id} className="bg-white rounded-lg shadow p-4">
-										<div className="flex items-center justify-between">
-											<div>
+										<div className="flex items-start justify-between gap-4">
+											<div className="flex-1">
 												<div className="text-sm text-gray-500">{item.section}</div>
 												<div className="text-lg font-semibold">{item.title}</div>
 												<div className="text-gray-600 line-clamp-2 max-w-3xl">{item.description}</div>
 											</div>
 											<div className="flex items-center space-x-2">
+												<input type="datetime-local" className="border rounded px-2 py-1 text-sm" value={item.publishAt || ''} onChange={(e) => schedulePublish(MOD_QUEUE_KEY, setQueue, queue, item.id, e.target.value, PUBLISHED_CULTURE_KEY)} aria-label="Schedule publish" />
 												<span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : item.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{item.status}</span>
 												<button onClick={() => approve(MOD_QUEUE_KEY, setQueue, queue, item.id)} className="px-3 py-1.5 text-sm rounded bg-green-600 text-white">Approve</button>
 												<button onClick={() => rejectItem(MOD_QUEUE_KEY, setQueue, queue, item.id)} className="px-3 py-1.5 text-sm rounded bg-red-600 text-white">Reject</button>
@@ -164,8 +182,8 @@ const AdminModeration = () => {
 							<ul className="space-y-3">
 								{researchQueue.map(item => (
 									<li key={item.id} className="bg-white rounded-lg shadow p-4">
-										<div className="flex items-start justify-between">
-											<div className="max-w-3xl">
+										<div className="flex items-start justify-between gap-4">
+											<div className="max-w-3xl flex-1">
 												<div className="text-lg font-semibold">{item.title}</div>
 												<div className="text-sm text-gray-500">{item.author} • {item.level} • {item.methodology} • {item.publicationDate}</div>
 												{item.abstract && <div className="text-sm text-gray-600 mt-1">{item.abstract}</div>}
@@ -176,6 +194,7 @@ const AdminModeration = () => {
 												)}
 											</div>
 											<div className="flex items-center space-x-2">
+												<input type="datetime-local" className="border rounded px-2 py-1 text-sm" value={item.publishAt || ''} onChange={(e) => schedulePublish(RESEARCH_QUEUE_KEY, setResearchQueue, researchQueue, item.id, e.target.value, PUBLISHED_RESEARCH_KEY)} aria-label="Schedule publish" />
 												<span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : item.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{item.status}</span>
 												<button onClick={() => approve(RESEARCH_QUEUE_KEY, setResearchQueue, researchQueue, item.id)} className="px-3 py-1.5 text-sm rounded bg-green-600 text-white">Approve</button>
 												<button onClick={() => rejectItem(RESEARCH_QUEUE_KEY, setResearchQueue, researchQueue, item.id)} className="px-3 py-1.5 text-sm rounded bg-red-600 text-white">Reject</button>

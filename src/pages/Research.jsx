@@ -1,10 +1,12 @@
 import React from 'react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Download, Filter, BookOpen, Users, GraduationCap, FileText, ExternalLink, MessageSquare, Plus } from 'lucide-react';
 import { researchData, forumData } from '../data/mockData';
 import ResearchUploadModal from '../components/ResearchUploadModal.jsx';
 import { submitResearchUpload } from '../api';
+
+const PUBLISHED_RESEARCH_KEY = 'akan:published:research';
 
 const Research = () => {
   const [activeTab, setActiveTab] = useState('resources');
@@ -19,6 +21,15 @@ const Research = () => {
   const [dateTo, setDateTo] = useState('');
 
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [published, setPublished] = useState([]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PUBLISHED_RESEARCH_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      setPublished(list.filter(i => !i.publishAt || new Date(i.publishAt) <= new Date()));
+    } catch { setPublished([]); }
+  }, []);
 
   const tabs = [
     { id: 'resources', label: 'Resource Library', icon: BookOpen },
@@ -32,7 +43,7 @@ const Research = () => {
   const methodologies = ['all', 'descriptive', 'comparative', 'corpus', 'ethnographic', 'experimental'];
 
   const getAllResources = () => {
-    return researchData.papers || [];
+    return [...(researchData.papers || []), ...published];
   };
 
   const filteredResources = getAllResources().filter(resource => {
@@ -63,7 +74,7 @@ const Research = () => {
           <p className="text-sm text-gray-600 mb-2">by {resource.author}</p>
           <p className="text-gray-700 mb-4">{resource.abstract}</p>
         </div>
-        <div className="flex flex-col items-end space-y-2 ml-4">
+        <div className="flex flex-col items.end space-y-2 ml-4">
           <span className="px-2 py-1 rounded-full text-xs font-medium"
                 style={{
                   backgroundColor: (resource.level || '').toLowerCase() === 'beginner' ? '#f1d799' : 
@@ -108,11 +119,11 @@ const Research = () => {
 
   const ForumPost = ({ post }) => (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items.start mb-4">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">{post.title}</h3>
           <p className="text-gray-700 mb-3">{post.content}</p>
-          <div className="flex items-center space-x-4 text-sm text-gray-500">
+          <div className="flex items-center space.x-4 text-sm text-gray-500">
             <span>by {post.author}</span>
             <span>{post.lastActivity}</span>
             <span>{post.replies} replies</span>
