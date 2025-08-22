@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Volume2, Book, Users, Star, Clock, ArrowRight, CheckCircle } from 'lucide-react';
 import { alphabetData, greetingsData, vocabularyModules, lessonsData } from '../data/mockData';
+import { useProgress } from '../contexts/ProgressContext.jsx';
 
 const LanguageLearning = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [playingAudio, setPlayingAudio] = useState(null);
+  const { updateLessonProgress, getModuleProgress } = useProgress();
 
   const playAudio = (audioSrc) => {
     // Simulate audio playing
@@ -186,7 +188,7 @@ const LanguageLearning = () => {
                       <div className="text-4xl font-bold mb-2" style={{color: '#564c38'}}>{letter.letter}</div>
                       <div className="text-sm text-gray-600 mb-2">{letter.pronunciation}</div>
                       <button
-                        onClick={() => playAudio(letter.audio)}
+                        onClick={() => { playAudio(letter.audio); updateLessonProgress('alphabet', letter.letter, true); }}
                         className="flex items-center justify-center w-full py-2 px-3 rounded-lg transition-colors"
                         style={{backgroundColor: '#f1d799', color: '#564c38'}}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#c2ae81'}
@@ -199,6 +201,9 @@ const LanguageLearning = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+              <div className="mt-6 h-2 bg-gray-200 rounded">
+                <div className="h-2 rounded" style={{width: `${getModuleProgress('alphabet', alphabetData.length)}%`, backgroundColor: '#ca8a04'}} />
               </div>
             </div>
           </div>
@@ -220,7 +225,7 @@ const LanguageLearning = () => {
                     </div>
                     <div className="text-center">
                       <button
-                        onClick={() => playAudio(greeting.audio)}
+                        onClick={() => { playAudio(greeting.audio); updateLessonProgress('greetings', greeting.id, true); }}
                         className="text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center mx-auto"
                         style={{backgroundColor: '#564c38'}}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
@@ -233,6 +238,9 @@ const LanguageLearning = () => {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-6 h-2 bg-gray-200 rounded">
+              <div className="h-2 rounded" style={{width: `${getModuleProgress('greetings', greetingsData.length)}%`, backgroundColor: '#ca8a04'}} />
             </div>
           </div>
         )}
@@ -258,30 +266,21 @@ const LanguageLearning = () => {
                             <span className="text-gray-600 ml-2">- {word.english}</span>
                           </div>
                           <button
-                            onClick={() => playAudio(word.audio)}
-                            className="transition-colors"
-                            style={{color: '#564c38'}}
-                            onMouseEnter={(e) => e.target.style.color = '#695e46'}
-                            onMouseLeave={(e) => e.target.style.color = '#564c38'}
+                            onClick={() => { playAudio(word.audio); updateLessonProgress(`vocab-${module.id}`, `${module.id}-${index}`, true); }}
+                            className="p-2 rounded-full hover:bg-gray-100"
                           >
-                            <Volume2 className="w-4 h-4" />
+                            <Volume2 className={`w-5 h-5 ${playingAudio === word.audio ? 'animate-pulse' : ''}`} />
                           </button>
                         </div>
                       ))}
-                      {module.words.length > 3 && (
-                        <p className="text-sm text-gray-500">+{module.words.length - 3} more words</p>
-                      )}
                     </div>
-                    <Link
-                      to={`/learn/vocabulary/${module.id}`}
-                      className="w-full text-white py-3 rounded-lg transition-colors flex items-center justify-center"
-                      style={{backgroundColor: '#564c38'}}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f59e0b'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
-                    >
-                      Study Module
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                    <Link to={`/learn/vocabulary/${module.id}`} className="inline-flex items-center text-sm font-medium" style={{color: '#564c38'}}>
+                      Explore Module
+                      <ArrowRight className="w-4 h-4 ml-1" />
                     </Link>
+                    <div className="mt-4 h-2 bg-gray-200 rounded">
+                      <div className="h-2 rounded" style={{width: `${getModuleProgress(`vocab-${module.id}`, module.words.length)}%`, backgroundColor: '#ca8a04'}} />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -293,45 +292,34 @@ const LanguageLearning = () => {
         {activeTab === 'lessons' && (
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Structured Lessons</h2>
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {lessonsData.map((lesson) => (
                 <div key={lesson.id} className="bg-white rounded-lg shadow-lg p-6">
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{lesson.title}</h3>
-                      <p className="text-gray-600 mb-4">{lesson.description}</p>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span className="px-3 py-1 rounded-full" style={{backgroundColor: '#f1d799', color: '#564c38'}}>{lesson.level}</span>
-                        <span className="flex items-center">
-                          <Clock className="w-4 h-4 mr-1" />
-                          {lesson.duration}
-                        </span>
-                      </div>
+                      <h3 className="text-xl font-bold text-gray-900">{lesson.title}</h3>
+                      <p className="text-gray-600">{lesson.description}</p>
                     </div>
-                    <Link
-                      to={`/learn/lesson/${lesson.id}`}
-                      className="text-white px-6 py-3 rounded-lg transition-colors flex items-center"
-                      style={{backgroundColor: '#564c38'}}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
-                    >
-                      Start Lesson
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Link>
+                    <div className="text-sm text-gray-500">{lesson.level}</div>
                   </div>
-                  <div className="border-t border-gray-200 pt-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Learning Objectives:</h4>
-                    <ul className="space-y-1">
-                      {lesson.content.objectives.map((objective, index) => (
-                        <li key={index} className="flex items-center text-gray-600">
-                          <CheckCircle className="w-4 h-4 mr-2" style={{color: '#f1d799'}} />
-                          {objective}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mt-4 flex items-center justify-between">
+                    <Link to={`/learn/lesson/${lesson.id}`} className="inline-flex items-center text-sm font-medium" style={{color: '#564c38'}}>
+                      Start Lesson
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
+                    <button
+                      onClick={() => updateLessonProgress('lessons', lesson.id, true)}
+                      className="text-sm px-3 py-1.5 rounded border"
+                      style={{borderColor: '#f1d799', color: '#564c38'}}
+                    >
+                      Mark Complete
+                    </button>
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-6 h-2 bg-gray-200 rounded">
+              <div className="h-2 rounded" style={{width: `${getModuleProgress('lessons', lessonsData.length)}%`, backgroundColor: '#ca8a04'}} />
             </div>
           </div>
         )}
