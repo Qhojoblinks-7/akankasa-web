@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, Download, Filter, BookOpen, Users, GraduationCap, FileText, ExternalLink, MessageSquare, Plus } from 'lucide-react';
 import { researchData, forumData } from '../data/mockData';
 import ResearchUploadModal from '../components/ResearchUploadModal.jsx';
@@ -147,9 +148,9 @@ const Research = () => {
         ))}
       </div>
       
-      <a className="text-blue-600 hover:text-blue-700 font-medium text-sm" href="/community/discussion">
+      <Link className="text-blue-600 hover:text-blue-700 font-medium text-sm" to={`/community/discussion/${post.id || ''}`}>
         Join Discussion →
-      </a>
+      </Link>
     </div>
   );
 
