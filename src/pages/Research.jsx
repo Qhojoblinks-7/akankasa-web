@@ -140,7 +140,7 @@ const Research = () => {
       </div>
       
       <div className="flex flex-wrap gap-2 mb-4">
-        {post.tags.map((tag, index) => (
+        {(post.tags || []).map((tag, index) => (
           <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
             #{tag}
           </span>
@@ -157,6 +157,8 @@ const Research = () => {
     await submitResearchUpload(payload);
     alert('谢谢! Your research upload was queued for moderation.');
   };
+
+  const forumPosts = Array.isArray(forumData?.posts) ? forumData.posts : (Array.isArray(forumData) ? forumData : []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -229,7 +231,7 @@ const Research = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Methodology</label>
+                  <label className="block text.sm font-medium text-gray-700 mb-2">Methodology</label>
                   <select
                     value={selectedMethodology}
                     onChange={(e) => setSelectedMethodology(e.target.value)}
@@ -280,8 +282,8 @@ const Research = () => {
 
         {activeTab === 'forum' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {forumData.posts.map((p) => (
-              <ForumPost post={p} key={p.id} />
+            {forumPosts.map((p) => (
+              <ForumPost post={p} key={p.id || p.title} />
             ))}
           </div>
         )}
