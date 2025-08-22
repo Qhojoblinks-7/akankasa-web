@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FileText, Headphones, Video, Music } from 'lucide-react';
+import { 
+  X, Play, Pause, Volume2, VolumeX, 
+  Maximize, Minimize, FileText, Headphones, Music 
+} from 'lucide-react';
 
-const LessonPlayer = ({ lesson, onClose }) => {
+const LessonPlayer = ({ lesson = {}, onClose }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
@@ -9,51 +12,76 @@ const LessonPlayer = ({ lesson, onClose }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
   const audioRef = useRef(null);
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const contentRef = useRef(null);
 
+  const {
+    title = "Untitled Lesson",
+    type = "audio",
+    videoUrl = "",
+    audioUrl = "",
+    transcript = "No transcript available.",
+    patternNotation = "",
+    description = "No description available.",
+    instrument = "Unknown",
+    difficulty = "N/A",
+    duration: lessonDuration = "N/A",
+    bpm = "--",
+    region = "Unspecified",
+    instructor = "Anonymous",
+  } = lesson;
+
+  // Attach listeners to update time & duration
   useEffect(() => {
-    const mediaElement = lesson.type === 'video' ? videoRef.current : audioRef.current;
-    
-    if (mediaElement) {
-      const updateTime = () => setCurrentTime(mediaElement.currentTime);
-      const updateDuration = () => setDuration(mediaElement.duration);
-      
-      mediaElement.addEventListener('timeupdate', updateTime);
-      mediaElement.addEventListener('loadedmetadata', updateDuration);
-      
-      return () => {
-        mediaElement.removeEventListener('timeupdate', updateTime);
-        mediaElement.removeEventListener('loadedmetadata', updateDuration);
-      };
-    }
-  }, [lesson.type]);
+    const mediaElement = type === 'video' ? videoRef.current : audioRef.current;
+    if (!mediaElement) return;
+
+    const updateTime = () => setCurrentTime(mediaElement.currentTime);
+    const updateDuration = () => setDuration(mediaElement.duration || 0);
+
+    mediaElement.addEventListener('timeupdate', updateTime);
+    mediaElement.addEventListener('loadedmetadata', updateDuration);
+
+    return () => {
+      mediaElement.removeEventListener('timeupdate', updateTime);
+      mediaElement.removeEventListener('loadedmetadata', updateDuration);
+    };
+  }, [type]);
 
   const togglePlay = () => {
-    const mediaElement = lesson.type === 'video' ? videoRef.current : audioRef.current;
+    const mediaElement = type === 'video' ? videoRef.current : audioRef.current;
+    if (!mediaElement) return;
+
     if (isPlaying) {
       mediaElement.pause();
     } else {
-      mediaElement.play();
+      mediaElement.play().catch(() => {
+        console.warn("Play blocked by browser policy");
+      });
     }
-    setIsPlaying(!isPlaying);
   };
 
   const toggleMute = () => {
-    const mediaElement = lesson.type === 'video' ? videoRef.current : audioRef.current;
+    const mediaElement = type === 'video' ? videoRef.current : audioRef.current;
+    if (!mediaElement) return;
+
     mediaElement.muted = !isMuted;
     setIsMuted(!isMuted);
   };
 
-  const formatTime = (time) => {
+  const formatTime = (time = 0) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
   const handleSeek = (e) => {
-    const mediaElement = lesson.type === 'video' ? videoRef.current : audioRef.current;
+    const mediaElement = type === 'video' ? videoRef.current : audioRef.current;
+    if (!mediaElement || !duration) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     const pos = (e.clientX - rect.left) / rect.width;
     mediaElement.currentTime = pos * duration;
@@ -61,12 +89,18 @@ const LessonPlayer = ({ lesson, onClose }) => {
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      playerRef.current.requestFullscreen();
+      playerRef.current?.requestFullscreen();
       setIsFullscreen(true);
     } else {
       document.exitFullscreen();
       setIsFullscreen(false);
     }
+  };
+
+  const switchContent = (section) => {
+    setShowTranscript(section === "transcript");
+    setShowNotation(section === "notation");
+    contentRef.current?.scrollTo(0, 0);
   };
 
   return (
@@ -77,21 +111,22 @@ const LessonPlayer = ({ lesson, onClose }) => {
       >
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-bold text-gray-900">{lesson.title}</h2>
+          <h2 className="text-xl font-bold text-gray-900">{title}</h2>
           <button 
             onClick={onClose}
+            aria-label="Close player"
             className="text-gray-500 hover:text-gray-700"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
         
-        {/* Media Player */}
+        {/* Media */}
         <div className="relative bg-black aspect-video">
-          {lesson.type === 'video' ? (
+          {type === 'video' ? (
             <video
               ref={videoRef}
-              src={lesson.videoUrl}
+              src={videoUrl}
               className="w-full h-full object-contain"
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
@@ -100,24 +135,25 @@ const LessonPlayer = ({ lesson, onClose }) => {
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-900 to-blue-700">
               <div className="text-center text-white">
                 <Headphones className="w-16 h-16 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold mb-2">{lesson.title}</h3>
+                <h3 className="text-2xl font-bold mb-2">{title}</h3>
                 <p className="text-blue-200">Drumming Lesson</p>
               </div>
             </div>
           )}
-          
-          {lesson.type === 'audio' && (
+
+          {type === 'audio' && (
             <audio
               ref={audioRef}
-              src={lesson.audioUrl}
+              src={audioUrl}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
             />
           )}
-          
-          {/* Play/Pause Overlay */}
+
+          {/* Overlay play button */}
           <button
             onClick={togglePlay}
+            aria-label={isPlaying ? "Pause" : "Play"}
             className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity"
           >
             {isPlaying ? (
@@ -134,6 +170,7 @@ const LessonPlayer = ({ lesson, onClose }) => {
             <div className="flex items-center space-x-4">
               <button 
                 onClick={togglePlay}
+                aria-label={isPlaying ? "Pause" : "Play"}
                 className="p-2 rounded-full bg-blue-100 hover:bg-blue-200 text-blue-800"
               >
                 {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
@@ -141,6 +178,7 @@ const LessonPlayer = ({ lesson, onClose }) => {
               
               <button 
                 onClick={toggleMute}
+                aria-label={isMuted ? "Unmute" : "Mute"}
                 className="p-2 rounded-full hover:bg-gray-100"
               >
                 {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
@@ -149,28 +187,31 @@ const LessonPlayer = ({ lesson, onClose }) => {
               <div className="flex items-center text-sm text-gray-600">
                 <span>{formatTime(currentTime)}</span>
                 <span className="mx-1">/</span>
-                <span>{formatTime(duration) || '0:00'}</span>
+                <span>{formatTime(duration)}</span>
               </div>
             </div>
             
             <div className="flex items-center space-x-2">
               <button 
-                onClick={() => setShowTranscript(!showTranscript)}
+                onClick={() => switchContent("transcript")}
+                aria-label="Toggle transcript"
                 className={`p-2 rounded-full ${showTranscript ? 'bg-blue-100 text-blue-800' : 'hover:bg-gray-100'}`}
               >
                 <FileText className="w-5 h-5" />
               </button>
               
               <button 
-                onClick={() => setShowNotation(!showNotation)}
+                onClick={() => switchContent("notation")}
+                aria-label="Toggle notation"
                 className={`p-2 rounded-full ${showNotation ? 'bg-purple-100 text-purple-800' : 'hover:bg-gray-100'}`}
               >
                 <Music className="w-5 h-5" />
               </button>
               
-              {lesson.type === 'video' && (
+              {type === 'video' && (
                 <button 
                   onClick={toggleFullscreen}
+                  aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                   className="p-2 rounded-full hover:bg-gray-100"
                 >
                   {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
@@ -179,10 +220,14 @@ const LessonPlayer = ({ lesson, onClose }) => {
             </div>
           </div>
           
-          {/* Progress Bar */}
+          {/* Progress */}
           <div 
             className="w-full h-2 bg-gray-200 rounded-full cursor-pointer"
             onClick={handleSeek}
+            role="progressbar"
+            aria-valuenow={currentTime}
+            aria-valuemin={0}
+            aria-valuemax={duration}
           >
             <div 
               className="h-full bg-blue-500 rounded-full"
@@ -192,47 +237,43 @@ const LessonPlayer = ({ lesson, onClose }) => {
         </div>
         
         {/* Content */}
-        <div className="flex-1 overflow-y-auto max-h-96">
+        <div ref={contentRef} className="flex-1 overflow-y-auto max-h-96">
           {showTranscript ? (
             <div className="p-4">
               <h3 className="font-bold text-lg mb-2">Transcript</h3>
-              <div className="prose max-w-none">
-                <p className="whitespace-pre-line text-gray-700">{lesson.transcript}</p>
-              </div>
+              <p className="whitespace-pre-line text-gray-700">{transcript}</p>
             </div>
           ) : showNotation ? (
             <div className="p-4">
               <h3 className="font-bold text-lg mb-2">Pattern Notation</h3>
               <div className="bg-gray-100 p-4 rounded-lg">
-                <p className="text-2xl font-mono text-center py-4">{lesson.patternNotation}</p>
+                <p className="text-2xl font-mono text-center py-4">{patternNotation || "No notation available."}</p>
               </div>
               <div className="mt-4">
                 <h4 className="font-bold text-gray-900 mb-2">Notation Guide</h4>
                 <ul className="text-gray-700 space-y-1">
-                  <li><span className="font-medium">Bass:</span> Strike the center of the drum head with a soft mallet</li>
-                  <li><span className="font-medium">Tone:</span> Strike the edge of the drum head with the hand</li>
-                  <li><span className="font-medium">Slap:</span> Strike the edge with fingers for a sharp sound</li>
+                  <li><span className="font-medium">Bass:</span> Center strike</li>
+                  <li><span className="font-medium">Tone:</span> Edge strike</li>
+                  <li><span className="font-medium">Slap:</span> Sharp finger strike</li>
                 </ul>
               </div>
             </div>
           ) : (
-            <div className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Description</h3>
-                  <p className="text-gray-700">{lesson.description}</p>
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Details</h3>
-                  <ul className="text-gray-700 space-y-1">
-                    <li><span className="font-medium">Instrument:</span> {lesson.instrument}</li>
-                    <li><span className="font-medium">Difficulty:</span> {lesson.difficulty}</li>
-                    <li><span className="font-medium">Duration:</span> {lesson.duration}</li>
-                    <li><span className="font-medium">BPM:</span> {lesson.bpm}</li>
-                    <li><span className="font-medium">Region:</span> {lesson.region}</li>
-                    <li><span className="font-medium">Instructor:</span> {lesson.instructor}</li>
-                  </ul>
-                </div>
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <h3 className="font-bold text-gray-900 mb-1">Description</h3>
+                <p className="text-gray-700">{description}</p>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-1">Details</h3>
+                <ul className="text-gray-700 space-y-1">
+                  <li><span className="font-medium">Instrument:</span> {instrument}</li>
+                  <li><span className="font-medium">Difficulty:</span> {difficulty}</li>
+                  <li><span className="font-medium">Duration:</span> {lessonDuration}</li>
+                  <li><span className="font-medium">BPM:</span> {bpm}</li>
+                  <li><span className="font-medium">Region:</span> {region}</li>
+                  <li><span className="font-medium">Instructor:</span> {instructor}</li>
+                </ul>
               </div>
             </div>
           )}

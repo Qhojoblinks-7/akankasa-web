@@ -13,7 +13,7 @@ const Research = () => {
   const tabs = [
     { id: 'resources', label: 'Resource Library', icon: BookOpen },
     { id: 'forum', label: 'Research Forum', icon: MessageSquare },
-    { id: 'tools', label: 'Analysis Tools', icon: GraduationCap },
+    // { id: 'tools', label: 'Analysis Tools', icon: GraduationCap },
     { id: 'collaboration', label: 'Collaboration', icon: Users }
   ];
 
@@ -282,79 +282,7 @@ const Research = () => {
         )}
 
         {/* Analysis Tools Tab */}
-        {activeTab === 'tools' && (
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Linguistic Analysis Tools</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  title: 'Text Analyzer',
-                  description: 'Analyze Akan text for linguistic patterns, word frequency, and grammatical structures',
-                  icon: FileText,
-                  status: 'Available'
-                },
-                {
-                  title: 'Tone Pattern Recognition',
-                  description: 'Identify and analyze tonal patterns in spoken Akan recordings',
-                  icon: MessageSquare,
-                  status: 'Beta'
-                },
-                {
-                  title: 'Dialect Comparison Tool',
-                  description: 'Compare linguistic features across different Akan dialects',
-                  icon: BookOpen,
-                  status: 'Coming Soon'
-                },
-                {
-                  title: 'Corpus Search',
-                  description: 'Search through large collections of Akan texts and audio recordings',
-                  icon: Search,
-                  status: 'Available'
-                },
-                {
-                  title: 'Phonetic Transcription',
-                  description: 'Convert Akan audio to phonetic notation using IPA standards',
-                  icon: GraduationCap,
-                  status: 'Beta'
-                },
-                {
-                  title: 'Statistical Analysis',
-                  description: 'Generate statistical reports on language usage patterns',
-                  icon: Users,
-                  status: 'Available'
-                }
-              ].map((tool, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md p-6">
-                  <div className="flex items-center mb-4">
-                    <tool.icon className="w-8 h-8 text-green-600 mr-3" />
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{tool.title}</h3>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        tool.status === 'Available' ? 'bg-green-100 text-green-700' :
-                        tool.status === 'Beta' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-gray-100 text-gray-700'
-                      }`}>
-                        {tool.status}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 mb-4">{tool.description}</p>
-                  <button 
-                    className={`w-full py-2 px-4 rounded-lg transition-colors ${
-                      tool.status === 'Available' 
-                        ? 'bg-green-600 text-white hover:bg-green-700' 
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                    disabled={tool.status !== 'Available'}
-                  >
-                    {tool.status === 'Available' ? 'Launch Tool' : tool.status}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        
 
         {/* Collaboration Tab */}
         {activeTab === 'collaboration' && (

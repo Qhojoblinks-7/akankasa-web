@@ -39,6 +39,17 @@ import CultureFolkStories from './pages/CultureFolkStories';
 import CultureResearchPapers from './pages/CultureResearchPapers';
 import FestivalPhotosPage from './pages/FestivalPhotosPage';
 import featureFlags from './config/featureFlags';
+import UserProfile from './pages/UserProfile';
+import Contribute from './pages/Contribute';
+import ResearchNewDiscussion from './pages/ResearchNewDiscussion';
+import ResearchProposeProject from './pages/ResearchProposeProject';
+import CommunityNewPost from './pages/CommunityNewPost';
+import CommunityJoin from './pages/CommunityJoin';
+import CommunityEvents from './pages/CommunityEvents';
+import CommunityRegisterEvent from './pages/CommunityRegisterEvent';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import FestivalGallery from './pages/FestivalGallery';
 
 function App() {
   return (
@@ -83,8 +94,31 @@ function App() {
               <Route path="/community/discussion" element={<JoinDiscussion />} />
               <Route path="/community/discussion/:id" element={<DiscussionView />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/accessibility" element={<Accessibility />} />
+              
+              {/* New routes for unconnected pages */}
+              <Route path="/profile/:id" element={<UserProfile />} />
+              <Route path="/contribute" element={<Contribute />} />
+              <Route path="/community/join" element={<CommunityJoin />} />
+              <Route path="/community/new-post" element={<CommunityNewPost />} />
+              <Route path="/community/events/list" element={<CommunityEvents />} />
+              <Route path="/community/events/register/:eventId" element={<CommunityRegisterEvent />} />
+              <Route path="/festival-gallery" element={<FestivalGallery />} />
+              
+              {/* Research routes (conditionally shown based on feature flag) */}
+              {featureFlags.showResearch && (
+                <>
+                  <Route path="/research/new-discussion" element={<ResearchNewDiscussion />} />
+                  <Route path="/research/propose-project" element={<ResearchProposeProject />} />
+                </>
+              )}
+              
+              {/* Alternative routes for consistency */}
+              <Route path="/privacy-alt" element={<Privacy />} />
+              <Route path="/terms-alt" element={<Terms />} />
             </Routes>
           </main>
           <Footer />

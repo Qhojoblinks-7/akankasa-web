@@ -2,16 +2,45 @@ import React from 'react';
 import { Play, Headphones, Video, Music } from 'lucide-react';
 
 const LessonCard = ({ lesson, onClick }) => {
+  const {
+    thumbnail,
+    title = "Untitled Lesson",
+    description = "No description available.",
+    type = "audio",
+    duration = "N/A",
+    instrument = "Unknown",
+    difficulty = "N/A",
+    bpm = "--",
+    region = "Unspecified",
+    instructor = "Anonymous"
+  } = lesson || {};
+
+  const mediaBadge = type === "video" ? (
+    <>
+      <Video className="w-3 h-3 mr-1" />
+      Video
+    </>
+  ) : (
+    <>
+      <Headphones className="w-3 h-3 mr-1" />
+      Audio
+    </>
+  );
+
   return (
-    <div 
+    <article
+      role="button"
+      tabIndex={0}
       className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-      onClick={() => onClick(lesson)}
+      onClick={() => onClick?.(lesson)}
+      onKeyDown={(e) => e.key === "Enter" && onClick?.(lesson)}
     >
+      {/* Thumbnail Section */}
       <div className="relative h-48">
-        {lesson.thumbnail ? (
-          <img 
-            src={lesson.thumbnail} 
-            alt={lesson.title}
+        {thumbnail ? (
+          <img
+            src={thumbnail}
+            alt={title}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -22,49 +51,44 @@ const LessonCard = ({ lesson, onClick }) => {
             </div>
           </div>
         )}
+
+        {/* Media Type */}
         <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full flex items-center">
-          {lesson.type === 'video' ? (
-            <>
-              <Video className="w-3 h-3 mr-1" />
-              Video
-            </>
-          ) : (
-            <>
-              <Headphones className="w-3 h-3 mr-1" />
-              Audio
-            </>
-          )}
+          {mediaBadge}
         </div>
+
+        {/* Duration */}
         <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-          {lesson.duration}
+          {duration}
         </div>
       </div>
-      
+
+      {/* Info Section */}
       <div className="p-4">
-        <h3 className="font-bold text-lg mb-1 text-gray-900">{lesson.title}</h3>
-        <p className="text-gray-600 text-sm mb-2">{lesson.description}</p>
-        
+        <h3 className="font-bold text-lg mb-1 text-gray-900">{title}</h3>
+        <p className="text-gray-600 text-sm mb-2 line-clamp-2">{description}</p>
+
         <div className="flex justify-between items-center mt-3">
           <div className="flex space-x-2">
             <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-              {lesson.instrument}
+              {instrument}
             </span>
             <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-              {lesson.difficulty}
+              {difficulty}
             </span>
             <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-              {lesson.bpm} BPM
+              {bpm} BPM
             </span>
           </div>
           <Play className="w-5 h-5 text-blue-600" />
         </div>
-        
+
         <div className="mt-3 pt-3 border-t border-gray-100 flex justify-between text-xs text-gray-500">
-          <span>{lesson.region}</span>
-          <span>By {lesson.instructor}</span>
+          <span>{region}</span>
+          <span>By {instructor}</span>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

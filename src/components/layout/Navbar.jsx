@@ -19,8 +19,8 @@ const Navbar = () => {
     { path: '/dictionary', label: t('dictionary'), icon: Book },
     { path: '/community', label: t('community'), icon: Lightbulb },
     // include research link only when the feature flag is enabled
-    ...(featureFlags.showResearch ? [{ path: '/research', label: t('research'), icon: Lightbulb }] : [])
-  ];
+    ...(featureFlags.showResearch ? [{ path: '/research', label: t('research'), icon: Lightbulb }] : []),
+  ];  
 
   const isActive = (path) => {
     if (path === '/') {
