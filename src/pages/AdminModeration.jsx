@@ -2,10 +2,12 @@ import React from 'react';
 
 const MOD_QUEUE_KEY = 'akan:moderation-queue:culture';
 const DICT_QUEUE_KEY = 'akan:moderation-queue:dictionary';
+const RESEARCH_QUEUE_KEY = 'akan:moderation-queue:research';
 
 const AdminModeration = () => {
 	const [queue, setQueue] = React.useState([]);
 	const [dictQueue, setDictQueue] = React.useState([]);
+	const [researchQueue, setResearchQueue] = React.useState([]);
 	const [activeTab, setActiveTab] = React.useState('culture');
 
 	React.useEffect(() => {
@@ -20,6 +22,12 @@ const AdminModeration = () => {
 			setDictQueue(raw ? JSON.parse(raw) : []);
 		} catch {
 			setDictQueue([]);
+		}
+		try {
+			const raw = localStorage.getItem(RESEARCH_QUEUE_KEY);
+			setResearchQueue(raw ? JSON.parse(raw) : []);
+		} catch {
+			setResearchQueue([]);
 		}
 	}, []);
 
@@ -63,6 +71,7 @@ const AdminModeration = () => {
 				<div className="flex items-center gap-2 mb-4">
 					<TabButton id="culture">Culture</TabButton>
 					<TabButton id="dictionary">Dictionary</TabButton>
+					<TabButton id="research">Research</TabButton>
 				</div>
 
 				{activeTab === 'culture' && (
@@ -131,6 +140,45 @@ const AdminModeration = () => {
 												<span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : item.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{item.status}</span>
 												<button onClick={() => approve(DICT_QUEUE_KEY, setDictQueue, dictQueue, item.id)} className="px-3 py-1.5 text-sm rounded bg-green-600 text-white">Approve</button>
 												<button onClick={() => rejectItem(DICT_QUEUE_KEY, setDictQueue, dictQueue, item.id)} className="px-3 py-1.5 text-sm rounded bg-red-600 text-white">Reject</button>
+											</div>
+										</div>
+									</li>
+								))}
+							</ul>
+						)}
+					</>
+				)}
+
+				{activeTab === 'research' && (
+					<>
+						<div className="bg-white rounded-lg shadow p-4 mb-4 flex items-center justify-between">
+							<div>
+								<span className="font-medium">Total:</span> {researchQueue.length}
+								<span className="ml-4 text-yellow-700">Pending:</span> {researchQueue.filter(q => q.status === 'pending').length}
+							</div>
+							<button onClick={() => clearReviewed(RESEARCH_QUEUE_KEY, setResearchQueue, researchQueue)} className="text-sm px-3 py-1.5 rounded border" style={{borderColor: '#f1d799', color: '#564c38'}}>Clear Reviewed</button>
+						</div>
+						{researchQueue.length === 0 ? (
+							<p className="text-gray-600">No submissions yet.</p>
+						) : (
+							<ul className="space-y-3">
+								{researchQueue.map(item => (
+									<li key={item.id} className="bg-white rounded-lg shadow p-4">
+										<div className="flex items-start justify-between">
+											<div className="max-w-3xl">
+												<div className="text-lg font-semibold">{item.title}</div>
+												<div className="text-sm text-gray-500">{item.author} • {item.level} • {item.methodology} • {item.publicationDate}</div>
+												{item.abstract && <div className="text-sm text-gray-600 mt-1">{item.abstract}</div>}
+												{item.tags && item.tags.length > 0 && (
+													<div className="mt-2 flex flex-wrap gap-2">
+														{item.tags.map((t, i) => <span key={i} className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">#{t}</span>)}
+													</div>
+												)}
+											</div>
+											<div className="flex items-center space-x-2">
+												<span className={`px-2 py-1 rounded text-xs ${item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : item.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{item.status}</span>
+												<button onClick={() => approve(RESEARCH_QUEUE_KEY, setResearchQueue, researchQueue, item.id)} className="px-3 py-1.5 text-sm rounded bg-green-600 text-white">Approve</button>
+												<button onClick={() => rejectItem(RESEARCH_QUEUE_KEY, setResearchQueue, researchQueue, item.id)} className="px-3 py-1.5 text-sm rounded bg-red-600 text-white">Reject</button>
 											</div>
 										</div>
 									</li>

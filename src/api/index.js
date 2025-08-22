@@ -137,3 +137,38 @@ export const setDictionaryModerationQueue = async (queue) => {
   } catch {}
   return queue;
 };
+
+// ---------------- Research Uploads + Moderation ----------------
+const RESEARCH_QUEUE_KEY = 'akan:moderation-queue:research';
+
+export const submitResearchUpload = async (payload) => {
+  const item = {
+    ...payload,
+    id: `res_${Date.now()}`,
+    status: 'pending',
+    submittedAt: new Date().toISOString(),
+  };
+  try {
+    const raw = localStorage.getItem(RESEARCH_QUEUE_KEY);
+    const queue = raw ? JSON.parse(raw) : [];
+    queue.push(item);
+    localStorage.setItem(RESEARCH_QUEUE_KEY, JSON.stringify(queue));
+  } catch {}
+  return item;
+};
+
+export const getResearchModerationQueue = async () => {
+  try {
+    const raw = localStorage.getItem(RESEARCH_QUEUE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const setResearchModerationQueue = async (queue) => {
+  try {
+    localStorage.setItem(RESEARCH_QUEUE_KEY, JSON.stringify(queue));
+  } catch {}
+  return queue;
+};
