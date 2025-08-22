@@ -1,12 +1,14 @@
 import React from 'react';
 
 import { useState, useMemo, useEffect } from 'react';
-import { Search, Volume2, BookOpen, MapPin, Heart, Download, Filter, ArrowUpDown, X, Plus, Pencil, Trash2, ListPlus } from 'lucide-react';
-import AudioPlayer from '../components/AudioPlayer';
+import { Search, Download, ListPlus, Plus } from 'lucide-react';
 import { getDictionary, getFavorites, saveFavorites, getWordLists, createWordList, renameWordList, deleteWordList, addWordToList, removeWordFromList } from '../api';
 import { dictionaryData } from '../data/mockData';
 import DictionaryContributionModal from '../components/DictionaryContributionModal.jsx';
 import { submitDictionaryContribution } from '../api';
+
+const ResultsList = React.lazy(() => import('../components/dictionary/ResultsList.jsx'));
+const ListsSidebar = React.lazy(() => import('../components/dictionary/ListsSidebar.jsx'));
 
 const Dictionary = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,7 +27,6 @@ const Dictionary = () => {
 
   const [isContribOpen, setIsContribOpen] = useState(false);
 
-  // Load dictionary, favorites, word lists
   useEffect(() => {
     let mounted = true;
     getDictionary().then(() => {});
@@ -169,7 +170,6 @@ const Dictionary = () => {
         {/* Search & Filters Row */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 mb-6">
-            {/* Direction */}
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setSearchDirection('akan-english')}
@@ -191,7 +191,6 @@ const Dictionary = () => {
               </button>
             </div>
 
-            {/* Search */}
             <div className="flex-1 relative">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -219,7 +218,6 @@ const Dictionary = () => {
               )}
             </div>
 
-            {/* Quick Actions */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsContribOpen(true)}
@@ -237,7 +235,6 @@ const Dictionary = () => {
             </div>
           </div>
 
-          {/* Filters */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Dialect</label>
@@ -290,155 +287,41 @@ const Dictionary = () => {
           </div>
         </div>
 
-        {/* Results and Lists */}
         <div className="bg-white rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-3">
-          {/* Results List */}
-          <div className="md:col-span-2 divide-y divide-gray-200">
-            {totalResults === 0 ? (
-              <div className="px-6 py-12 text-center">
-                <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
-                <p className="text-gray-600">
-                  Try adjusting your search terms or filters to find what you're looking for.
-                </p>
-              </div>
-            ) : (
-              paginatedWords.map((word) => (
-                <div key={word.id} className="px-6 py-6 hover:bg-gray-50 transition-colors">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-4 mb-2">
-                        <h3 className="text-2xl font-bold text-gray-900">{word.akan}</h3>
-                        <div>
-                          <AudioPlayer
-                            src={word.audio}
-                            playing={playingAudio === word.audio}
-                            onPlay={() => setPlayingAudio(word.audio)}
-                            onPause={() => setPlayingAudio(null)}
-                          />
-                        </div>
-                        <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium">
-                          {word.partOfSpeech}
-                        </span>
-                        <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
-                          {word.dialect}
-                        </span>
-                      </div>
-                      <p className="text-lg text-gray-700 mb-2">{word.english}</p>
-                      <p className="text-sm text-gray-500 mb-4">
-                        Pronunciation: <span className="font-mono">{word.pronunciation}</span>
-                      </p>
-
-                      {word.examples && word.examples.length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold text-gray-900 mb-2">Examples:</h4>
-                          {word.examples.map((example, index) => (
-                            <div key={index} className="bg-gray-50 p-3 rounded-lg mb-2">
-                              <div className="flex justify-between items-center">
-                                <div>
-                                  <p className="font-medium text-gray-900">{example.akan}</p>
-                                  <p className="text-gray-600">{example.english}</p>
-                                </div>
-                                <AudioPlayer
-                                  src={example.audio}
-                                  playing={playingAudio === example.audio}
-                                  onPlay={() => setPlayingAudio(example.audio)}
-                                  onPause={() => setPlayingAudio(null)}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {word.etymology && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold text-gray-900 mb-2">Etymology:</h4>
-                          <p className="text-sm text-gray-600 italic">{word.etymology}</p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="ml-4 flex flex-col items-center space-y-2">
-                      <button
-                        onClick={() => toggleFavorite(word.id)}
-                        className={`p-2 rounded-full transition-colors ${
-                          favorites.includes(word.id)
-                            ? 'text-red-500 bg-red-50 hover:bg-red-100'
-                            : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                        }`}
-                        aria-pressed={favorites.includes(word.id)}
-                        title="Toggle favorite"
-                      >
-                        <Heart className={`w-5 h-5 ${favorites.includes(word.id) ? 'fill-current' : ''}`} />
-                      </button>
-                      <button
-                        onClick={() => handleAddWordToActiveList(word.id)}
-                        className="p-2 rounded-full hover:bg-gray-100"
-                        title="Add to active list"
-                      >
-                        <Plus className="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+          <div className="md:col-span-2">
+            <React.Suspense fallback={<div className="p-6">Loading results…</div>}>
+              <ResultsList
+                words={paginatedWords}
+                favorites={favorites}
+                playingAudio={playingAudio}
+                onPlaySrc={(src) => setPlayingAudio(src)}
+                onPause={() => setPlayingAudio(null)}
+                onToggleFavorite={toggleFavorite}
+                onAddToActiveList={handleAddWordToActiveList}
+              />
+            </React.Suspense>
           </div>
 
-          {/* Sidebar: Lists */}
-          <aside className="border-l border-gray-100 p-4 bg-gray-50">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold">Word Lists</h3>
-              <button onClick={() => setIsListModalOpen(true)} className="text-sm flex items-center"><ListPlus className="w-4 h-4 mr-1" /> New</button>
-            </div>
-            {Object.keys(wordLists).length === 0 ? (
-              <p className="text-sm text-gray-600">No lists yet. Create one to start organizing words.</p>
-            ) : (
-              <ul className="space-y-2">
-                {Object.values(wordLists).map(list => (
-                  <li key={list.id} className={`rounded p-2 ${activeListId === list.id ? 'bg-white shadow' : 'hover:bg-white'}`}>
-                    <div className="flex items-center justify-between">
-                      <button onClick={() => setActiveListId(list.id)} className="font-medium text-sm text-left">
-                        {list.name}
-                      </button>
-                      <div className="flex items-center gap-1">
-                        <button onClick={() => setRenameState({ id: list.id, name: list.name })} className="p-1 rounded hover:bg-gray-100" title="Rename"><Pencil className="w-4 h-4" /></button>
-                        <button onClick={() => handleDeleteList(list.id)} className="p-1 rounded hover:bg-gray-100" title="Delete"><Trash2 className="w-4 h-4" /></button>
-                      </div>
-                    </div>
-                    {activeListId === list.id && (
-                      <div className="mt-2">
-                        {list.wordIds.length === 0 ? (
-                          <p className="text-sm text-gray-500">No words yet. Use + on a word to add it here.</p>
-                        ) : (
-                          <ul className="space-y-1">
-                            {list.wordIds.map(id => {
-                              const w = dictionaryData.find(d => d.id === id);
-                              if (!w) return null;
-                              return (
-                                <li key={id} className="flex items-center justify-between bg-white rounded px-2 py-1">
-                                  <div className="text-sm">
-                                    <span className="font-medium">{w.akan}</span>
-                                    <span className="text-gray-500"> — {w.english}</span>
-                                  </div>
-                                  <button onClick={() => handleRemoveWordFromActiveList(id)} className="text-gray-400 hover:text-red-500" title="Remove"><X className="w-4 h-4" /></button>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        )}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </aside>
+          <React.Suspense fallback={<div className="p-6">Loading lists…</div>}>
+            <ListsSidebar
+              wordLists={wordLists}
+              activeListId={activeListId}
+              onNewList={() => setIsListModalOpen(true)}
+              onSetActive={(id) => setActiveListId(id)}
+              onDelete={handleDeleteList}
+              onRemoveWord={handleRemoveWordFromActiveList}
+              isListModalOpen={isListModalOpen}
+              setIsListModalOpen={setIsListModalOpen}
+              newListName={newListName}
+              setNewListName={setNewListName}
+              renameState={renameState}
+              setRenameState={setRenameState}
+              onCreateList={handleCreateList}
+              onSaveRename={handleRenameList}
+            />
+          </React.Suspense>
         </div>
 
-        {/* Pagination Controls */}
         {totalResults > 0 && (
           <div className="mt-6 flex flex-col-reverse md:flex-row items-center justify-between gap-4">
             <div className="flex items-center space-x-2">
@@ -491,33 +374,6 @@ const Dictionary = () => {
           </div>
         )}
       </div>
-
-      {/* Modals */}
-      {isListModalOpen && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl p-4 w-full max-w-sm">
-            <h3 className="font-semibold mb-2">Create New List</h3>
-            <input value={newListName} onChange={(e) => setNewListName(e.target.value)} placeholder="List name" className="w-full border rounded px-3 py-2 mb-3" />
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setIsListModalOpen(false)} className="px-3 py-2 rounded border">Cancel</button>
-              <button onClick={handleCreateList} className="px-3 py-2 rounded text-white" style={{backgroundColor: '#564c38'}}>Create</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {renameState.id && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl p-4 w-full max-w-sm">
-            <h3 className="font-semibold mb-2">Rename List</h3>
-            <input value={renameState.name} onChange={(e) => setRenameState(s => ({...s, name: e.target.value}))} className="w-full border rounded px-3 py-2 mb-3" />
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setRenameState({ id: null, name: '' })} className="px-3 py-2 rounded border">Cancel</button>
-              <button onClick={handleRenameList} className="px-3 py-2 rounded text-white" style={{backgroundColor: '#564c38'}}>Save</button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <DictionaryContributionModal isOpen={isContribOpen} onClose={() => setIsContribOpen(false)} onSubmit={submitContribution} />
     </div>
