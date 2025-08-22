@@ -35,7 +35,6 @@ const Research = () => {
   const tabs = [
     { id: 'resources', label: 'Resource Library', icon: BookOpen },
     { id: 'forum', label: 'Research Forum', icon: MessageSquare },
-    { id: 'tools', label: 'Analysis Tools', icon: GraduationCap },
     { id: 'collaboration', label: 'Collaboration', icon: Users }
   ];
 
@@ -160,6 +159,21 @@ const Research = () => {
   };
 
   const forumPosts = Array.isArray(forumData?.posts) ? forumData.posts : (Array.isArray(forumData) ? forumData : []);
+
+  const PROJECTS_KEY = 'akan:research:projects';
+  const [projects, setProjects] = useState(() => {
+    try { const raw = localStorage.getItem(PROJECTS_KEY); return raw ? JSON.parse(raw) : []; } catch { return []; }
+  });
+  const [newProject, setNewProject] = useState({ title: '', description: '' });
+
+  const addProject = () => {
+    if (!newProject.title.trim() || !newProject.description.trim()) return;
+    const project = { id: Date.now(), title: newProject.title.trim(), description: newProject.description.trim(), participants: 1, status: 'Proposed' };
+    const next = [project, ...projects];
+    setProjects(next);
+    try { localStorage.setItem(PROJECTS_KEY, JSON.stringify(next)); } catch {}
+    setNewProject({ title: '', description: '' });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -286,6 +300,54 @@ const Research = () => {
             {forumPosts.map((p) => (
               <ForumPost post={p} key={p.id || p.title} />
             ))}
+          </div>
+        )}
+
+        {activeTab === 'collaboration' && (
+          <div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Research Collaboration</h2>
+              <p className="text-gray-600">Propose and join research projects with the community</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Active/Proposed Projects</h3>
+                {projects.length === 0 ? (
+                  <p className="text-sm text-gray-600">No projects yet. Be the first to propose one.</p>
+                ) : (
+                  <ul className="space-y-3">
+                    {projects.map(p => (
+                      <li key={p.id} className="border border-gray-200 rounded p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="font-medium text-gray-900">{p.title}</div>
+                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">{p.status}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2">{p.description}</p>
+                        <div className="text-xs text-gray-500 mt-2">{p.participants} participant(s)</div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Propose a Project</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input value={newProject.title} onChange={(e) => setNewProject(s => ({...s, title: e.target.value}))} className="w-full border rounded px-3 py-2" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea value={newProject.description} onChange={(e) => setNewProject(s => ({...s, description: e.target.value}))} className="w-full border rounded px-3 py-2" rows={4} />
+                  </div>
+                  <div className="flex justify-end">
+                    <button onClick={addProject} className="px-4 py-2 rounded text-white" style={{backgroundColor: '#564c38'}}>Submit Proposal</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
