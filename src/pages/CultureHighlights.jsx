@@ -69,6 +69,20 @@ const CultureHighlights = () => {
     setSelectedItem(null);
   };
 
+	// Helpers for History visuals
+	const parseTimelineStart = (timelineStr) => {
+		if (!timelineStr) return 0;
+		const match = String(timelineStr).match(/(\d{3,4})/);
+		return match ? parseInt(match[1], 10) : 0;
+	};
+	const historyItems = activeSection === 'history' ? filteredContent.slice().sort((a, b) => parseTimelineStart(a.timeline) - parseTimelineStart(b.timeline)) : [];
+	const regionCounts = historyItems.reduce((acc, item) => {
+		const key = item.region || 'Unknown';
+		acc[key] = (acc[key] || 0) + 1;
+		return acc;
+	}, {});
+	const regionList = Object.entries(regionCounts).sort((a, b) => b[1] - a[1]);
+
 
   const CultureCard = ({ item, sectionType }) => (
 		<div className="bg.white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -297,6 +311,86 @@ const CultureHighlights = () => {
           </div>
         </div>
       </div>
+
+      {/* History Visuals */}
+      {activeSection === 'history' && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+          {/* Region Legend / Chips */}
+          {regionList.length > 0 && (
+            <div className="bg-white rounded-lg shadow p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-gray-900">Regions activity</h3>
+                <button
+                  className="text-xs text-gray-600 underline"
+                  onClick={() => setSelectedRegion('all')}
+                >
+                  Reset
+                </button>
+              </div>
+              <div className="flex items-center flex-wrap gap-2">
+                {regionList.map(([regionName, count]) => {
+                  const intensity = Math.min(1, 0.4 + count * 0.15);
+                  const isActive = selectedRegion === regionName;
+                  return (
+                    <button
+                      key={regionName}
+                      onClick={() => setSelectedRegion(isActive ? 'all' : regionName)}
+                      className={`px-3 py-1 rounded-full text-xs border ${isActive ? 'text-white' : 'text-gray-800'}`}
+                      style={{
+                        backgroundColor: isActive ? '#564c38' : `rgba(241,215,153,${intensity.toFixed(2)})`,
+                        borderColor: '#e5e7eb'
+                      }}
+                      aria-pressed={isActive}
+                    >
+                      {regionName} ({count})
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Timeline */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-base font-semibold text-gray-900 mb-4">Historical timeline</h3>
+            {historyItems.length === 0 ? (
+              <p className="text-sm text-gray-600">No items match your filters.</p>
+            ) : (
+              <ol className="relative border-l border-gray-200 pl-6">
+                {historyItems.map((item, idx) => (
+                  <li key={item.id} className="mb-6 ml-2">
+                    <span className="absolute -left-[9px] flex items-center justify-center w-4 h-4 bg-yellow-500 rounded-full ring-2 ring-white"></span>
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600">
+                      <Calendar className="w-3 h-3" />
+                      <span>{item.timeline || 'Undated'}</span>
+                      {item.region && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-gray-100 text-gray-800">
+                          <MapPin className="w-3 h-3 mr-1" /> {item.region}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-1 flex items-start justify-between gap-2">
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-900">{item.title}</h4>
+                        {item.significance && (
+                          <p className="text-sm text-gray-700 mt-1">{item.significance}</p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleLearnMore(item)}
+                        className="text-sm font-medium"
+                        style={{color: '#564c38'}}
+                      >
+                        View
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Content Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
