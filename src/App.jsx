@@ -43,6 +43,7 @@ const CultureFolkStories = React.lazy(() => import('./pages/CultureFolkStories')
 const CultureResearchPapers = React.lazy(() => import('./pages/CultureResearchPapers'));
 const FestivalPhotosPage = React.lazy(() => import('./pages/FestivalPhotosPage'));
 const AdminModeration = React.lazy(() => import('./pages/AdminModeration.jsx'));
+const TraditionDetail = React.lazy(() => import('./pages/TraditionDetail'));
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
                         <Route path="/festival-photos" element={<FestivalPhotosPage />} />
                       </>
                     )}
+                    <Route path="/culture/traditions/:traditionId" element={<TraditionDetail />} />
                     <Route path="/learn/alphabet" element={<LearnAlphabet />} />
                     <Route path="/learn/greetings" element={<LearnGreetingsIndex />} />
                     <Route path="/learn/vocabulary" element={<LearnVocabularyIndex />} />

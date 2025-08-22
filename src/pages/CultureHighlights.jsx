@@ -144,16 +144,27 @@ const CultureHighlights = () => {
 				)}
 
 				<div className="mt-4 pt-4 border-t border-gray-200">
-					<button
-						onClick={() => handleLearnMore(item)} // This is the new onClick handler
-						className="font-medium text-sm flex items-center transition-colors"
-						style={{color: '#564c38'}}
-						onMouseEnter={(e) => e.target.style.color = '#695e46'}
-						onMouseLeave={(e) => e.target.style.color = '#564c38'}
-					>
-						Learn More
-						<ChevronRight className="w-4 h-4 ml-1" />
-					</button>
+					{sectionType === 'traditions' ? (
+						<a
+							href={`/culture/traditions/${item.id}`}
+							className="font-medium text-sm flex items-center transition-colors"
+							style={{color: '#564c38'}}
+						>
+							Learn More
+							<ChevronRight className="w-4 h-4 ml-1" />
+						</a>
+					) : (
+						<button
+							onClick={() => handleLearnMore(item)}
+							className="font-medium text-sm flex items-center transition-colors"
+							style={{color: '#564c38'}}
+							onMouseEnter={(e) => e.target.style.color = '#695e46'}
+							onMouseLeave={(e) => e.target.style.color = '#564c38'}
+						>
+							Learn More
+							<ChevronRight className="w-4 h-4 ml-1" />
+						</button>
+					)}
 				</div>
 			</div>
 		</div>
