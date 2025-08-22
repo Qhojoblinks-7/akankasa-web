@@ -9,6 +9,7 @@ import EventCreationModal from '../components/EventCreationModal';
 import RegisterEventModal from '../components/RegisterEventModal';
 import Toast from '../components/Toast';
 
+const MEMBER_KEY = 'akan:community:member';
 
 const Community = () => {
   const navigate = useNavigate();
@@ -27,7 +28,17 @@ const Community = () => {
   const [registerModalEvent, setRegisterModalEvent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
   const [toast, setToast] = useState(null);
+  const [isMember, setIsMember] = useState(() => {
+    try { return localStorage.getItem(MEMBER_KEY) === 'true'; } catch { return false; }
+  });
   
+  const handleJoinCommunity = () => {
+    try { localStorage.setItem(MEMBER_KEY, 'true'); } catch {}
+    setIsMember(true);
+    setToast({ type: 'success', message: 'Welcome! You joined the community.' });
+    setTimeout(() => setToast(null), 2000);
+  };
+
   // Use useCallback to memoize navigate function usage
   const handleJoinDiscussion = useCallback((postId) => {
     navigate(`/community/discussion/${postId}`);
@@ -73,7 +84,6 @@ const Community = () => {
     setShowNewPostModal(false);
     navigate(`/community/discussion/${newPost.id}`);
   };
-
 
   const handlePostInputChange = (e) => {
     const { name, value } = e.target;
@@ -334,7 +344,7 @@ const Community = () => {
         />
       )}
       
-      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      {toast && <Toast message={toast.message} onClose={() => setToast(null)} />}
       
       {/* Header */}
       <div  style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}} className="text-white">
@@ -501,12 +511,16 @@ const Community = () => {
                 <button className="text-gray-600 hover:text-gray-700 p-2 border border-gray-300 rounded-lg">
                   <Filter className="w-4 h-4" />
                 </button>
-                <button 
-                  className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
-                  onClick={() => alert('Join Community functionality would go here')}
-                >
-                  Join Community
-                </button>
+                {!isMember ? (
+                  <button 
+                    className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
+                    onClick={handleJoinCommunity}
+                  >
+                    Join Community
+                  </button>
+                ) : (
+                  <span className="text-sm text-gray-600">You are a member</span>
+                )}
               </div>
             </div>
             
