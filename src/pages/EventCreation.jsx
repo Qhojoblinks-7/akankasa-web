@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateEventButton from '../components/CreateEventButton';
 
+const EVENTS_KEY = 'akan:events';
+
 const EventCreation = () => {
   const navigate = useNavigate();
   const formRef = useRef(null);
@@ -21,9 +23,14 @@ const EventCreation = () => {
 
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
-    // In a real app, submit eventData to backend
-    alert('Event created successfully!');
-    navigate('/community');
+    const newEvent = { ...eventData, id: Date.now().toString() };
+    try {
+      const raw = localStorage.getItem(EVENTS_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      list.push(newEvent);
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(list));
+    } catch {}
+    navigate('/community/events');
   };
 
   return (

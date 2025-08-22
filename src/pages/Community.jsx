@@ -50,15 +50,30 @@ const Community = () => {
     setShowNewPostModal(true);
   };
 
+  const POSTS_KEY = 'akan:forum:posts';
+
   const handleCreatePost = () => {
-    // In a real app, this would send data to a backend
-    console.log('Creating new post:', newPostData);
-    // Reset form and close modal
+    const newPost = {
+      id: Date.now(),
+      title: newPostData.title.trim(),
+      content: newPostData.content.trim(),
+      category: newPostData.category,
+      author: 'You',
+      lastActivity: 'just now',
+      replies: 0,
+      tags: []
+    };
+    try {
+      const raw = localStorage.getItem(POSTS_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      list.unshift(newPost);
+      localStorage.setItem(POSTS_KEY, JSON.stringify(list));
+    } catch {}
     setNewPostData({ title: '', content: '', category: 'Language Learning' });
     setShowNewPostModal(false);
-    // Show success message
-    alert('Post created successfully!');
+    navigate(`/community/discussion/${newPost.id}`);
   };
+
 
   const handlePostInputChange = (e) => {
     const { name, value } = e.target;

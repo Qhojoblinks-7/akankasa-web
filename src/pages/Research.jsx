@@ -98,17 +98,22 @@ const Research = () => {
       </div>
       
       <div className="flex justify-between items-center">
-        <button 
+        <a 
+          href={resource.downloadUrl || '#'}
           className="font-medium text-sm flex items-center transition-colors"
           style={{color: '#564c38'}}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <ExternalLink className="w-4 h-4 mr-2" />
           View Details
-        </button>
+        </a>
         <a 
           href={resource.downloadUrl}
           className="text-white px-4 py-2 rounded-lg transition-colors flex items-center text-sm"
           style={{backgroundColor: '#564c38'}}
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <Download className="w-4 h-4 mr-2" />
           Download
@@ -142,15 +147,15 @@ const Research = () => {
         ))}
       </div>
       
-      <button className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+      <a className="text-blue-600 hover:text-blue-700 font-medium text-sm" href="/community/discussion">
         Join Discussion →
-      </button>
+      </a>
     </div>
   );
 
   const submitUpload = async (payload) => {
     await submitResearchUpload(payload);
-    alert('Thank you! Your research upload was queued for moderation.');
+    alert('谢谢! Your research upload was queued for moderation.');
   };
 
   return (
