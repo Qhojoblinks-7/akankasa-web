@@ -1,46 +1,48 @@
 // src/components/CultureHighlights.jsx
-import React, { useState } from 'react';
-import { Calendar, MapPin, X,Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
-import { culturalData } from '../data/mockData';
-import ContributeModal from './ContributeModal';
+import React, { useEffect } from 'react';
+import { Calendar, MapPin, X, Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useCulture, useUI } from '../hooks/useRadux';
+import ContributeModal from './ContributeModal';
 
 const CultureHighlights = () => {
-  const [activeSection, setActiveSection] = useState('traditions');
-  const [selectedRegion, setSelectedRegion] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null); // New state to hold the selected item
   const navigate = useNavigate();
+  const {
+    activeSection,
+    selectedRegion,
+    searchTerm,
+    isLoading,
+    error,
+    filteredContent,
+    availableRegions,
+    setActiveSection,
+    setRegionFilter,
+    setSearchTerm,
+    loadCulturalData,
+  } = useCulture();
+  
+  const {
+    isContributeModalOpen,
+    setContributeModal,
+    showSuccessToast,
+  } = useUI();
 
-  const sections = [
-    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
-    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#695e46' },
-//     { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#77705c' },
-//     { id: 'music', label: 'Music & Dance', icon: Music, color: '#c2ae81' }
-  ];
+  const sections = [
+    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
+    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#695e46' },
+    { id: 'symbols', label: 'Symbols & Arts', icon: Palette, color: '#77705c' },
+  ];
 
-  const regions = ['all', 'Ashanti Region', 'Eastern Region', 'Central Region', 'Western Region'];
+  // Load cultural data on component mount
+  useEffect(() => {
+    loadCulturalData();
+  }, [loadCulturalData]);
 
-  const getCurrentSectionData = () => {
-    return culturalData[activeSection] || [];
-  };
-
-  const filteredContent = getCurrentSectionData().filter(item => {
-    const matchesSearch = !searchTerm ||
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesRegion = selectedRegion === 'all' ||
-      item.region === selectedRegion;
-
-    return matchesSearch && matchesRegion;
-  });
-
-  const handleContributeSubmit = (newContent) => {
-    console.log('New content submitted:', newContent);
-    alert('Thank you for your contribution! We will review it shortly.');
-  };
+  const handleContributeSubmit = (newContent) => {
+    console.log('New content submitted:', newContent);
+    showSuccessToast('Thank you for your contribution! We will review it shortly.');
+    setContributeModal(false);
+  };
 
   const handleLearnMore = (item) => {
     if (activeSection === 'history') {
@@ -51,16 +53,12 @@ const CultureHighlights = () => {
       navigate(`/culture/traditions/${item.id}`);
     } else {
       // For other sections, show the modal
-      setSelectedItem(item);
+      // Note: This would need to be implemented with Radux state
+      console.log('Show modal for:', item);
     }
   };
 
-  const handleCloseDetailView = () => {
-    setSelectedItem(null);
-  };
-
-
-    const CultureCard = ({ item, sectionType }) => (
+  const CultureCard = ({ item, sectionType }) => (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <div className="relative h-32 sm:h-40 md:h-48" style={{background: 'linear-gradient(135deg, #f1d799 0%, #564c38 100%)'}}>
         <div className="absolute inset-0 flex items-center justify-center p-3 sm:p-4">
@@ -80,7 +78,7 @@ const CultureHighlights = () => {
           <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{item.content}</p>
         </div>
 
-                {sectionType === 'history' && item.timeline && (
+        {sectionType === 'history' && item.timeline && (
           <div className="mb-3 sm:mb-4">
             <div className="flex items-center text-xs sm:text-sm text-gray-600">
               <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
@@ -145,92 +143,11 @@ const CultureHighlights = () => {
             <ChevronRight className="w-4 h-4 ml-1" />
           </button>
         </div>
-      </div>
-    </div>
-  );
-
-  const DetailView = ({ item, onClose }) => {
-    if (!item) return null;
-
-    // Determine the section icon for the detail view
-    const section = sections.find(s => s.id === activeSection);
-    const Icon = section?.icon;
-
-    return (
-      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center p-4">
-        <div className="relative w-full max-w-2xl bg-white rounded-lg shadow-xl m-2 sm:m-4 max-h-[90vh] overflow-y-auto">
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-600 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
-            aria-label="Close modal"
-          >
-            <X size={20} className="sm:w-6 sm:h-6" />
-          </button>
-          
-          <div className="p-4 sm:p-6 lg:p-8">
-            <div className="flex items-center mb-4">
-              {Icon && (
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0`} style={{backgroundColor: section.color}}>
-                  <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                </div>
-              )}
-              <div className="min-w-0 flex-1">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">{item.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600 mt-1">{item.description}</p>
-              </div>
-            </div>
-            
-            <div className="prose max-w-none text-gray-700">
-              <p className="text-sm sm:text-base leading-relaxed">{item.content}</p>
-              
-              {activeSection === 'history' && (
-                <>
-                  <h4 className="font-semibold text-gray-900 mt-4 text-base sm:text-lg">Timeline:</h4>
-                  <p className="text-sm sm:text-base">{item.timeline}</p>
-                  <h4 className="font-semibold text-gray-900 mt-4 text-base sm:text-lg">Significance:</h4>
-                  <p className="text-sm sm:text-base">{item.significance}</p>
-                </>
-              )}
-              {activeSection === 'arts' && (
-                <>
-                  <h4 className="font-semibold text-gray-900 mt-4 text-base sm:text-lg">Examples:</h4>
-                  <ul className="text-sm sm:text-base">
-                    {item.examples && item.examples.map((example, index) => (
-                      <li key={index} className="mb-2">
-                        <strong>{example.symbol}</strong> - {example.meaning}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-              {activeSection === 'music' && (
-                <>
-                  <h4 className="font-semibold text-gray-900 mt-4 text-base sm:text-lg">Instruments:</h4>
-                  <p className="text-sm sm:text-base">{item.instruments && item.instruments.join(', ')}</p>
-                </>
-              )}
-
-              {item.tags && item.tags.length > 0 && (
-                  <div className="mt-4">
-                    <span className="font-semibold text-gray-900 text-base sm:text-lg">Tags:</span>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {item.tags.map((tag, index) => (
-                        <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
-    );
-  };
-  
+    </div>
+  );
 
-    return (
+  return (
     <div className="min-h-screen bg-gray-50">
       {/* Header - Mobile first */}
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
@@ -301,10 +218,10 @@ const CultureHighlights = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Region</label>
               <select
                 value={selectedRegion}
-                onChange={(e) => setSelectedRegion(e.target.value)}
+                onChange={(e) => setRegionFilter(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-3 py-3 sm:py-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base"
               >
-                {regions.map(region => (
+                {availableRegions.map(region => (
                   <option key={region} value={region}>
                     {region === 'all' ? 'All Regions' : region}
                   </option>
@@ -313,7 +230,8 @@ const CultureHighlights = () => {
             </div>
           </div>
         </div>
-                {/* Section Content - Mobile first */}
+        
+        {/* Section Content - Mobile first */}
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center mb-4 sm:mb-6">
             {sections.find(s => s.id === activeSection) && (() => {
@@ -357,8 +275,8 @@ const CultureHighlights = () => {
             </div>
           )}
         </div>
-        {/* Cultural Map Section (commented out) */}
-                {/* Multimedia Gallery - Mobile first */}
+        
+        {/* Multimedia Gallery - Mobile first */}
         <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
           <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Multimedia Gallery</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -397,26 +315,23 @@ const CultureHighlights = () => {
               Help preserve Akan culture by contributing your stories, photos, and knowledge
             </p>
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setContributeModal(true)}
               className="bg-white text-yellow-500 px-4 sm:px-6 py-3 rounded-lg font-semibold hover:text-gray-100 hover:bg-gray-500 transition-colors min-h-[44px] w-full sm:w-auto"
             >
               Contribute Content
             </button>
           </div>
         </div>
-      </div>
-      {/* Modals */}
-      <ContributeModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleContributeSubmit}
-      />
-      <DetailView 
-        item={selectedItem}
-        onClose={handleCloseDetailView}
-      />
-    </div>
-  );
+        
+        {/* Modals */}
+        <ContributeModal
+          isOpen={isContributeModalOpen}
+          onClose={() => setContributeModal(false)}
+          onSubmit={handleContributeSubmit}
+        />
+      </div>
+    </div>
+  );
 };
 
 export default CultureHighlights;

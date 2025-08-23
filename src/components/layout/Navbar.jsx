@@ -1,15 +1,13 @@
 import React from 'react';
-
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, BookOpen, Users, Home, Book, Lightbulb } from 'lucide-react';
 import featureFlags from '../../config/featureFlags';
-import { useLanguage } from '../../contexts/LanguageContext';
+import { useLanguage, useUI } from '../../hooks/useRadux';
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { currentLanguage, setCurrentLanguage, t } = useLanguage();
+  const { isMobileMenuOpen, setMobileMenu } = useUI();
 
   const navigationItems = [
     { path: '/', label: t('home'), icon: Home },
@@ -93,18 +91,18 @@ const Navbar = () => {
 
             {/* Mobile menu button - Larger touch target */}
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setMobileMenu(!isMobileMenuOpen)}
               className="lg:hidden p-3 rounded-lg text-black hover:bg-black/5 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle navigation menu"
-              aria-expanded={isMenuOpen}
+              aria-expanded={isMobileMenuOpen}
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation - Improved mobile experience */}
-        {isMenuOpen && (
+        {isMobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-black/10 bg-white">
             <div className="flex flex-col space-y-1">
               {navigationItems.map((item) => {
@@ -113,7 +111,7 @@ const Navbar = () => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => setMobileMenu(false)}
                     className={`px-4 py-4 rounded-lg text-base font-medium transition-all duration-200 flex items-center space-x-3 min-h-[56px] ${isActive(item.path) ? 'bg-[#F1D799] text-black' : 'text-black hover:bg-black/5 active:bg-black/10'}`}
                   >
                     <Icon className="w-5 h-5 flex-shrink-0" />
