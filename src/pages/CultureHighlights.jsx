@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import { Calendar, MapPin, X,Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
 import { culturalData } from '../data/mockData';
 import ContributeModal from './ContributeModal';
+import { useNavigate } from 'react-router-dom';
 
 const CultureHighlights = () => {
-  const [activeSection, setActiveSection] = useState('traditions');
-  const [selectedRegion, setSelectedRegion] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('traditions');
+  const [selectedRegion, setSelectedRegion] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null); // New state to hold the selected item
+  const navigate = useNavigate();
 
   const sections = [
     { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
@@ -41,7 +43,16 @@ const CultureHighlights = () => {
   };
 
   const handleLearnMore = (item) => {
-    setSelectedItem(item);
+    if (activeSection === 'history') {
+      // Navigate to the history detail page for history items
+      navigate(`/culture/history/${item.id}`);
+    } else if (activeSection === 'traditions') {
+      // Navigate to the traditions detail page for tradition items
+      navigate(`/culture/traditions/${item.id}`);
+    } else {
+      // For other sections, show the modal
+      setSelectedItem(item);
+    }
   };
 
   const handleCloseDetailView = () => {

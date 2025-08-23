@@ -16,6 +16,8 @@ import Research from './pages/Research';
 import Accessibility from './pages/Accessibility';
 import CultureTraditions from './pages/CultureTraditions';
 import CultureHistory from './pages/CultureHistory';
+import HistoryDetail from './pages/HistoryDetail';
+import TraditionsDetail from './pages/TraditionsDetail';
 import CultureMusic from './pages/CultureMusic';
 import CultureFolklore from './pages/CultureFolklore';
 import LearnAlphabet from './pages/LearnAlphabet';
@@ -66,7 +68,9 @@ function App() {
               {featureFlags.showAdvancedCulturePages && (
                 <>
                   <Route path="/culture/traditions" element={<CultureTraditions />} />
+                  <Route path="/culture/traditions/:id" element={<TraditionsDetail />} />
                   <Route path="/culture/history" element={<CultureHistory />} />
+                  <Route path="/culture/history/:id" element={<HistoryDetail />} />
                   <Route path="/culture/arts" element={<CultureArts />} />
                   <Route path="/culture/music" element={<CultureMusic />} />
                   <Route path="/culture/folklore" element={<CultureFolklore />} />
