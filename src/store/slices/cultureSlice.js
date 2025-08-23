@@ -1,4 +1,4 @@
-import { createSlice } from 'radux';
+// Culture slice using Radux v0.6.4 compatible approach
 import { culturalData } from '../../data/mockData';
 
 // Initial state for culture management
@@ -42,236 +42,223 @@ export const CULTURE_ACTIONS = {
   RESET_FILTERS: 'culture/resetFilters',
 };
 
-// Culture slice
-export const cultureSlice = createSlice({
-  name: 'culture',
-  initialState,
-  reducers: {
+// Culture reducer
+export const cultureReducer = (state = initialState, action) => {
+  switch (action.type) {
     // Set active section (traditions, history, symbols)
-    setActiveSection: (state, action) => {
-      state.activeSection = action.payload;
-      // Reset selection when changing sections
-      state.selectedItem = null;
-      state.selectedItemType = null;
-    },
+    case CULTURE_ACTIONS.SET_ACTIVE_SECTION:
+      return {
+        ...state,
+        activeSection: action.payload,
+        selectedItem: null,
+        selectedItemType: null,
+      };
 
     // Set selected item for detail view
-    setSelectedItem: (state, action) => {
-      const { item, type } = action.payload;
-      state.selectedItem = item;
-      state.selectedItemType = type;
-    },
+    case CULTURE_ACTIONS.SET_SELECTED_ITEM:
+      return {
+        ...state,
+        selectedItem: action.payload.item,
+        selectedItemType: action.payload.type,
+      };
 
     // Set selected item type
-    setSelectedItemType: (state, action) => {
-      state.selectedItemType = action.payload;
-    },
+    case CULTURE_ACTIONS.SET_SELECTED_ITEM_TYPE:
+      return {
+        ...state,
+        selectedItemType: action.payload,
+      };
 
     // Set region filter
-    setRegionFilter: (state, action) => {
-      state.selectedRegion = action.payload;
-      state.currentPage = 1; // Reset to first page when filtering
-    },
+    case CULTURE_ACTIONS.SET_REGION_FILTER:
+      return {
+        ...state,
+        selectedRegion: action.payload,
+        currentPage: 1, // Reset to first page when filtering
+      };
 
     // Set search term
-    setSearchTerm: (state, action) => {
-      state.searchTerm = action.payload;
-      state.currentPage = 1; // Reset to first page when searching
-    },
+    case CULTURE_ACTIONS.SET_SEARCH_TERM:
+      return {
+        ...state,
+        searchTerm: action.payload,
+        currentPage: 1, // Reset to first page when searching
+      };
 
     // Set loading state
-    setLoading: (state, action) => {
-      state.isLoading = action.payload;
-    },
+    case CULTURE_ACTIONS.SET_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
 
     // Set error state
-    setError: (state, action) => {
-      state.error = action.payload;
-    },
+    case CULTURE_ACTIONS.SET_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
 
     // Set current page for pagination
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
-    },
+    case CULTURE_ACTIONS.SET_CURRENT_PAGE:
+      return {
+        ...state,
+        currentPage: action.payload,
+      };
 
     // Load cultural data (placeholder for future API integration)
-    loadCulturalData: (state) => {
-      state.isLoading = true;
-      state.error = null;
-      
-      try {
-        // For now, use mock data. In production, this would be an API call
-        state.traditions = culturalData.traditions || [];
-        state.history = culturalData.history || [];
-        state.symbols = culturalData.symbols || [];
-        state.totalItems = (culturalData.traditions?.length || 0) + 
-                          (culturalData.history?.length || 0) + 
-                          (culturalData.symbols?.length || 0);
-      } catch (error) {
-        state.error = error.message;
-      } finally {
-        state.isLoading = false;
-      }
-    },
+    case CULTURE_ACTIONS.LOAD_CULTURAL_DATA:
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+      };
 
-    // Clear current selection
-    clearSelection: (state) => {
-      state.selectedItem = null;
-      state.selectedItemType = null;
-    },
+    // Clear selection
+    case CULTURE_ACTIONS.CLEAR_SELECTION:
+      return {
+        ...state,
+        selectedItem: null,
+        selectedItemType: null,
+      };
 
-    // Reset all filters
-    resetFilters: (state) => {
-      state.selectedRegion = 'all';
-      state.searchTerm = '';
-      state.currentPage = 1;
-    },
-  },
-});
+    // Reset filters
+    case CULTURE_ACTIONS.RESET_FILTERS:
+      return {
+        ...state,
+        selectedRegion: 'all',
+        searchTerm: '',
+        currentPage: 1,
+      };
 
-// Export actions
-export const {
-  setActiveSection,
-  setSelectedItem,
-  setSelectedItemType,
-  setRegionFilter,
-  setSearchTerm,
-  setLoading,
-  setError,
-  setCurrentPage,
-  loadCulturalData,
-  clearSelection,
-  resetFilters,
-} = cultureSlice.actions;
-
-// Selectors for easy state access
-export const selectCulture = (state) => state.culture;
-
-export const selectActiveSection = (state) => state.culture.activeSection;
-export const selectSelectedItem = (state) => state.culture.selectedItem;
-export const selectSelectedItemType = (state) => state.culture.selectedItemType;
-export const selectRegionFilter = (state) => state.culture.selectedRegion;
-export const selectSearchTerm = (state) => state.culture.searchTerm;
-export const selectIsLoading = (state) => state.culture.isLoading;
-export const selectError = (state) => state.culture.error;
-export const selectCurrentPage = (state) => state.culture.currentPage;
-export const selectTotalItems = (state) => state.culture.totalItems;
-
-// Computed selectors
-export const selectFilteredContent = (state) => {
-  const { activeSection, traditions, history, symbols, selectedRegion, searchTerm } = state.culture;
-  
-  let content = [];
-  switch (activeSection) {
-    case 'traditions':
-      content = traditions;
-      break;
-    case 'history':
-      content = history;
-      break;
-    case 'symbols':
-      content = symbols;
-      break;
     default:
-      content = [];
-  }
-
-  // Apply region filter
-  if (selectedRegion !== 'all') {
-    content = content.filter(item => item.region === selectedRegion);
-  }
-
-  // Apply search filter
-  if (searchTerm) {
-    const searchLower = searchTerm.toLowerCase();
-    content = content.filter(item => 
-      item.title.toLowerCase().includes(searchLower) ||
-      item.description.toLowerCase().includes(searchLower) ||
-      item.content.toLowerCase().includes(searchLower) ||
-      (item.tags && item.tags.some(tag => tag.toLowerCase().includes(searchLower)))
-    );
-  }
-
-  return content;
-};
-
-export const selectAvailableRegions = (state) => {
-  const { activeSection, traditions, history, symbols } = state.culture;
-  
-  let content = [];
-  switch (activeSection) {
-    case 'traditions':
-      content = traditions;
-      break;
-    case 'history':
-      content = history;
-      break;
-    case 'symbols':
-      content = symbols;
-      break;
-    default:
-      content = [];
-  }
-
-  const regions = ['all', ...new Set(content.map(item => item.region).filter(Boolean))];
-  return regions;
-};
-
-export const selectItemById = (state, id, type) => {
-  const { traditions, history, symbols } = state.culture;
-  
-  switch (type) {
-    case 'tradition':
-      return traditions.find(item => item.id === parseInt(id));
-    case 'history':
-      return history.find(item => item.id === parseInt(id));
-    case 'symbol':
-      return symbols.find(item => item.id === parseInt(id));
-    default:
-      return null;
+      return state;
   }
 };
 
-// Async action creators (for future API integration)
-export const fetchCulturalData = () => async (dispatch) => {
-  dispatch(setLoading(true));
-  
-  try {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // In production, this would be:
-    // const response = await fetch('/api/cultural-data');
-    // const data = await response.json();
-    
-    dispatch(loadCulturalData());
-  } catch (error) {
-    dispatch(setError(error.message));
-  }
+// Action creators
+export const cultureActions = {
+  setActiveSection: (section) => ({
+    type: CULTURE_ACTIONS.SET_ACTIVE_SECTION,
+    payload: section,
+  }),
+
+  setSelectedItem: (item, type) => ({
+    type: CULTURE_ACTIONS.SET_SELECTED_ITEM,
+    payload: { item, type },
+  }),
+
+  setSelectedItemType: (type) => ({
+    type: CULTURE_ACTIONS.SET_SELECTED_ITEM_TYPE,
+    payload: type,
+  }),
+
+  setRegionFilter: (region) => ({
+    type: CULTURE_ACTIONS.SET_REGION_FILTER,
+    payload: region,
+  }),
+
+  setSearchTerm: (term) => ({
+    type: CULTURE_ACTIONS.SET_SEARCH_TERM,
+    payload: term,
+  }),
+
+  setLoading: (loading) => ({
+    type: CULTURE_ACTIONS.SET_LOADING,
+    payload: loading,
+  }),
+
+  setError: (error) => ({
+    type: CULTURE_ACTIONS.SET_ERROR,
+    payload: error,
+  }),
+
+  setCurrentPage: (page) => ({
+    type: CULTURE_ACTIONS.SET_CURRENT_PAGE,
+    payload: page,
+  }),
+
+  loadCulturalData: () => ({
+    type: CULTURE_ACTIONS.LOAD_CULTURAL_DATA,
+  }),
+
+  clearSelection: () => ({
+    type: CULTURE_ACTIONS.CLEAR_SELECTION,
+  }),
+
+  resetFilters: () => ({
+    type: CULTURE_ACTIONS.RESET_FILTERS,
+  }),
 };
 
-export const fetchItemById = (id, type) => async (dispatch, getState) => {
-  dispatch(setLoading(true));
+// Selectors
+export const cultureSelectors = {
+  getActiveSection: (state) => state.culture.activeSection,
+  getSelectedItem: (state) => state.culture.selectedItem,
+  getSelectedItemType: (state) => state.culture.selectedItemType,
+  getRegionFilter: (state) => state.culture.selectedRegion,
+  getSearchTerm: (state) => state.culture.searchTerm,
+  getLoading: (state) => state.culture.isLoading,
+  getError: (state) => state.culture.error,
+  getCurrentPage: (state) => state.culture.currentPage,
+  getItemsPerPage: (state) => state.culture.itemsPerPage,
+  getTotalItems: (state) => state.culture.totalItems,
   
-  try {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 300));
+  // Computed selectors
+  getFilteredTraditions: (state) => {
+    const { traditions, selectedRegion, searchTerm } = state.culture;
+    let filtered = traditions;
     
-    // In production, this would be:
-    // const response = await fetch(`/api/${type}/${id}`);
-    // const item = await response.json();
-    
-    const state = getState();
-    const item = selectItemById(state, id, type);
-    
-    if (item) {
-      dispatch(setSelectedItem({ item, type }));
-    } else {
-      dispatch(setError('Item not found'));
+    if (selectedRegion !== 'all') {
+      filtered = filtered.filter(tradition => tradition.region === selectedRegion);
     }
-  } catch (error) {
-    dispatch(setError(error.message));
-  } finally {
-    dispatch(setLoading(false));
-  }
+    
+    if (searchTerm) {
+      filtered = filtered.filter(tradition => 
+        tradition.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tradition.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  },
+  
+  getFilteredHistory: (state) => {
+    const { history, selectedRegion, searchTerm } = state.culture;
+    let filtered = history;
+    
+    if (selectedRegion !== 'all') {
+      filtered = filtered.filter(item => item.region === selectedRegion);
+    }
+    
+    if (searchTerm) {
+      filtered = filtered.filter(item => 
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  },
+  
+  getFilteredSymbols: (state) => {
+    const { symbols, selectedRegion, searchTerm } = state.culture;
+    let filtered = symbols;
+    
+    if (selectedRegion !== 'all') {
+      filtered = filtered.filter(symbol => symbol.region === selectedRegion);
+    }
+    
+    if (searchTerm) {
+      filtered = filtered.filter(symbol => 
+        symbol.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        symbol.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return filtered;
+  },
 };
+
+// Export the reducer as default for store configuration
+export default cultureReducer;

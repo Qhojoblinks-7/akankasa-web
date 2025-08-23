@@ -1,299 +1,332 @@
-import { createSlice } from 'radux';
+// UI slice using Radux v0.6.4 compatible approach
 
 // Initial state for UI management
 const initialState = {
-  // Modal states
-  isContributeModalOpen: false,
-  isDetailModalOpen: false,
-  
-  // Navigation states
   isMobileMenuOpen: false,
+  isModalOpen: false,
+  activeModal: null,
+  isLoading: false,
+  toast: null,
+  theme: 'light',
   isSidebarOpen: false,
-  
-  // Loading states
-  isPageLoading: false,
-  loadingMessage: '',
-  
-  // Toast/notification states
-  toast: {
-    isVisible: false,
-    message: '',
-    type: 'info', // 'info', 'success', 'warning', 'error'
-    duration: 5000,
-  },
-  
-  // Theme and appearance
-  theme: 'light', // 'light', 'dark'
-  isHighContrast: false,
-  isReducedMotion: false,
-  
-  // Responsive states
-  isMobile: false,
-  isTablet: false,
-  isDesktop: false,
-  
-  // Scroll position tracking
-  scrollPosition: 0,
-  isScrolled: false,
-  
-  // Focus management
-  lastFocusedElement: null,
-  isKeyboardNavigation: false,
+  isSearchOpen: false,
+  isFilterOpen: false,
+  isSortOpen: false,
+  isViewMode: 'grid',
+  isSortBy: 'name',
+  isSortOrder: 'asc',
+  isFilterBy: 'all',
+  isSearchTerm: '',
+  isPage: 1,
+  isPerPage: 12,
+  isTotalItems: 0,
+  isTotalPages: 0,
+  isHasNextPage: false,
+  isHasPrevPage: false,
+  isCurrentPage: 1,
 };
 
 // Action types
 export const UI_ACTIONS = {
-  SET_CONTRIBUTE_MODAL: 'ui/setContributeModal',
-  SET_DETAIL_MODAL: 'ui/setDetailModal',
   SET_MOBILE_MENU: 'ui/setMobileMenu',
-  SET_SIDEBAR: 'ui/setSidebar',
-  SET_PAGE_LOADING: 'ui/setPageLoading',
-  SET_LOADING_MESSAGE: 'ui/setLoadingMessage',
-  SHOW_TOAST: 'ui/showToast',
-  HIDE_TOAST: 'ui/hideToast',
+  SET_MODAL: 'ui/setModal',
+  SET_LOADING: 'ui/setLoading',
+  SET_TOAST: 'ui/setToast',
   SET_THEME: 'ui/setTheme',
-  SET_HIGH_CONTRAST: 'ui/setHighContrast',
-  SET_REDUCED_MOTION: 'ui/setReducedMotion',
-  SET_RESPONSIVE_STATE: 'ui/setResponsiveState',
-  SET_SCROLL_POSITION: 'ui/setScrollPosition',
-  SET_SCROLLED_STATE: 'ui/setScrolledState',
-  SET_LAST_FOCUSED: 'ui/setLastFocused',
-  SET_KEYBOARD_NAVIGATION: 'ui/setKeyboardNavigation',
-  RESET_UI_STATE: 'ui/resetUIState',
+  SET_SIDEBAR: 'ui/setSidebar',
+  SET_SEARCH: 'ui/setSearch',
+  SET_FILTER: 'ui/setFilter',
+  SET_SORT: 'ui/setSort',
+  SET_VIEW_MODE: 'ui/setViewMode',
+  SET_SORT_BY: 'ui/setSortBy',
+  SET_SORT_ORDER: 'ui/setSortOrder',
+  SET_FILTER_BY: 'ui/setFilterBy',
+  SET_SEARCH_TERM: 'ui/setSearchTerm',
+  SET_PAGE: 'ui/setPage',
+  SET_PER_PAGE: 'ui/setPerPage',
+  SET_TOTAL_ITEMS: 'ui/setTotalItems',
+  SET_TOTAL_PAGES: 'ui/setTotalPages',
+  SET_HAS_NEXT_PAGE: 'ui/setHasNextPage',
+  SET_HAS_PREV_PAGE: 'ui/setHasPrevPage',
+  SET_CURRENT_PAGE: 'ui/setCurrentPage',
+  RESET_UI: 'ui/resetUI',
 };
 
-// UI slice
-export const uiSlice = createSlice({
-  name: 'ui',
-  initialState,
-  reducers: {
-    // Modal controls
-    setContributeModal: (state, action) => {
-      state.isContributeModalOpen = action.payload;
-    },
-
-    setDetailModal: (state, action) => {
-      state.isDetailModalOpen = action.payload;
-    },
-
-    // Navigation controls
-    setMobileMenu: (state, action) => {
-      state.isMobileMenuOpen = action.payload;
-    },
-
-    setSidebar: (state, action) => {
-      state.isSidebarOpen = action.payload;
-    },
-
-    // Loading controls
-    setPageLoading: (state, action) => {
-      state.isPageLoading = action.payload;
-    },
-
-    setLoadingMessage: (state, action) => {
-      state.loadingMessage = action.payload;
-    },
-
-    // Toast controls
-    showToast: (state, action) => {
-      const { message, type = 'info', duration = 5000 } = action.payload;
-      state.toast = {
-        isVisible: true,
-        message,
-        type,
-        duration,
+// UI reducer
+export const uiReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case UI_ACTIONS.SET_MOBILE_MENU:
+      return {
+        ...state,
+        isMobileMenuOpen: action.payload,
       };
-    },
 
-    hideToast: (state) => {
-      state.toast.isVisible = false;
-    },
+    case UI_ACTIONS.SET_MODAL:
+      return {
+        ...state,
+        isModalOpen: action.payload.isOpen,
+        activeModal: action.payload.modal,
+      };
 
-    // Theme controls
-    setTheme: (state, action) => {
-      state.theme = action.payload;
-      // Apply theme to document
-      document.documentElement.setAttribute('data-theme', action.payload);
-    },
+    case UI_ACTIONS.SET_LOADING:
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
 
-    setHighContrast: (state, action) => {
-      state.isHighContrast = action.payload;
-      // Apply high contrast to document
-      document.documentElement.setAttribute('data-high-contrast', action.payload);
-    },
+    case UI_ACTIONS.SET_TOAST:
+      return {
+        ...state,
+        toast: action.payload,
+      };
 
-    setReducedMotion: (state, action) => {
-      state.isReducedMotion = action.payload;
-      // Apply reduced motion to document
-      document.documentElement.setAttribute('data-reduced-motion', action.payload);
-    },
+    case UI_ACTIONS.SET_THEME:
+      return {
+        ...state,
+        theme: action.payload,
+      };
 
-    // Responsive state management
-    setResponsiveState: (state, action) => {
-      const { isMobile, isTablet, isDesktop } = action.payload;
-      state.isMobile = isMobile;
-      state.isTablet = isTablet;
-      state.isDesktop = isDesktop;
-    },
+    case UI_ACTIONS.SET_SIDEBAR:
+      return {
+        ...state,
+        isSidebarOpen: action.payload,
+      };
 
-    // Scroll tracking
-    setScrollPosition: (state, action) => {
-      state.scrollPosition = action.payload;
-    },
+    case UI_ACTIONS.SET_SEARCH:
+      return {
+        ...state,
+        isSearchOpen: action.payload,
+      };
 
-    setScrolledState: (state, action) => {
-      state.isScrolled = action.payload;
-    },
+    case UI_ACTIONS.SET_FILTER:
+      return {
+        ...state,
+        isFilterOpen: action.payload,
+      };
 
-    // Focus management
-    setLastFocused: (state, action) => {
-      state.lastFocusedElement = action.payload;
-    },
+    case UI_ACTIONS.SET_SORT:
+      return {
+        ...state,
+        isSortOpen: action.payload,
+      };
 
-    setKeyboardNavigation: (state, action) => {
-      state.isKeyboardNavigation = action.payload;
-    },
+    case UI_ACTIONS.SET_VIEW_MODE:
+      return {
+        ...state,
+        isViewMode: action.payload,
+      };
 
-    // Reset UI state
-    resetUIState: (state) => {
-      state.isContributeModalOpen = false;
-      state.isDetailModalOpen = false;
-      state.isMobileMenuOpen = false;
-      state.isSidebarOpen = false;
-      state.isPageLoading = false;
-      state.loadingMessage = '';
-      state.toast.isVisible = false;
-    },
-  },
-});
+    case UI_ACTIONS.SET_SORT_BY:
+      return {
+        ...state,
+        isSortBy: action.payload,
+      };
 
-// Export actions
-export const {
-  setContributeModal,
-  setDetailModal,
-  setMobileMenu,
-  setSidebar,
-  setPageLoading,
-  setLoadingMessage,
-  showToast,
-  hideToast,
-  setTheme,
-  setHighContrast,
-  setReducedMotion,
-  setResponsiveState,
-  setScrollPosition,
-  setScrolledState,
-  setLastFocused,
-  setKeyboardNavigation,
-  resetUIState,
-} = uiSlice.actions;
+    case UI_ACTIONS.SET_SORT_ORDER:
+      return {
+        ...state,
+        isSortOrder: action.payload,
+      };
 
-// Selectors for easy state access
-export const selectUI = (state) => state.ui;
+    case UI_ACTIONS.SET_FILTER_BY:
+      return {
+        ...state,
+        isFilterBy: action.payload,
+      };
 
-export const selectIsContributeModalOpen = (state) => state.ui.isContributeModalOpen;
-export const selectIsDetailModalOpen = (state) => state.ui.isDetailModalOpen;
-export const selectIsMobileMenuOpen = (state) => state.ui.isMobileMenuOpen;
-export const selectIsSidebarOpen = (state) => state.ui.isSidebarOpen;
-export const selectIsPageLoading = (state) => state.ui.isPageLoading;
-export const selectLoadingMessage = (state) => state.ui.loadingMessage;
-export const selectToast = (state) => state.ui.toast;
-export const selectTheme = (state) => state.ui.theme;
-export const selectIsHighContrast = (state) => state.ui.isHighContrast;
-export const selectIsReducedMotion = (state) => state.ui.isReducedMotion;
-export const selectIsMobile = (state) => state.ui.isMobile;
-export const selectIsTablet = (state) => state.ui.isTablet;
-export const selectIsDesktop = (state) => state.ui.isDesktop;
-export const selectScrollPosition = (state) => state.ui.scrollPosition;
-export const selectIsScrolled = (state) => state.ui.isScrolled;
-export const selectLastFocused = (state) => state.ui.lastFocusedElement;
-export const selectIsKeyboardNavigation = (state) => state.ui.isKeyboardNavigation;
+    case UI_ACTIONS.SET_SEARCH_TERM:
+      return {
+        ...state,
+        isSearchTerm: action.payload,
+      };
 
-// Computed selectors
-export const selectIsAnyModalOpen = (state) => 
-  state.ui.isContributeModalOpen || state.ui.isDetailModalOpen;
+    case UI_ACTIONS.SET_PAGE:
+      return {
+        ...state,
+        isPage: action.payload,
+      };
 
-export const selectIsAnyNavigationOpen = (state) => 
-  state.ui.isMobileMenuOpen || state.ui.isSidebarOpen;
+    case UI_ACTIONS.SET_PER_PAGE:
+      return {
+        ...state,
+        isPerPage: action.payload,
+      };
 
-export const selectIsAnyOverlayOpen = (state) => 
-  state.ui.isContributeModalOpen || 
-  state.ui.isDetailModalOpen || 
-  state.ui.isMobileMenuOpen || 
-  state.ui.isSidebarOpen;
+    case UI_ACTIONS.SET_TOTAL_ITEMS:
+      return {
+        ...state,
+        isTotalItems: action.payload,
+      };
 
-// Async action creators
-export const initializeUI = () => async (dispatch) => {
-  // Check user preferences
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
+    case UI_ACTIONS.SET_TOTAL_PAGES:
+      return {
+        ...state,
+        isTotalPages: action.payload,
+      };
 
-  // Set initial theme
-  dispatch(setTheme(prefersDark ? 'dark' : 'light'));
-  dispatch(setReducedMotion(prefersReducedMotion));
-  dispatch(setHighContrast(prefersHighContrast));
+    case UI_ACTIONS.SET_HAS_NEXT_PAGE:
+      return {
+        ...state,
+        isHasNextPage: action.payload,
+      };
 
-  // Set responsive state
-  const updateResponsiveState = () => {
-    const width = window.innerWidth;
-    dispatch(setResponsiveState({
-      isMobile: width < 768,
-      isTablet: width >= 768 && width < 1024,
-      isDesktop: width >= 1024,
-    }));
-  };
+    case UI_ACTIONS.SET_HAS_PREV_PAGE:
+      return {
+        ...state,
+        isHasPrevPage: action.payload,
+      };
 
-  // Initial check
-  updateResponsiveState();
+    case UI_ACTIONS.SET_CURRENT_PAGE:
+      return {
+        ...state,
+        isCurrentPage: action.payload,
+      };
 
-  // Listen for resize events
-  window.addEventListener('resize', updateResponsiveState);
+    case UI_ACTIONS.RESET_UI:
+      return initialState;
 
-  // Listen for scroll events
-  const handleScroll = () => {
-    const scrollY = window.scrollY;
-    dispatch(setScrollPosition(scrollY));
-    dispatch(setScrolledState(scrollY > 10));
-  };
-
-  window.addEventListener('scroll', handleScroll);
-
-  // Listen for keyboard navigation
-  const handleKeyDown = (event) => {
-    if (event.key === 'Tab') {
-      dispatch(setKeyboardNavigation(true));
-    }
-  };
-
-  const handleMouseDown = () => {
-    dispatch(setKeyboardNavigation(false));
-  };
-
-  document.addEventListener('keydown', handleKeyDown);
-  document.addEventListener('mousedown', handleMouseDown);
-
-  // Return cleanup function
-  return () => {
-    window.removeEventListener('resize', updateResponsiveState);
-    window.removeEventListener('scroll', handleScroll);
-    document.removeEventListener('keydown', handleKeyDown);
-    document.removeEventListener('mousedown', handleMouseDown);
-  };
+    default:
+      return state;
+  }
 };
 
-export const showSuccessToast = (message) => (dispatch) => {
-  dispatch(showToast({ message, type: 'success' }));
+// Action creators
+export const uiActions = {
+  setMobileMenu: (isOpen) => ({
+    type: UI_ACTIONS.SET_MOBILE_MENU,
+    payload: isOpen,
+  }),
+
+  setModal: (isOpen, modal = null) => ({
+    type: UI_ACTIONS.SET_MODAL,
+    payload: { isOpen, modal },
+  }),
+
+  setLoading: (loading) => ({
+    type: UI_ACTIONS.SET_LOADING,
+    payload: loading,
+  }),
+
+  setToast: (toast) => ({
+    type: UI_ACTIONS.SET_TOAST,
+    payload: toast,
+  }),
+
+  setTheme: (theme) => ({
+    type: UI_ACTIONS.SET_THEME,
+    payload: theme,
+  }),
+
+  setSidebar: (isOpen) => ({
+    type: UI_ACTIONS.SET_SIDEBAR,
+    payload: isOpen,
+  }),
+
+  setSearch: (isOpen) => ({
+    type: UI_ACTIONS.SET_SEARCH,
+    payload: isOpen,
+  }),
+
+  setFilter: (isOpen) => ({
+    type: UI_ACTIONS.SET_FILTER,
+    payload: isOpen,
+  }),
+
+  setSort: (isOpen) => ({
+    type: UI_ACTIONS.SET_SORT,
+    payload: isOpen,
+  }),
+
+  setViewMode: (mode) => ({
+    type: UI_ACTIONS.SET_VIEW_MODE,
+    payload: mode,
+  }),
+
+  setSortBy: (sortBy) => ({
+    type: UI_ACTIONS.SET_SORT_BY,
+    payload: sortBy,
+  }),
+
+  setSortOrder: (order) => ({
+    type: UI_ACTIONS.SET_SORT_ORDER,
+    payload: order,
+  }),
+
+  setFilterBy: (filter) => ({
+    type: UI_ACTIONS.SET_FILTER_BY,
+    payload: filter,
+  }),
+
+  setSearchTerm: (term) => ({
+    type: UI_ACTIONS.SET_SEARCH_TERM,
+    payload: term,
+  }),
+
+  setPage: (page) => ({
+    type: UI_ACTIONS.SET_PAGE,
+    payload: page,
+  }),
+
+  setPerPage: (perPage) => ({
+    type: UI_ACTIONS.SET_PER_PAGE,
+    payload: perPage,
+  }),
+
+  setTotalItems: (total) => ({
+    type: UI_ACTIONS.SET_TOTAL_ITEMS,
+    payload: total,
+  }),
+
+  setTotalPages: (total) => ({
+    type: UI_ACTIONS.SET_TOTAL_PAGES,
+    payload: total,
+  }),
+
+  setHasNextPage: (hasNext) => ({
+    type: UI_ACTIONS.SET_HAS_NEXT_PAGE,
+    payload: hasNext,
+  }),
+
+  setHasPrevPage: (hasPrev) => ({
+    type: UI_ACTIONS.SET_HAS_PREV_PAGE,
+    payload: hasPrev,
+  }),
+
+  setCurrentPage: (page) => ({
+    type: UI_ACTIONS.SET_CURRENT_PAGE,
+    payload: page,
+  }),
+
+  resetUI: () => ({
+    type: UI_ACTIONS.RESET_UI,
+  }),
 };
 
-export const showErrorToast = (message) => (dispatch) => {
-  dispatch(showToast({ message, type: 'error' }));
+// Selectors
+export const uiSelectors = {
+  getMobileMenuOpen: (state) => state.ui.isMobileMenuOpen,
+  getModalOpen: (state) => state.ui.isModalOpen,
+  getActiveModal: (state) => state.ui.activeModal,
+  getLoading: (state) => state.ui.isLoading,
+  getToast: (state) => state.ui.toast,
+  getTheme: (state) => state.ui.theme,
+  getSidebarOpen: (state) => state.ui.isSidebarOpen,
+  getSearchOpen: (state) => state.ui.isSearchOpen,
+  getFilterOpen: (state) => state.ui.isFilterOpen,
+  getSortOpen: (state) => state.ui.isSortOpen,
+  getViewMode: (state) => state.ui.isViewMode,
+  getSortBy: (state) => state.ui.isSortBy,
+  getSortOrder: (state) => state.ui.isSortOrder,
+  getFilterBy: (state) => state.ui.isFilterBy,
+  getSearchTerm: (state) => state.ui.isSearchTerm,
+  getPage: (state) => state.ui.isPage,
+  getPerPage: (state) => state.ui.isPerPage,
+  getTotalItems: (state) => state.ui.isTotalItems,
+  getTotalPages: (state) => state.ui.isTotalPages,
+  getHasNextPage: (state) => state.ui.isHasNextPage,
+  getHasPrevPage: (state) => state.ui.isHasPrevPage,
+  getCurrentPage: (state) => state.ui.isCurrentPage,
 };
 
-export const showWarningToast = (message) => (dispatch) => {
-  dispatch(showToast({ message, type: 'warning' }));
-};
-
-export const showInfoToast = (message) => (dispatch) => {
-  dispatch(showToast({ message, type: 'info' }));
-};
+// Export the reducer as default for store configuration
+export default uiReducer;

@@ -45,13 +45,13 @@ const LoadingSpinner = () => (
 );
 
 function AppContent() {
-  useEffect(() => {
-    // Initialize store data when app loads
-    store.dispatch({ type: 'culture/loadCulturalData' });
-    store.dispatch({ type: 'language/loadTranslations' });
-    store.dispatch({ type: 'ui/initializeUI' });
-    store.dispatch({ type: 'user/initializeUser' });
-  }, []);
+          useEffect(() => {
+          // Initialize store data when app loads
+          store.dispatch({ type: 'culture/loadCulturalData' });
+          store.dispatch({ type: 'language/loadTranslations' });
+          store.dispatch({ type: 'ui/resetUI' });
+          store.dispatch({ type: 'user/resetUser' });
+        }, []);
 
   return (
     <Router>
