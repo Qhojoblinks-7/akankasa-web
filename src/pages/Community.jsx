@@ -264,7 +264,7 @@ const Community = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen mt-15 bg-gray-50 overflow-x-hidden">
       {showProfileModal && (
         <ProfileViewModal 
           member={selectedMember} 

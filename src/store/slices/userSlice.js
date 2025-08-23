@@ -1,4 +1,4 @@
-// User slice using Radux v0.6.4 compatible approach
+import { createSlice } from '@reduxjs/toolkit';
 
 // Initial state for user management
 const initialState = {
@@ -11,169 +11,54 @@ const initialState = {
   error: null,
 };
 
-// Action types
-export const USER_ACTIONS = {
-  SET_AUTHENTICATED: 'user/setAuthenticated',
-  SET_USER: 'user/setUser',
-  SET_PREFERENCES: 'user/setPreferences',
-  SET_LEARNING_PROGRESS: 'user/setLearningProgress',
-  SET_COMMUNITY_ACTIVITY: 'user/setCommunityActivity',
-  SET_LOADING: 'user/setLoading',
-  SET_ERROR: 'user/setError',
-  UPDATE_PREFERENCE: 'user/updatePreference',
-  UPDATE_LEARNING_PROGRESS: 'user/updateLearningProgress',
-  UPDATE_COMMUNITY_ACTIVITY: 'user/updateCommunityActivity',
-  LOGOUT: 'user/logout',
-  RESET_USER: 'user/resetUser',
-};
-
-// User reducer
-export const userReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case USER_ACTIONS.SET_AUTHENTICATED:
-      return {
-        ...state,
-        isAuthenticated: action.payload,
-      };
-
-    case USER_ACTIONS.SET_USER:
-      return {
-        ...state,
-        user: action.payload,
-      };
-
-    case USER_ACTIONS.SET_PREFERENCES:
-      return {
-        ...state,
-        preferences: action.payload,
-      };
-
-    case USER_ACTIONS.SET_LEARNING_PROGRESS:
-      return {
-        ...state,
-        learningProgress: action.payload,
-      };
-
-    case USER_ACTIONS.SET_COMMUNITY_ACTIVITY:
-      return {
-        ...state,
-        communityActivity: action.payload,
-      };
-
-    case USER_ACTIONS.SET_LOADING:
-      return {
-        ...state,
-        isLoading: action.payload,
-      };
-
-    case USER_ACTIONS.SET_ERROR:
-      return {
-        ...state,
-        error: action.payload,
-      };
-
-    case USER_ACTIONS.UPDATE_PREFERENCE:
-      return {
-        ...state,
-        preferences: {
-          ...state.preferences,
-          [action.payload.key]: action.payload.value,
-        },
-      };
-
-    case USER_ACTIONS.UPDATE_LEARNING_PROGRESS:
-      return {
-        ...state,
-        learningProgress: {
-          ...state.learningProgress,
-          [action.payload.key]: action.payload.value,
-        },
-      };
-
-    case USER_ACTIONS.UPDATE_COMMUNITY_ACTIVITY:
-      return {
-        ...state,
-        communityActivity: {
-          ...state.communityActivity,
-          [action.payload.key]: action.payload.value,
-        },
-      };
-
-    case USER_ACTIONS.LOGOUT:
-      return {
-        ...state,
-        isAuthenticated: false,
-        user: null,
-      };
-
-    case USER_ACTIONS.RESET_USER:
-      return initialState;
-
-    default:
-      return state;
-  }
-};
-
-// Action creators
-export const userActions = {
-  setAuthenticated: (isAuthenticated) => ({
-    type: USER_ACTIONS.SET_AUTHENTICATED,
-    payload: isAuthenticated,
-  }),
-
-  setUser: (user) => ({
-    type: USER_ACTIONS.SET_USER,
-    payload: user,
-  }),
-
-  setPreferences: (preferences) => ({
-    type: USER_ACTIONS.SET_PREFERENCES,
-    payload: preferences,
-  }),
-
-  setLearningProgress: (progress) => ({
-    type: USER_ACTIONS.SET_LEARNING_PROGRESS,
-    payload: progress,
-  }),
-
-  setCommunityActivity: (activity) => ({
-    type: USER_ACTIONS.SET_COMMUNITY_ACTIVITY,
-    payload: activity,
-  }),
-
-  setLoading: (loading) => ({
-    type: USER_ACTIONS.SET_LOADING,
-    payload: loading,
-  }),
-
-  setError: (error) => ({
-    type: USER_ACTIONS.SET_ERROR,
-    payload: error,
-  }),
-
-  updatePreference: (key, value) => ({
-    type: USER_ACTIONS.UPDATE_PREFERENCE,
-    payload: { key, value },
-  }),
-
-  updateLearningProgress: (key, value) => ({
-    type: USER_ACTIONS.UPDATE_LEARNING_PROGRESS,
-    payload: { key, value },
-  }),
-
-  updateCommunityActivity: (key, value) => ({
-    type: USER_ACTIONS.UPDATE_COMMUNITY_ACTIVITY,
-    payload: { key, value },
-  }),
-
-  logout: () => ({
-    type: USER_ACTIONS.LOGOUT,
-  }),
-
-  resetUser: () => ({
-    type: USER_ACTIONS.RESET_USER,
-  }),
-};
+// Create the user slice
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    // Reducers that directly set the state
+    setAuthenticated: (state, action) => {
+      state.isAuthenticated = action.payload;
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setPreferences: (state, action) => {
+      state.preferences = action.payload;
+    },
+    setLearningProgress: (state, action) => {
+      state.learningProgress = action.payload;
+    },
+    setCommunityActivity: (state, action) => {
+      state.communityActivity = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    // Reducers that update nested state
+    updatePreference: (state, action) => {
+      const { key, value } = action.payload;
+      state.preferences[key] = value;
+    },
+    updateLearningProgress: (state, action) => {
+      const { key, value } = action.payload;
+      state.learningProgress[key] = value;
+    },
+    updateCommunityActivity: (state, action) => {
+      const { key, value } = action.payload;
+      state.communityActivity[key] = value;
+    },
+    // Reducers for logout and reset
+    logout: (state) => {
+      state.isAuthenticated = false;
+      state.user = null;
+    },
+    resetUser: () => initialState,
+  },
+});
 
 // Selectors
 export const userSelectors = {
@@ -195,5 +80,22 @@ export const userSelectors = {
   getUserRole: (state) => state.user.user?.role || 'guest',
 };
 
-// Export the reducer as default for store configuration
-export default userReducer;
+export const userActions = {
+  ...userSlice.actions,
+};
+export const {
+  setAuthenticated,
+  setUser,
+  setPreferences,
+  setLearningProgress,
+  setCommunityActivity,
+  setLoading,
+  setError,
+  updatePreference,
+  updateLearningProgress,
+  updateCommunityActivity,
+  logout,
+  resetUser,
+} = userSlice.actions;
+
+export default userSlice.reducer;

@@ -1,30 +1,42 @@
-import { useRadux } from 'radux';
+import { useSelector, useDispatch } from 'react-redux';
 import { store } from '../store';
 import { cultureActions, cultureSelectors } from '../store/slices/cultureSlice';
 import { uiActions, uiSelectors } from '../store/slices/uiSlice';
 import { languageActions, languageSelectors } from '../store/slices/languageSlice';
 import { userActions, userSelectors } from '../store/slices/userSlice';
 
+// Custom hook for accessing the Redux store
+const useRadux = (selector) => {
+  const dispatch = useDispatch();
+  
+  // Always call useSelector to maintain hook order
+  const selectedValue = useSelector(selector || (() => undefined));
+  
+  return selector ? selectedValue : dispatch;
+};
+
 // Custom hook for culture state
 export const useCulture = () => {
-  const dispatch = useRadux(store);
+  const dispatch = useRadux();
   
   return {
     // State
-    activeSection: useRadux(store, (state) => cultureSelectors.getActiveSection(state)),
-    selectedItem: useRadux(store, (state) => cultureSelectors.getSelectedItem(state)),
-    selectedItemType: useRadux(store, (state) => cultureSelectors.getSelectedItemType(state)),
-    regionFilter: useRadux(store, (state) => cultureSelectors.getRegionFilter(state)),
-    searchTerm: useRadux(store, (state) => cultureSelectors.getSearchTerm(state)),
-    isLoading: useRadux(store, (state) => cultureSelectors.getLoading(state)),
-    error: useRadux(store, (state) => cultureSelectors.getError(state)),
-    currentPage: useRadux(store, (state) => cultureSelectors.getCurrentPage(state)),
-    totalItems: useRadux(store, (state) => cultureSelectors.getTotalItems(state)),
+    activeSection: useRadux((state) => cultureSelectors.getActiveSection(state)),
+    selectedItem: useRadux((state) => cultureSelectors.getSelectedItem(state)),
+    selectedItemType: useRadux((state) => cultureSelectors.getSelectedItemType(state)),
+    regionFilter: useRadux((state) => cultureSelectors.getSelectedRegion(state)),
+    searchTerm: useRadux((state) => cultureSelectors.getSearchTerm(state)),
+    isLoading: useRadux((state) => cultureSelectors.getLoading(state)),
+    error: useRadux((state) => cultureSelectors.getError(state)),
+    currentPage: useRadux((state) => cultureSelectors.getCurrentPage(state)),
+    totalItems: useRadux((state) => cultureSelectors.getTotalItems(state)),
     
     // Computed state
-    filteredTraditions: useRadux(store, (state) => cultureSelectors.getFilteredTraditions(state)),
-    filteredHistory: useRadux(store, (state) => cultureSelectors.getFilteredHistory(state)),
-    filteredSymbols: useRadux(store, (state) => cultureSelectors.getFilteredSymbols(state)),
+    filteredTraditions: useRadux((state) => cultureSelectors.getFilteredTraditions(state)),
+    filteredHistory: useRadux((state) => cultureSelectors.getFilteredHistory(state)),
+    filteredSymbols: useRadux((state) => cultureSelectors.getFilteredSymbols(state)),
+    availableRegions: useRadux((state) => cultureSelectors.getAvailableRegions(state)),
+    filteredContent: useRadux((state) => cultureSelectors.getFilteredContent(state)),
     
     // Actions
     setActiveSection: (section) => dispatch(cultureActions.setActiveSection(section)),
@@ -40,17 +52,17 @@ export const useCulture = () => {
 
 // Custom hook for UI state
 export const useUI = () => {
-  const dispatch = useRadux(store);
+  const dispatch = useRadux();
   
   return {
     // State
-    isMobileMenuOpen: useRadux(store, (state) => uiSelectors.getMobileMenuOpen(state)),
-    isModalOpen: useRadux(store, (state) => uiSelectors.getModalOpen(state)),
-    activeModal: useRadux(store, (state) => uiSelectors.getActiveModal(state)),
-    isLoading: useRadux(store, (state) => uiSelectors.getLoading(state)),
-    toast: useRadux(store, (state) => uiSelectors.getToast(state)),
-    theme: useRadux(store, (state) => uiSelectors.getTheme(state)),
-    sidebarOpen: useRadux(store, (state) => uiSelectors.getSidebarOpen(state)),
+    isMobileMenuOpen: useRadux((state) => uiSelectors.getMobileMenuOpen(state)),
+    isModalOpen: useRadux((state) => uiSelectors.getModalOpen(state)),
+    activeModal: useRadux((state) => uiSelectors.getActiveModal(state)),
+    isLoading: useRadux((state) => uiSelectors.getLoading(state)),
+    toast: useRadux((state) => uiSelectors.getToast(state)),
+    theme: useRadux((state) => uiSelectors.getTheme(state)),
+    sidebarOpen: useRadux((state) => uiSelectors.getSidebarOpen(state)),
     
     // Actions
     setMobileMenu: (isOpen) => dispatch(uiActions.setMobileMenu(isOpen)),
@@ -60,20 +72,24 @@ export const useUI = () => {
     setTheme: (theme) => dispatch(uiActions.setTheme(theme)),
     setSidebar: (isOpen) => dispatch(uiActions.setSidebar(isOpen)),
     resetUI: () => dispatch(uiActions.resetUI()),
+    showSuccessToast: (message) => dispatch(uiActions.setToast({ message, type: 'success' })),
+    showErrorToast: (message) => dispatch(uiActions.setToast({ message, type: 'error' })),
+    showWarningToast: (message) => dispatch(uiActions.setToast({ message, type: 'warning' })),
+    showInfoToast: (message) => dispatch(uiActions.setToast({ message, type: 'info' })),
   };
 };
 
 // Custom hook for language state
 export const useLanguage = () => {
-  const dispatch = useRadux(store);
+  const dispatch = useRadux();
   
   return {
     // State
-    currentLanguage: useRadux(store, (state) => languageSelectors.getCurrentLanguage(state)),
-    availableLanguages: useRadux(store, (state) => languageSelectors.getAvailableLanguages(state)),
-    translations: useRadux(store, (state) => languageSelectors.getTranslations(state)),
-    isLoading: useRadux(store, (state) => languageSelectors.getLoading(state)),
-    error: useRadux(store, (state) => languageSelectors.getError(state)),
+    currentLanguage: useRadux((state) => languageSelectors.getCurrentLanguage(state)),
+    availableLanguages: useRadux((state) => languageSelectors.getAvailableLanguages(state)),
+    translations: useRadux((state) => languageSelectors.getTranslations(state)),
+    isLoading: useRadux((state) => languageSelectors.getLoading(state)),
+    error: useRadux((state) => languageSelectors.getError(state)),
     
     // Computed state
     t: (key) => {
@@ -92,22 +108,22 @@ export const useLanguage = () => {
 
 // Custom hook for user state
 export const useUser = () => {
-  const dispatch = useRadux(store);
+  const dispatch = useRadux();
   
   return {
     // State
-    isAuthenticated: useRadux(store, (state) => userSelectors.getAuthenticated(state)),
-    user: useRadux(store, (state) => userSelectors.getUser(state)),
-    preferences: useRadux(store, (state) => userSelectors.getPreferences(state)),
-    learningProgress: useRadux(store, (state) => userSelectors.getLearningProgress(state)),
-    communityActivity: useRadux(store, (state) => userSelectors.getCommunityActivity(state)),
-    isLoading: useRadux(store, (state) => userSelectors.getLoading(state)),
-    error: useRadux(store, (state) => userSelectors.getError(state)),
+    isAuthenticated: useRadux((state) => userSelectors.getAuthenticated(state)),
+    user: useRadux((state) => userSelectors.getUser(state)),
+    preferences: useRadux((state) => userSelectors.getPreferences(state)),
+    learningProgress: useRadux((state) => userSelectors.getLearningProgress(state)),
+    communityActivity: useRadux((state) => userSelectors.getCommunityActivity(state)),
+    isLoading: useRadux((state) => userSelectors.getLoading(state)),
+    error: useRadux((state) => userSelectors.getError(state)),
     
     // Computed state
-    userName: useRadux(store, (state) => userSelectors.getUserName(state)),
-    userEmail: useRadux(store, (state) => userSelectors.getUserEmail(state)),
-    userRole: useRadux(store, (state) => userSelectors.getUserRole(state)),
+    userName: useRadux((state) => userSelectors.getUserName(state)),
+    userEmail: useRadux((state) => userSelectors.getUserEmail(state)),
+    userRole: useRadux((state) => userSelectors.getUserRole(state)),
     
     // Actions
     setAuthenticated: (isAuthenticated) => dispatch(userActions.setAuthenticated(isAuthenticated)),

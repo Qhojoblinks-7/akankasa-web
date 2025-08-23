@@ -49,7 +49,7 @@ const LanguageLearning = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen mt-15 bg-gray-50 overflow-x-hidden">
       {/* Header - Mobile First */}
       <div className="text-white overflow-hidden" style={{background: 'linear-gradient(135deg, #ca8a04 0%, #f59e0b 100%)'}}>
         <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 max-w-7xl mx-auto overflow-hidden">

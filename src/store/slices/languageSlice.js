@@ -1,4 +1,4 @@
-// Language slice using Radux v0.6.4 compatible approach
+import { createSlice } from '@reduxjs/toolkit';
 
 // Initial state for language management
 const initialState = {
@@ -9,100 +9,36 @@ const initialState = {
   error: null,
 };
 
-// Action types
-export const LANGUAGE_ACTIONS = {
-  SET_CURRENT_LANGUAGE: 'language/setCurrentLanguage',
-  SET_AVAILABLE_LANGUAGES: 'language/setAvailableLanguages',
-  SET_TRANSLATIONS: 'language/setTranslations',
-  SET_LOADING: 'language/setLoading',
-  SET_ERROR: 'language/setError',
-  LOAD_TRANSLATIONS: 'language/loadTranslations',
-  RESET_LANGUAGE: 'language/resetLanguage',
-};
-
-// Language reducer
-export const languageReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case LANGUAGE_ACTIONS.SET_CURRENT_LANGUAGE:
-      return {
-        ...state,
-        currentLanguage: action.payload,
-      };
-
-    case LANGUAGE_ACTIONS.SET_AVAILABLE_LANGUAGES:
-      return {
-        ...state,
-        availableLanguages: action.payload,
-      };
-
-    case LANGUAGE_ACTIONS.SET_TRANSLATIONS:
-      return {
-        ...state,
-        translations: action.payload,
-      };
-
-    case LANGUAGE_ACTIONS.SET_LOADING:
-      return {
-        ...state,
-        isLoading: action.payload,
-      };
-
-    case LANGUAGE_ACTIONS.SET_ERROR:
-      return {
-        ...state,
-        error: action.payload,
-      };
-
-    case LANGUAGE_ACTIONS.LOAD_TRANSLATIONS:
-      return {
-        ...state,
-        isLoading: true,
-        error: null,
-      };
-
-    case LANGUAGE_ACTIONS.RESET_LANGUAGE:
-      return initialState;
-
-    default:
-      return state;
-  }
-};
-
-// Action creators
-export const languageActions = {
-  setCurrentLanguage: (language) => ({
-    type: LANGUAGE_ACTIONS.SET_CURRENT_LANGUAGE,
-    payload: language,
-  }),
-
-  setAvailableLanguages: (languages) => ({
-    type: LANGUAGE_ACTIONS.SET_AVAILABLE_LANGUAGES,
-    payload: languages,
-  }),
-
-  setTranslations: (translations) => ({
-    type: LANGUAGE_ACTIONS.SET_TRANSLATIONS,
-    payload: translations,
-  }),
-
-  setLoading: (loading) => ({
-    type: LANGUAGE_ACTIONS.SET_LOADING,
-    payload: loading,
-  }),
-
-  setError: (error) => ({
-    type: LANGUAGE_ACTIONS.SET_ERROR,
-    payload: error,
-  }),
-
-  loadTranslations: () => ({
-    type: LANGUAGE_ACTIONS.LOAD_TRANSLATIONS,
-  }),
-
-  resetLanguage: () => ({
-    type: LANGUAGE_ACTIONS.RESET_LANGUAGE,
-  }),
-};
+// Create the language slice
+const languageSlice = createSlice({
+  name: 'language',
+  initialState,
+  reducers: {
+    // Reducers that directly set the state
+    setCurrentLanguage: (state, action) => {
+      state.currentLanguage = action.payload;
+    },
+    setAvailableLanguages: (state, action) => {
+      state.availableLanguages = action.payload;
+    },
+    setTranslations: (state, action) => {
+      state.translations = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    // The loadTranslations action is used to trigger a data fetch,
+    // so it only needs to set loading and clear errors.
+    loadTranslations: (state) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    resetLanguage: () => initialState,
+  },
+});
 
 // Selectors
 export const languageSelectors = {
@@ -124,5 +60,17 @@ export const languageSelectors = {
   },
 };
 
-// Export the reducer as default for store configuration
-export default languageReducer;
+export const languageActions = {
+  ...languageSlice.actions,
+};
+export const {
+  setCurrentLanguage,
+  setAvailableLanguages,
+  setTranslations,
+  setLoading,
+  setError,
+  loadTranslations,
+  resetLanguage,
+} = languageSlice.actions;
+
+export default languageSlice.reducer;

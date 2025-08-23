@@ -459,12 +459,14 @@ The application uses **Radux** for centralized state management, providing a cle
 ### Store Structure
 
 ```javascript
-// Main store configuration
-export const store = createStore({
-  culture: cultureSlice,      // Cultural data and UI state
-  ui: uiSlice,               // UI interactions and preferences
-  language: languageSlice,    // Language settings and translations
-  user: userSlice,           // User authentication and preferences
+// Main store configuration using Redux Toolkit
+export const store = configureStore({
+  reducer: {
+    culture: cultureReducer,      // Cultural data and UI state
+    ui: uiReducer,               // UI interactions and preferences
+    language: languageReducer,    // Language settings and translations
+    user: userReducer,           // User authentication and preferences
+  },
 });
 ```
 

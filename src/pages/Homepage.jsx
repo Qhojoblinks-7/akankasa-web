@@ -63,10 +63,10 @@ const Homepage = () => {
         <div className="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
           <div className="text-center mb-8 sm:mb-12 overflow-hidden">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight break-words">
-              {t('featuredContentTitle')}
+              {t('Featured Content')}
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 px-2 sm:px-0 break-words">
-              {t('featuredContentDesc')}
+              {t('Discover the most popular and engaging content on our platform')}
             </p>
           </div>
           

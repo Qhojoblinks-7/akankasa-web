@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Globe, BookOpen, Users, Home, Book, Lightbulb } from 'lucide-react';
-import featureFlags from '../../config/featureFlags';
 import { useLanguage, useUI } from '../../hooks/useRadux';
 
 const Navbar = () => {
   const location = useLocation();
-  const { currentLanguage, setCurrentLanguage, t } = useLanguage();
+  const { currentLanguage, setCurrentLanguage } = useLanguage();
   const { isMobileMenuOpen, setMobileMenu } = useUI();
 
   const navigationItems = [
@@ -26,7 +25,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="shadow-lg sticky top-0 z-50 bg-white overflow-hidden">
+    <nav className="shadow-lg w-lvw fixed top-0 z-50 bg-white overflow-hidden">
       <div className="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
         <div className="flex justify-between items-center h-16 sm:h-18 overflow-hidden">
           {/* Logo */}

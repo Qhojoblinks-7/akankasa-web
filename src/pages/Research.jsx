@@ -13,7 +13,6 @@ const Research = () => {
   const tabs = [
     { id: 'resources', label: 'Resource Library', icon: BookOpen },
     { id: 'forum', label: 'Research Forum', icon: MessageSquare },
-    { id: 'tools', label: 'Analysis Tools', icon: GraduationCap },
     { id: 'collaboration', label: 'Collaboration', icon: Users }
   ];
 
@@ -121,7 +120,7 @@ const Research = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
+    <div className="min-h-screen mt-15 bg-gray-50 overflow-x-hidden">
       {/* Header */}
       <div className="text-white overflow-hidden" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 overflow-hidden">
@@ -281,69 +280,7 @@ const Research = () => {
           </div>
         )}
 
-        {/* Analysis Tools Tab */}
-        {activeTab === 'tools' && (
-          <div className="overflow-hidden">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 break-words">Analysis Tools</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-hidden">
-              {[
-                {
-                  name: 'Phonetic Analyzer',
-                  description: 'Analyze Akan phonetic patterns and pronunciation',
-                  status: 'Available',
-                  icon: '🔊'
-                },
-                {
-                  name: 'Text Corpus Tool',
-                  description: 'Search and analyze Akan text collections',
-                  status: 'Available',
-                  icon: '📚'
-                },
-                {
-                  name: 'Statistical Analysis',
-                  description: 'Perform statistical analysis on Akan language data',
-                  status: 'Coming Soon',
-                  icon: '📊'
-                },
-                {
-                  name: 'Translation Memory',
-                  description: 'Build and manage translation databases',
-                  status: 'Available',
-                  icon: '🔄'
-                },
-                {
-                  name: 'Cultural Context Analyzer',
-                  description: 'Analyze cultural context in Akan texts',
-                  status: 'Beta',
-                  icon: '🏛️'
-                },
-                {
-                  name: 'Collaborative Annotation',
-                  description: 'Collaboratively annotate and tag Akan texts',
-                  status: 'Available',
-                  icon: '✏️'
-                }
-              ].map((tool, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-lg p-6 overflow-hidden">
-                  <div className="text-3xl mb-4 overflow-hidden">{tool.icon}</div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 break-words">{tool.name}</h3>
-                  <p className="text-gray-600 mb-4 break-words">{tool.description}</p>
-                  <button 
-                    className={`w-full py-2 rounded-lg transition-colors text-sm break-words min-h-[44px] ${
-                      tool.status === 'Available' 
-                        ? 'bg-green-600 text-white hover:bg-green-700' 
-                        : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                    }`}
-                    disabled={tool.status !== 'Available'}
-                  >
-                    {tool.status === 'Available' ? 'Launch Tool' : tool.status}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        
 
         {/* Collaboration Tab */}
         {activeTab === 'collaboration' && (

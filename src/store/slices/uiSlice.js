@@ -1,4 +1,4 @@
-// UI slice using Radux v0.6.4 compatible approach
+import { createSlice } from '@reduxjs/toolkit';
 
 // Initial state for UI management
 const initialState = {
@@ -26,281 +26,107 @@ const initialState = {
   isCurrentPage: 1,
 };
 
-// Action types
-export const UI_ACTIONS = {
-  SET_MOBILE_MENU: 'ui/setMobileMenu',
-  SET_MODAL: 'ui/setModal',
-  SET_LOADING: 'ui/setLoading',
-  SET_TOAST: 'ui/setToast',
-  SET_THEME: 'ui/setTheme',
-  SET_SIDEBAR: 'ui/setSidebar',
-  SET_SEARCH: 'ui/setSearch',
-  SET_FILTER: 'ui/setFilter',
-  SET_SORT: 'ui/setSort',
-  SET_VIEW_MODE: 'ui/setViewMode',
-  SET_SORT_BY: 'ui/setSortBy',
-  SET_SORT_ORDER: 'ui/setSortOrder',
-  SET_FILTER_BY: 'ui/setFilterBy',
-  SET_SEARCH_TERM: 'ui/setSearchTerm',
-  SET_PAGE: 'ui/setPage',
-  SET_PER_PAGE: 'ui/setPerPage',
-  SET_TOTAL_ITEMS: 'ui/setTotalItems',
-  SET_TOTAL_PAGES: 'ui/setTotalPages',
-  SET_HAS_NEXT_PAGE: 'ui/setHasNextPage',
-  SET_HAS_PREV_PAGE: 'ui/setHasPrevPage',
-  SET_CURRENT_PAGE: 'ui/setCurrentPage',
-  RESET_UI: 'ui/resetUI',
-};
+// Create the UI slice
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState,
+  reducers: {
+    // Toolkit automatically generates action creators for each reducer function
+    setMobileMenu: (state, action) => {
+      state.isMobileMenuOpen = action.payload;
+    },
+    setModal: (state, action) => {
+      state.isModalOpen = action.payload.isOpen;
+      state.activeModal = action.payload.modal;
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setToast: (state, action) => {
+      state.toast = action.payload;
+    },
+    setTheme: (state, action) => {
+      state.theme = action.payload;
+    },
+    setSidebar: (state, action) => {
+      state.isSidebarOpen = action.payload;
+    },
+    setSearch: (state, action) => {
+      state.isSearchOpen = action.payload;
+    },
+    setFilter: (state, action) => {
+      state.isFilterOpen = action.payload;
+    },
+    setSort: (state, action) => {
+      state.isSortOpen = action.payload;
+    },
+    setViewMode: (state, action) => {
+      state.isViewMode = action.payload;
+    },
+    setSortBy: (state, action) => {
+      state.isSortBy = action.payload;
+    },
+    setSortOrder: (state, action) => {
+      state.isSortOrder = action.payload;
+    },
+    setFilterBy: (state, action) => {
+      state.isFilterBy = action.payload;
+    },
+    setSearchTerm: (state, action) => {
+      state.isSearchTerm = action.payload;
+    },
+    setPage: (state, action) => {
+      state.isPage = action.payload;
+    },
+    setPerPage: (state, action) => {
+      state.isPerPage = action.payload;
+    },
+    setTotalItems: (state, action) => {
+      state.isTotalItems = action.payload;
+    },
+    setTotalPages: (state, action) => {
+      state.isTotalPages = action.payload;
+    },
+    setHasNextPage: (state, action) => {
+      state.isHasNextPage = action.payload;
+    },
+    setHasPrevPage: (state, action) => {
+      state.isHasPrevPage = action.payload;
+    },
+    setCurrentPage: (state, action) => {
+      state.isCurrentPage = action.payload;
+    },
+    resetUI: () => initialState,
+  },
+});
 
-// UI reducer
-export const uiReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case UI_ACTIONS.SET_MOBILE_MENU:
-      return {
-        ...state,
-        isMobileMenuOpen: action.payload,
-      };
-
-    case UI_ACTIONS.SET_MODAL:
-      return {
-        ...state,
-        isModalOpen: action.payload.isOpen,
-        activeModal: action.payload.modal,
-      };
-
-    case UI_ACTIONS.SET_LOADING:
-      return {
-        ...state,
-        isLoading: action.payload,
-      };
-
-    case UI_ACTIONS.SET_TOAST:
-      return {
-        ...state,
-        toast: action.payload,
-      };
-
-    case UI_ACTIONS.SET_THEME:
-      return {
-        ...state,
-        theme: action.payload,
-      };
-
-    case UI_ACTIONS.SET_SIDEBAR:
-      return {
-        ...state,
-        isSidebarOpen: action.payload,
-      };
-
-    case UI_ACTIONS.SET_SEARCH:
-      return {
-        ...state,
-        isSearchOpen: action.payload,
-      };
-
-    case UI_ACTIONS.SET_FILTER:
-      return {
-        ...state,
-        isFilterOpen: action.payload,
-      };
-
-    case UI_ACTIONS.SET_SORT:
-      return {
-        ...state,
-        isSortOpen: action.payload,
-      };
-
-    case UI_ACTIONS.SET_VIEW_MODE:
-      return {
-        ...state,
-        isViewMode: action.payload,
-      };
-
-    case UI_ACTIONS.SET_SORT_BY:
-      return {
-        ...state,
-        isSortBy: action.payload,
-      };
-
-    case UI_ACTIONS.SET_SORT_ORDER:
-      return {
-        ...state,
-        isSortOrder: action.payload,
-      };
-
-    case UI_ACTIONS.SET_FILTER_BY:
-      return {
-        ...state,
-        isFilterBy: action.payload,
-      };
-
-    case UI_ACTIONS.SET_SEARCH_TERM:
-      return {
-        ...state,
-        isSearchTerm: action.payload,
-      };
-
-    case UI_ACTIONS.SET_PAGE:
-      return {
-        ...state,
-        isPage: action.payload,
-      };
-
-    case UI_ACTIONS.SET_PER_PAGE:
-      return {
-        ...state,
-        isPerPage: action.payload,
-      };
-
-    case UI_ACTIONS.SET_TOTAL_ITEMS:
-      return {
-        ...state,
-        isTotalItems: action.payload,
-      };
-
-    case UI_ACTIONS.SET_TOTAL_PAGES:
-      return {
-        ...state,
-        isTotalPages: action.payload,
-      };
-
-    case UI_ACTIONS.SET_HAS_NEXT_PAGE:
-      return {
-        ...state,
-        isHasNextPage: action.payload,
-      };
-
-    case UI_ACTIONS.SET_HAS_PREV_PAGE:
-      return {
-        ...state,
-        isHasPrevPage: action.payload,
-      };
-
-    case UI_ACTIONS.SET_CURRENT_PAGE:
-      return {
-        ...state,
-        isCurrentPage: action.payload,
-      };
-
-    case UI_ACTIONS.RESET_UI:
-      return initialState;
-
-    default:
-      return state;
-  }
-};
-
-// Action creators
 export const uiActions = {
-  setMobileMenu: (isOpen) => ({
-    type: UI_ACTIONS.SET_MOBILE_MENU,
-    payload: isOpen,
-  }),
-
-  setModal: (isOpen, modal = null) => ({
-    type: UI_ACTIONS.SET_MODAL,
-    payload: { isOpen, modal },
-  }),
-
-  setLoading: (loading) => ({
-    type: UI_ACTIONS.SET_LOADING,
-    payload: loading,
-  }),
-
-  setToast: (toast) => ({
-    type: UI_ACTIONS.SET_TOAST,
-    payload: toast,
-  }),
-
-  setTheme: (theme) => ({
-    type: UI_ACTIONS.SET_THEME,
-    payload: theme,
-  }),
-
-  setSidebar: (isOpen) => ({
-    type: UI_ACTIONS.SET_SIDEBAR,
-    payload: isOpen,
-  }),
-
-  setSearch: (isOpen) => ({
-    type: UI_ACTIONS.SET_SEARCH,
-    payload: isOpen,
-  }),
-
-  setFilter: (isOpen) => ({
-    type: UI_ACTIONS.SET_FILTER,
-    payload: isOpen,
-  }),
-
-  setSort: (isOpen) => ({
-    type: UI_ACTIONS.SET_SORT,
-    payload: isOpen,
-  }),
-
-  setViewMode: (mode) => ({
-    type: UI_ACTIONS.SET_VIEW_MODE,
-    payload: mode,
-  }),
-
-  setSortBy: (sortBy) => ({
-    type: UI_ACTIONS.SET_SORT_BY,
-    payload: sortBy,
-  }),
-
-  setSortOrder: (order) => ({
-    type: UI_ACTIONS.SET_SORT_ORDER,
-    payload: order,
-  }),
-
-  setFilterBy: (filter) => ({
-    type: UI_ACTIONS.SET_FILTER_BY,
-    payload: filter,
-  }),
-
-  setSearchTerm: (term) => ({
-    type: UI_ACTIONS.SET_SEARCH_TERM,
-    payload: term,
-  }),
-
-  setPage: (page) => ({
-    type: UI_ACTIONS.SET_PAGE,
-    payload: page,
-  }),
-
-  setPerPage: (perPage) => ({
-    type: UI_ACTIONS.SET_PER_PAGE,
-    payload: perPage,
-  }),
-
-  setTotalItems: (total) => ({
-    type: UI_ACTIONS.SET_TOTAL_ITEMS,
-    payload: total,
-  }),
-
-  setTotalPages: (total) => ({
-    type: UI_ACTIONS.SET_TOTAL_PAGES,
-    payload: total,
-  }),
-
-  setHasNextPage: (hasNext) => ({
-    type: UI_ACTIONS.SET_HAS_NEXT_PAGE,
-    payload: hasNext,
-  }),
-
-  setHasPrevPage: (hasPrev) => ({
-    type: UI_ACTIONS.SET_HAS_PREV_PAGE,
-    payload: hasPrev,
-  }),
-
-  setCurrentPage: (page) => ({
-    type: UI_ACTIONS.SET_CURRENT_PAGE,
-    payload: page,
-  }),
-
-  resetUI: () => ({
-    type: UI_ACTIONS.RESET_UI,
-  }),
+  ...uiSlice.actions,
 };
+export const {
+  setMobileMenu,
+  setModal,
+  setLoading,
+  setToast,
+  setTheme,
+  setSidebar,
+  setSearch,
+  setFilter,
+  setSort,
+  setViewMode,
+  setSortBy,
+  setSortOrder,
+  setFilterBy,
+  setSearchTerm,
+  setPage,
+  setPerPage,
+  setTotalItems,
+  setTotalPages,
+  setHasNextPage,
+  setHasPrevPage,
+  setCurrentPage,
+  resetUI,
+} = uiSlice.actions;
 
 // Selectors
 export const uiSelectors = {
@@ -329,4 +155,4 @@ export const uiSelectors = {
 };
 
 // Export the reducer as default for store configuration
-export default uiReducer;
+export default uiSlice.reducer;

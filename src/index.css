@@ -20,7 +20,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    -webkit-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%; /* Added for modern browser compatibility */
+    text-size-adjust: 100%; /* Added for modern browser compatibility */
   }
   
   #root {
@@ -33,6 +34,7 @@
     overflow-x: hidden;
     max-width: 100vw;
     box-sizing: border-box;
+    width: 100%;
   }
   
   img, svg, video {
@@ -44,6 +46,7 @@
   h1, h2, h3, h4, h5, h6, p, span, div {
     overflow-wrap: break-word;
     word-wrap: break-word;
+    -webkit-hyphens: auto; /* Added for Safari compatibility */
     hyphens: auto;
   }
   
