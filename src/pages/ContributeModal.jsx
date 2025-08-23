@@ -70,26 +70,40 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed  inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
-      <div className="relative mt-30 p-8 w-full max-w-2xl bg-white rounded-lg shadow-xl m-4">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-start p-4">
+      <div className="relative mt-8 sm:mt-16 p-4 sm:p-6 lg:p-8 w-full max-w-2xl bg-white rounded-lg shadow-xl">
+        {/* Close Button - Mobile First */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-600 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+          aria-label="Close modal"
         >
-          <X size={24} />
+          <X size={20} className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">Contribute Content</h3>
-        <p className="text-gray-600 mb-6">Help preserve Akan culture by sharing your knowledge with the community.</p>
+        
+        {/* Header - Mobile First */}
+        <div className="pr-12 sm:pr-16">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4 leading-tight">
+            Contribute Content
+          </h3>
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
+            Help preserve Akan culture by sharing your knowledge with the community.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          {/* Section Selection - Mobile First */}
           <div className="space-y-2">
-            <label htmlFor="section" className="block text-sm font-medium text-gray-700">Choose a Category</label>
+            <label htmlFor="section" className="block text-sm font-medium text-gray-700">
+              Choose a Category
+            </label>
             <select
               id="section"
               name="section"
               value={formData.section}
               onChange={handleSectionChange}
-              className="mt-1 block w-full h-10 border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm **py-2**"
+              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base min-h-[44px] px-3 py-2"
+              aria-label="Select content category"
             >
               {sections.map(section => (
                 <option key={section.id} value={section.id}>{section.label}</option>
@@ -97,10 +111,12 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
             </select>
           </div>
 
-          <div className="space-y-4">
-            {/* General Fields (always visible) */}
+          <div className="space-y-4 sm:space-y-6">
+            {/* General Fields - Mobile First */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                Title
+              </label>
               <input
                 type="text"
                 id="title"
@@ -108,11 +124,16 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-10 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm **py-2**"
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm min-h-[44px] px-3 py-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base"
+                placeholder="Enter a descriptive title"
+                aria-label="Content title"
               />
             </div>
+            
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">Short Description</label>
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                Short Description
+              </label>
               <textarea
                 id="description"
                 name="description"
@@ -120,11 +141,16 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
                 value={formData.description}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base px-3 py-2"
+                placeholder="Brief summary of the content"
+                aria-label="Content description"
               ></textarea>
             </div>
+            
             <div>
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700">Full Content</label>
+              <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                Full Content
+              </label>
               <textarea
                 id="content"
                 name="content"
@@ -132,17 +158,23 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
                 value={formData.content}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base px-3 py-2"
+                placeholder="Detailed content about the topic"
+                aria-label="Full content text"
               ></textarea>
             </div>
+            
             <div>
-              <label htmlFor="region" className="block text-sm font-medium text-gray-700">Region (Optional)</label>
+              <label htmlFor="region" className="block text-sm font-medium text-gray-700">
+                Region (Optional)
+              </label>
               <select
                 id="region"
                 name="region"
                 value={formData.region}
                 onChange={handleChange}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-10 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm **py-2**"
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm min-h-[44px] px-3 py-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base"
+                aria-label="Select region"
               >
                 <option value="">Select a region</option>
                 {regions.map(region => (
@@ -151,40 +183,54 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
               </select>
             </div>
 
-            {/* Conditional Fields based on section */}
+            {/* Conditional Fields based on section - Mobile First */}
             {formData.section === 'history' && (
               <>
-                <div className="border-t border-gray-200 pt-4">
-                  <h4 className="text-lg font-semibold text-gray-800 mb-2">History Details</h4>
-                  <div>
-                    <label htmlFor="timeline" className="block text-sm font-medium text-gray-700">Timeline</label>
-                    <input
-                      type="text"
-                      id="timeline"
-                      name="timeline"
-                      value={formData.timeline}
-                      onChange={handleChange}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-10 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm **py-2**"
-                    />
-                  </div>
-                  <div className="mt-4">
-                    <label htmlFor="significance" className="block text-sm font-medium text-gray-700">Significance</label>
-                    <textarea
-                      id="significance"
-                      name="significance"
-                      rows="2"
-                      value={formData.significance}
-                      onChange={handleChange}
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-15 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                    ></textarea>
+                <div className="border-t border-gray-200 pt-4 sm:pt-6">
+                  <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 leading-tight">
+                    History Details
+                  </h4>
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor="timeline" className="block text-sm font-medium text-gray-700">
+                        Timeline
+                      </label>
+                      <input
+                        type="text"
+                        id="timeline"
+                        name="timeline"
+                        value={formData.timeline}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm min-h-[44px] px-3 py-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base"
+                        placeholder="e.g., 18th century, pre-colonial era"
+                        aria-label="Historical timeline"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="significance" className="block text-sm font-medium text-gray-700">
+                        Significance
+                      </label>
+                      <textarea
+                        id="significance"
+                        name="significance"
+                        rows="2"
+                        value={formData.significance}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base px-3 py-2"
+                        placeholder="Why is this historically important?"
+                        aria-label="Historical significance"
+                      ></textarea>
+                    </div>
                   </div>
                 </div>
               </>
             )}
 
             {formData.section === 'arts' && (
-              <div className="border-t border-gray-200 pt-4">
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">Arts & Crafts Details</h4>
+              <div className="border-t border-gray-200 pt-4 sm:pt-6">
+                <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 leading-tight">
+                  Arts & Crafts Details
+                </h4>
                 <div>
                   <label htmlFor="examples" className="block text-sm font-medium text-gray-700">
                     Examples (e.g., Symbol, another example)
@@ -196,15 +242,18 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.examples}
                     onChange={handleChange}
                     placeholder="Separate examples with commas"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-15 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm **py-2**"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm min-h-[44px] px-3 py-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base"
+                    aria-label="Arts and crafts examples"
                   />
                 </div>
               </div>
             )}
 
             {formData.section === 'music' && (
-              <div className="border-t border-gray-200 pt-4">
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">Music & Dance Details</h4>
+              <div className="border-t border-gray-200 pt-4 sm:pt-6">
+                <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4 leading-tight">
+                  Music & Dance Details
+                </h4>
                 <div>
                   <label htmlFor="instruments" className="block text-sm font-medium text-gray-700">
                     Instruments (e.g., Atumpan, Fontomfrom)
@@ -216,39 +265,45 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
                     value={formData.instruments}
                     onChange={handleChange}
                     placeholder="Separate instruments with commas"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-15 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm **py-2**"
+                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm min-h-[44px] px-3 py-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base"
+                    aria-label="Musical instruments"
                   />
                 </div>
               </div>
             )}
             
-            <div className="border-t border-gray-200 pt-4">
-                <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
-                    Tags (e.g., #festival, #royalty)
-                </label>
-                <input
-                    type="text"
-                    id="tags"
-                    name="tags"
-                    value={formData.tags}
-                    onChange={handleChange}
-                    placeholder="Separate tags with commas"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-15 focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm **py-2**"
-                />
+            {/* Tags - Mobile First */}
+            <div className="border-t border-gray-200 pt-4 sm:pt-6">
+              <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
+                Tags (e.g., #festival, #royalty)
+              </label>
+              <input
+                type="text"
+                id="tags"
+                name="tags"
+                value={formData.tags}
+                onChange={handleChange}
+                placeholder="Separate tags with commas"
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm min-h-[44px] px-3 py-2 focus:ring-yellow-500 focus:border-yellow-500 text-sm sm:text-base"
+                aria-label="Content tags"
+              />
             </div>
           </div>
 
-          <div className="flex justify-end space-x-2 border-t border-gray-200 pt-4">
+          {/* Action Buttons - Mobile First */}
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 border-t border-gray-200 pt-4 sm:pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="w-full sm:w-auto px-4 sm:px-6 py-3 border border-gray-300 rounded-md shadow-sm text-sm sm:text-base font-medium text-gray-700 hover:bg-gray-50 transition-colors min-h-[44px]"
+              aria-label="Cancel contribution"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700"
+              className="w-full sm:w-auto px-4 sm:px-6 py-3 border border-transparent rounded-md shadow-sm text-sm sm:text-base font-medium text-white bg-yellow-600 hover:bg-yellow-700 transition-colors min-h-[44px]"
+              aria-label="Submit contribution"
             >
               Submit Contribution
             </button>

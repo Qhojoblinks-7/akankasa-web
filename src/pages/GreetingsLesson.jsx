@@ -99,26 +99,26 @@ const GreetingsLesson = () => {
   const completionRate = (completedGreetings.size / greetings.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Header */}
-      <div className="sticky top-0 z-10 px-4 py-4" style={{backgroundColor: '#f1d799'}}>
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+      <div className="sticky top-0 z-10 px-4 py-4 overflow-hidden" style={{backgroundColor: '#f1d799'}}>
+        <div className="max-w-4xl mx-auto flex items-center justify-between overflow-hidden">
           <Link 
             to="/learn" 
-            className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors min-h-[44px] break-words"
             style={{color: '#564c38'}}
             onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(86, 76, 56, 0.1)'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium">Back to Lessons</span>
+            <ArrowLeft className="w-5 h-5 flex-shrink-0" />
+            <span className="font-medium break-words">Back to Lessons</span>
           </Link>
           
-          <div className="flex items-center space-x-4">
-            <div className="text-sm font-medium" style={{color: '#564c38'}}>
+          <div className="flex items-center space-x-4 overflow-hidden">
+            <div className="text-sm font-medium break-words" style={{color: '#564c38'}}>
               Progress: {currentGreeting + 1}/{greetings.length}
             </div>
-            <div className="w-32 h-2 rounded-full" style={{backgroundColor: 'rgba(86, 76, 56, 0.2)'}}>
+            <div className="w-32 h-2 rounded-full overflow-hidden" style={{backgroundColor: 'rgba(86, 76, 56, 0.2)'}}>
               <div 
                 className="h-2 rounded-full transition-all duration-300"
                 style={{backgroundColor: '#564c38', width: `${progress}%`}}
@@ -128,16 +128,16 @@ const GreetingsLesson = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 overflow-hidden">
         {/* Lesson Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4" style={{color: '#564c38'}}>
+        <div className="text-center mb-8 overflow-hidden">
+          <h1 className="text-4xl font-bold mb-4 break-words" style={{color: '#564c38'}}>
             Basic Akan Greetings
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-600 break-words">
             Learn essential daily greetings to start conversations in Akan
           </p>
-          <div className="mt-4 inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" 
+          <div className="mt-4 inline-flex items-center px-4 py-2 rounded-full text-sm font-medium break-words" 
                style={{backgroundColor: '#c2ae81', color: '#564c38'}}>
             {completedGreetings.size} of {greetings.length} completed
           </div>
@@ -149,39 +149,39 @@ const GreetingsLesson = () => {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-2xl shadow-lg p-8 mb-8"
+          className="bg-white rounded-2xl shadow-lg p-8 mb-8 overflow-hidden"
         >
-          <div className="text-center">
+          <div className="text-center overflow-hidden">
             {/* Akan Text */}
-            <div className="mb-6">
-              <h2 className="text-5xl font-bold mb-4" style={{color: '#564c38'}}>
+            <div className="mb-6 overflow-hidden">
+              <h2 className="text-5xl font-bold mb-4 break-words" style={{color: '#564c38'}}>
                 {currentData.akan}
               </h2>
               <button
                 onClick={() => playAudio(currentData.audio)}
-                className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors"
+                className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px] break-words"
                 style={{backgroundColor: '#f1d799', color: '#564c38'}}
                 onMouseEnter={(e) => e.target.style.backgroundColor = '#c2ae81'}
                 onMouseLeave={(e) => e.target.style.backgroundColor = '#f1d799'}
               >
-                <Volume2 className="w-5 h-5" />
-                <span>Play Audio</span>
+                <Volume2 className="w-5 h-5 flex-shrink-0" />
+                <span className="break-words">Play Audio</span>
               </button>
             </div>
 
             {/* Pronunciation */}
-            <div className="mb-6">
-              <p className="text-lg text-gray-600 mb-2">Pronunciation:</p>
-              <p className="text-2xl font-mono" style={{color: '#695e46'}}>
+            <div className="mb-6 overflow-hidden">
+              <p className="text-lg text-gray-600 mb-2 break-words">Pronunciation:</p>
+              <p className="text-2xl font-mono break-words" style={{color: '#695e46'}}>
                 [{currentData.pronunciation}]
               </p>
             </div>
 
             {/* Translation Toggle */}
-            <div className="mb-6">
+            <div className="mb-6 overflow-hidden">
               <button
                 onClick={() => setShowTranslation(!showTranslation)}
-                className="px-6 py-3 rounded-lg font-medium transition-colors"
+                className="px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px] break-words"
                 style={{
                   backgroundColor: showTranslation ? '#564c38' : '#77705c',
                   color: 'white'
@@ -194,9 +194,9 @@ const GreetingsLesson = () => {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4"
+                  className="mt-4 overflow-hidden"
                 >
-                  <p className="text-3xl font-semibold" style={{color: '#564c38'}}>
+                  <p className="text-3xl font-semibold break-words" style={{color: '#564c38'}}>
                     "{currentData.english}"
                   </p>
                 </motion.div>
@@ -204,71 +204,71 @@ const GreetingsLesson = () => {
             </div>
 
             {/* Context */}
-            <div className="p-4 rounded-lg" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
-              <p className="font-medium mb-1">When to use:</p>
-              <p>{currentData.context}</p>
+            <div className="p-4 rounded-lg overflow-hidden" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
+              <p className="font-medium mb-1 break-words">When to use:</p>
+              <p className="break-words">{currentData.context}</p>
             </div>
           </div>
         </motion.div>
 
         {/* Navigation and Actions */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-8 overflow-hidden">
           <button
             onClick={prevGreeting}
             disabled={currentGreeting === 0}
-            className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] break-words"
             style={{backgroundColor: '#77705c', color: 'white'}}
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Previous</span>
+            <ArrowLeft className="w-5 h-5 flex-shrink-0" />
+            <span className="break-words">Previous</span>
           </button>
 
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 overflow-hidden">
             <button
               onClick={markAsCompleted}
               disabled={completedGreetings.has(currentGreeting)}
-              className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
+              className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 min-h-[44px] break-words"
               style={{
                 backgroundColor: completedGreetings.has(currentGreeting) ? '#c2ae81' : '#564c38',
                 color: 'white'
               }}
             >
-              <CheckCircle className="w-5 h-5" />
-              <span>{completedGreetings.has(currentGreeting) ? 'Completed' : 'Mark Complete'}</span>
+              <CheckCircle className="w-5 h-5 flex-shrink-0" />
+              <span className="break-words">{completedGreetings.has(currentGreeting) ? 'Completed' : 'Mark Complete'}</span>
             </button>
 
             <button
               onClick={() => setShowTranslation(false)}
-              className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors"
+              className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px] break-words"
               style={{backgroundColor: '#695e46', color: 'white'}}
             >
-              <RotateCcw className="w-5 h-5" />
-              <span>Practice Again</span>
+              <RotateCcw className="w-5 h-5 flex-shrink-0" />
+              <span className="break-words">Practice Again</span>
             </button>
           </div>
 
           <button
             onClick={nextGreeting}
             disabled={currentGreeting === greetings.length - 1}
-            className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] break-words"
             style={{backgroundColor: '#77705c', color: 'white'}}
           >
-            <span>Next</span>
-            <ArrowLeft className="w-5 h-5 rotate-180" />
+            <span className="break-words">Next</span>
+            <ArrowLeft className="w-5 h-5 rotate-180 flex-shrink-0" />
           </button>
         </div>
 
         {/* Progress Overview */}
-        <div className="bg-white rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4" style={{color: '#564c38'}}>
+        <div className="bg-white rounded-lg p-6 overflow-hidden">
+          <h3 className="text-xl font-semibold mb-4 break-words" style={{color: '#564c38'}}>
             Lesson Progress
           </h3>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-3 overflow-hidden">
             {greetings.map((greeting, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentGreeting(index)}
-                className={`p-3 rounded-lg text-sm font-medium transition-colors ${
+                className={`p-3 rounded-lg text-sm font-medium transition-colors min-h-[44px] break-words ${
                   index === currentGreeting ? 'ring-2 ring-offset-2' : ''
                 }`}
                 style={{
@@ -287,7 +287,7 @@ const GreetingsLesson = () => {
               </button>
             ))}
           </div>
-          <div className="mt-4 text-sm text-gray-600">
+          <div className="mt-4 text-sm text-gray-600 break-words">
             Completion: {Math.round(completionRate)}%
           </div>
         </div>
@@ -297,22 +297,22 @@ const GreetingsLesson = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-8 bg-white rounded-lg p-6 text-center border-2"
+            className="mt-8 bg-white rounded-lg p-6 text-center border-2 overflow-hidden"
             style={{borderColor: '#f1d799'}}
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h3 className="text-2xl font-bold mb-2" style={{color: '#564c38'}}>
+            <h3 className="text-2xl font-bold mb-2 break-words" style={{color: '#564c38'}}>
               Congratulations!
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 mb-4 break-words">
               You've completed the Basic Greetings lesson. You're ready to start conversations in Akan!
             </p>
             <Link
               to="/learn"
-              className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors"
+              className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-colors min-h-[44px] break-words"
               style={{backgroundColor: '#564c38', color: 'white'}}
             >
-              <span>Continue to Next Lesson</span>
+              <span className="break-words">Continue to Next Lesson</span>
             </Link>
           </motion.div>
         )}
