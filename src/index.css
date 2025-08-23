@@ -1,6 +1,19 @@
-@import "tailwindcss";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 @layer base {
+  /* Global overflow protection */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
   body {
     font-family: 'Inter', 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'sans-serif';
     background-color: #f9f9f9;
@@ -9,20 +22,104 @@
     /* Optimize for mobile performance */
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    /* Ensure content stays within viewport */
+    max-width: 100vw;
+    width: 100%;
   }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Georama', 'Inter', system-ui, sans-serif;
+  
+  /* Root container overflow protection */
+  #root {
+    overflow-x: hidden;
+    max-width: 100vw;
+    width: 100%;
   }
-
-  .accent-font {
-    font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  
+  /* Prevent horizontal overflow on all containers */
+  .container, .max-w-screen-xl, .max-w-7xl {
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure images don't overflow */
+  img, svg, video {
+    max-width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  
+  /* Prevent text overflow */
+  h1, h2, h3, h4, h5, h6, p, span, div {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  /* Long words and URLs */
+  .break-words {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  
+  .break-all {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+  
+  /* Prevent flex items from overflowing */
+  .flex, .flex-row, .flex-col {
+    overflow: hidden;
+    max-width: 100%;
+  }
+  
+  /* Grid overflow protection */
+  .grid {
+    overflow: hidden;
+    max-width: 100%;
+  }
+  
+  /* Form elements overflow protection */
+  input, textarea, select, button {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
+  /* Table overflow protection */
+  table {
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+  }
+  
+  /* Modal and overlay overflow protection */
+  .modal, .overlay, [role="dialog"] {
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 }
 
 @layer components {
-  .akan-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1d799' fill-opacity='0.1'%3E%3Cpath d='M36 30c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12zm12-12c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  /* Base component styles */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md overflow-hidden;
+  }
+  
+  .input {
+    @apply block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm;
+  }
+  
+  .label {
+    @apply block text-sm font-medium text-gray-700;
   }
   
   /* Custom scrollbar styles */
@@ -34,52 +131,239 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
   }
+  
+  /* Overflow-safe containers */
+  .overflow-safe {
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Responsive text containers */
+  .text-container {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    max-width: 100%;
+  }
+  
+  /* Safe flex containers */
+  .flex-safe {
+    display: flex;
+    overflow: hidden;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  /* Safe grid containers */
+  .grid-safe {
+    display: grid;
+    overflow: hidden;
+    max-width: 100%;
+  }
+  
+  /* Mobile-first touch improvements */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Safe image containers */
+  .image-container {
+    overflow: hidden;
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Safe button containers */
+  .button-container {
+    overflow: hidden;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+  
+  /* Safe form containers */
+  .form-container {
+    overflow: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 @layer utilities {
   /* Mobile-first touch improvements */
   @media (max-width: 640px) {
-    /* Improve touch targets */
-    .touch-target {
-      min-height: 44px;
-      min-width: 44px;
+    .touch-target { 
+      min-height: 44px; 
+      min-width: 44px; 
     }
-    
-    /* Better text readability on small screens */
-    .mobile-text {
-      line-height: 1.5;
-      font-size: 0.875rem;
+    .mobile-text { 
+      line-height: 1.5; 
+      font-size: 0.875rem; 
     }
-    
-    /* Optimize spacing for mobile */
-    .mobile-optimized {
-      padding: 1rem;
-      margin: 0.5rem;
+    .mobile-optimized { 
+      padding: 1rem; 
+      margin: 0.5rem; 
     }
   }
-
+  
   /* Landscape orientation optimizations */
-  @media (max-height: 500px) and (orientation: landscape) {
-    .landscape-optimized {
-      padding: 0.5rem;
-      margin: 0.25rem;
+  @media (max-width: 640px) and (orientation: landscape) {
+    .landscape-optimized { 
+      padding: 0.75rem; 
+      margin: 0.25rem; 
     }
   }
-
+  
   /* High DPI display optimizations */
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    .high-dpi-optimized {
+    .high-dpi-optimized { 
       image-rendering: -webkit-optimize-contrast;
       image-rendering: crisp-edges;
     }
   }
-
+  
   /* Reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
-    .no-motion * {
+    .no-motion {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+  
+  /* Overflow protection utilities */
+  .overflow-x-hidden {
+    overflow-x: hidden;
+  }
+  
+  .max-w-screen {
+    max-width: 100vw;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .box-border {
+    box-sizing: border-box;
+  }
+  
+  .min-w-0 {
+    min-width: 0;
+  }
+  
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+  
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+  .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .overflow-auto {
+    overflow: auto;
+  }
+  
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  
+  /* Text overflow utilities */
+  .break-words {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  
+  .break-all {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+  
+  .whitespace-normal {
+    white-space: normal;
+  }
+  
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
+  
+  /* Container overflow utilities */
+  .container-overflow-safe {
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .responsive-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  
+  /* Grid overflow utilities */
+  .grid-overflow-safe {
+    display: grid;
+    overflow: hidden;
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  }
+  
+  /* Flex overflow utilities */
+  .flex-overflow-safe {
+    display: flex;
+    overflow: hidden;
+    max-width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  /* Form overflow utilities */
+  .form-overflow-safe {
+    overflow: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .input-overflow-safe {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
+  /* Button overflow utilities */
+  .button-overflow-safe {
+    overflow: hidden;
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  /* Image overflow utilities */
+  .image-overflow-safe {
+    max-width: 100%;
+    height: auto;
+    overflow: hidden;
+    object-fit: contain;
+  }
+  
+  /* Table overflow utilities */
+  .table-overflow-safe {
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+  }
+  
+  /* Modal overflow utilities */
+  .modal-overflow-safe {
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
 }

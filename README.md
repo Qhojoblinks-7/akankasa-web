@@ -43,6 +43,8 @@ src/
 
 The AkanKasa platform is built with a **mobile-first design philosophy**, ensuring optimal user experience across all device sizes. This approach prioritizes mobile users while progressively enhancing the experience for larger screens.
 
+> **📋 Important**: For comprehensive overflow protection guidelines and component requirements, see [OVERFLOW_PROTECTION.md](./OVERFLOW_PROTECTION.md).
+
 ### Design Principles
 
 1. **Mobile-First Approach**: Start with mobile breakpoints (base, xs, sm) and scale up
@@ -401,6 +403,31 @@ const ResponsiveNavigation = () => {
   );
 };
 ```
+
+### Overflow Protection & Layout Safety
+
+#### 1. Horizontal Overflow Prevention
+
+- **Global Protection**: `overflow-x: hidden` on root containers
+- **Container Constraints**: `max-w-screen-xl` and `box-border` on all containers
+- **Text Safety**: `break-words` on all text content to prevent overflow
+- **Layout Safety**: `overflow-hidden` on grids, flex containers, and content sections
+
+#### 2. Responsive Containment
+
+- **Mobile-First Constraints**: Start with mobile breakpoints and scale up
+- **Flexible Grids**: Use `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` with overflow protection
+- **Safe Flexbox**: Implement `flex-wrap` and `min-w-0` for flexible layouts
+- **Touch-Friendly**: Minimum 44px touch targets that don't cause overflow
+
+#### 3. Component Safety Standards
+
+- **Required Classes**: Every component must include overflow protection
+- **Container Pattern**: Use consistent container structure with safety classes
+- **Testing Requirements**: Test with long content, various screen sizes, and orientations
+- **Enforcement**: Overflow protection is mandatory for all components
+
+> **🔒 Critical**: See [OVERFLOW_PROTECTION.md](./OVERFLOW_PROTECTION.md) for complete implementation guidelines, component checklist, and enforcement rules.
 
 ### Future Mobile Enhancements
 
@@ -907,6 +934,18 @@ PUT  /api/user/profile           # Update user profile
 - **Prettier**: Use Prettier for code formatting
 - **TypeScript**: Consider migrating to TypeScript for better type safety
 - **Testing**: Write tests for new features
+- **Overflow Protection**: Follow overflow protection guidelines for all components
+
+### Overflow Protection Requirements
+
+**MANDATORY**: All new components must implement overflow protection:
+
+1. **Component Structure**: Use required overflow protection classes
+2. **Testing**: Test with long content and various screen sizes
+3. **Validation**: Use the component checklist before submitting
+4. **Documentation**: Document any overflow protection decisions
+
+> **🚫 Critical**: Components without proper overflow protection will not be merged. See [OVERFLOW_PROTECTION.md](./OVERFLOW_PROTECTION.md) for complete requirements.
 
 ### State Management Guidelines
 
@@ -923,6 +962,18 @@ PUT  /api/user/profile           # Update user profile
 3. **Responsive Typography**: Use scalable text sizing
 4. **Performance**: Optimize for mobile performance
 5. **Accessibility**: Maintain WCAG compliance across devices
+6. **Overflow Protection**: Implement mandatory overflow protection on all components
+
+### Overflow Protection Integration
+
+Radux state management integrates with overflow protection:
+
+1. **UI State**: Track responsive states and overflow conditions
+2. **Layout Safety**: Ensure state changes don't cause layout overflow
+3. **Component Validation**: Enforce overflow protection in component rendering
+4. **Testing**: Include overflow testing in state management tests
+
+> **🔒 Required**: All components using Radux must implement overflow protection. See [OVERFLOW_PROTECTION.md](./OVERFLOW_PROTECTION.md) for implementation details.
 
 ## 📄 License
 
