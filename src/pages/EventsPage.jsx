@@ -3,13 +3,19 @@ import { Link } from 'react-router-dom';
 import { communityData } from '../data/mockData';
 import { Calendar, MapPin, Clock } from 'lucide-react';
 
+const EVENTS_KEY = 'akan:events';
+
 const EventsPage = () => {
+  const stored = (() => {
+    try { const raw = localStorage.getItem(EVENTS_KEY); return raw ? JSON.parse(raw) : []; } catch { return []; }
+  })();
+  const events = [...stored, ...(communityData.events || [])];
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Events & Meetups</h1>
       <p className="text-gray-600 mb-6">Discover and attend Akan cultural events</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {communityData.events.map(event => (
+        {events.map(event => (
           <div key={event.id} className="bg-white rounded-lg shadow p-4">
             <h3 className="font-semibold mb-2">{event.title}</h3>
             <p className="text-sm text-gray-600 mb-2">{event.description}</p>

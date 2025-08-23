@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { forumData } from '../data/mockData';
 
+const POSTS_KEY = 'akan:forum:posts';
+const REPLIES_KEY_PREFIX = 'akan:forum:replies:';
+
 const DiscussionView = () => {
   const { id } = useParams();
-  const post = forumData.find(p => p.id === parseInt(id));
+  const numericId = parseInt(id);
+  const storedPosts = (() => {
+    try { const raw = localStorage.getItem(POSTS_KEY); return raw ? JSON.parse(raw) : []; } catch { return []; }
+  })();
+  const builtIn = forumData.find(p => p.id === numericId);
+  const stored = storedPosts.find(p => p.id === numericId);
+  const post = stored || builtIn;
 
-  // Demo fallback post and replies for simulation when a post is not found
-  const demoPost = {
-    id: 9999,
-    title: 'How can I improve my Akan pronunciation? 🎙️',
-    content: 'I struggle with tone and vowel length. What exercises have worked for you?',
-    author: 'Kofi',
-    repliesList: [
-      { id: 1, author: 'Ama', content: "Practice with native audio and shadow-speak sentence-by-sentence. I use recordings from the lessons.", time: '2h' },
-      { id: 2, author: 'Yaw', content: "Try recording yourself and compare waveforms — also slow playback helps.", time: '1h' },
-      { id: 3, author: 'Abena', content: "A language partner helped me a lot. We do 15-minute sessions 3x/week.", time: '20m' }
-    ]
-  };
-
-  const initialPost = post || demoPost;
-  const [replies, setReplies] = useState(initialPost ? (initialPost.repliesList || []) : []);
+  const storageKey = `${REPLIES_KEY_PREFIX}${id}`;
+  const [replies, setReplies] = useState([]);
   const [newReply, setNewReply] = useState('');
 
-  if (!initialPost) {
+  useEffect(() => {
+    try { const raw = localStorage.getItem(storageKey); setReplies(raw ? JSON.parse(raw) : (post?.repliesList || [])); } catch { setReplies(post?.repliesList || []); }
+  }, [storageKey, post]);
+
+  if (!post) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -43,8 +43,10 @@ const DiscussionView = () => {
       content: newReply,
       time: 'now'
     };
-    setReplies([...replies, reply]);
+    const next = [...replies, reply];
+    setReplies(next);
     setNewReply('');
+    try { localStorage.setItem(storageKey, JSON.stringify(next)); } catch {}
   };
 
   return (
@@ -54,12 +56,12 @@ const DiscussionView = () => {
       </Link>
 
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <h1 className="text-3xl font-bold mb-2">{initialPost.title}</h1>
+        <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
         <div className="flex items-center justify-between mb-4">
-          <div className="text-sm text-gray-600">by {initialPost.author || 'Community'}</div>
-          <div className="text-sm text-gray-500">{initialPost.repliesList ? `${initialPost.repliesList.length} replies` : `${replies.length} replies`}</div>
+          <div className="text-sm text-gray-600">by {post.author || 'Community'}</div>
+          <div className="text-sm text-gray-500">{replies.length} replies</div>
         </div>
-        <p className="mb-4 text-gray-700">{initialPost.content}</p>
+        <p className="mb-4 text-gray-700">{post.content}</p>
       </div>
 
       <div className="mb-6">
@@ -69,9 +71,9 @@ const DiscussionView = () => {
           <p className="text-gray-600">No replies yet. Be the first to reply!</p>
         ) : (
           <ul className="space-y-4">
-      {replies.map(reply => (
+            {replies.map(reply => (
               <li key={reply.id} className="flex gap-4">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold" style={{backgroundColor: 'var(--color-primary)'}}>{(reply.author || 'U').slice(0,1)}</div>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold" style={{backgroundColor: 'var(--color-primary)'}}>{(reply.author || 'U').slice(0,1)}</div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div className="text-sm font-medium text-gray-900">{reply.author}</div>

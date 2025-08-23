@@ -9,6 +9,7 @@ import EventCreationModal from '../components/EventCreationModal';
 import RegisterEventModal from '../components/RegisterEventModal';
 import Toast from '../components/Toast';
 
+const MEMBER_KEY = 'akan:community:member';
 
 const Community = () => {
   const navigate = useNavigate();
@@ -27,7 +28,17 @@ const Community = () => {
   const [registerModalEvent, setRegisterModalEvent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
   const [toast, setToast] = useState(null);
+  const [isMember, setIsMember] = useState(() => {
+    try { return localStorage.getItem(MEMBER_KEY) === 'true'; } catch { return false; }
+  });
   
+  const handleJoinCommunity = () => {
+    try { localStorage.setItem(MEMBER_KEY, 'true'); } catch {}
+    setIsMember(true);
+    setToast({ type: 'success', message: 'Welcome! You joined the community.' });
+    setTimeout(() => setToast(null), 2000);
+  };
+
   // Use useCallback to memoize navigate function usage
   const handleJoinDiscussion = useCallback((postId) => {
     navigate(`/community/discussion/${postId}`);
@@ -50,14 +61,28 @@ const Community = () => {
     setShowNewPostModal(true);
   };
 
+  const POSTS_KEY = 'akan:forum:posts';
+
   const handleCreatePost = () => {
-    // In a real app, this would send data to a backend
-    console.log('Creating new post:', newPostData);
-    // Reset form and close modal
+    const newPost = {
+      id: Date.now(),
+      title: newPostData.title.trim(),
+      content: newPostData.content.trim(),
+      category: newPostData.category,
+      author: 'You',
+      lastActivity: 'just now',
+      replies: 0,
+      tags: []
+    };
+    try {
+      const raw = localStorage.getItem(POSTS_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      list.unshift(newPost);
+      localStorage.setItem(POSTS_KEY, JSON.stringify(list));
+    } catch {}
     setNewPostData({ title: '', content: '', category: 'Language Learning' });
     setShowNewPostModal(false);
-    // Show success message
-    alert('Post created successfully!');
+    navigate(`/community/discussion/${newPost.id}`);
   };
 
   const handlePostInputChange = (e) => {
@@ -319,7 +344,7 @@ const Community = () => {
         />
       )}
       
-      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      {toast && <Toast message={toast.message} onClose={() => setToast(null)} />}
       
       {/* Header */}
       <div  style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}} className="text-white">
@@ -486,12 +511,16 @@ const Community = () => {
                 <button className="text-gray-600 hover:text-gray-700 p-2 border border-gray-300 rounded-lg">
                   <Filter className="w-4 h-4" />
                 </button>
-                <button 
-                  className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
-                  onClick={() => alert('Join Community functionality would go here')}
-                >
-                  Join Community
-                </button>
+                {!isMember ? (
+                  <button 
+                    className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
+                    onClick={handleJoinCommunity}
+                  >
+                    Join Community
+                  </button>
+                ) : (
+                  <span className="text-sm text-gray-600">You are a member</span>
+                )}
               </div>
             </div>
             

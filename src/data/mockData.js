@@ -469,6 +469,35 @@ export const culturalData = {
       meaning: "Except for God - supremacy of God",
       usage: "Spiritual contexts, decoration"
     }
+  ],
+  history: [
+    {
+      id: 101,
+      title: "Origins of the Akan States",
+      description: "Formation and migration of Akan peoples",
+      content: "The Akan emerged as a collection of matrilineal clans whose trade networks spanned the forests and savannahs of West Africa, laying foundations for powerful states.",
+      timeline: "c. 11th–15th centuries",
+      significance: "Establishes cultural and economic roots of Akan identity",
+      region: "Forest belt"
+    },
+    {
+      id: 102,
+      title: "Rise of the Ashanti Empire",
+      description: "Unification under Osei Tutu and the Golden Stool",
+      content: "Through military organization and trade, the Ashanti state centralized power around Kumasi, with the Golden Stool symbolizing unity and sovereignty.",
+      timeline: "17th–19th centuries",
+      significance: "Became a dominant regional power influencing language and culture",
+      region: "Ashanti Region"
+    },
+    {
+      id: 103,
+      title: "Akan Gold and Trans-Saharan Trade",
+      description: "Economic influence of gold production",
+      content: "Akan gold fueled trans-Saharan and Atlantic trade routes, shaping regional politics and attracting European powers to the coast.",
+      timeline: "14th–18th centuries",
+      significance: "Connected Akan polities to global commerce",
+      region: "South-central Ghana"
+    }
   ]
 };
 
