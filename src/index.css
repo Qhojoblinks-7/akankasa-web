@@ -4,6 +4,11 @@
   body {
     font-family: 'Inter', 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'sans-serif';
     background-color: #f9f9f9;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+    /* Optimize for mobile performance */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -18,5 +23,63 @@
 @layer components {
   .akan-pattern {
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1d799' fill-opacity='0.1'%3E%3Cpath d='M36 30c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12zm12-12c0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12 12-5.373 12-12z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  
+  /* Custom scrollbar styles */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+}
+
+@layer utilities {
+  /* Mobile-first touch improvements */
+  @media (max-width: 640px) {
+    /* Improve touch targets */
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Better text readability on small screens */
+    .mobile-text {
+      line-height: 1.5;
+      font-size: 0.875rem;
+    }
+    
+    /* Optimize spacing for mobile */
+    .mobile-optimized {
+      padding: 1rem;
+      margin: 0.5rem;
+    }
+  }
+
+  /* Landscape orientation optimizations */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .landscape-optimized {
+      padding: 0.5rem;
+      margin: 0.25rem;
+    }
+  }
+
+  /* High DPI display optimizations */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .high-dpi-optimized {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+  }
+
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .no-motion * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

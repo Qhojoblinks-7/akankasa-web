@@ -31,28 +31,28 @@ const Navbar = () => {
 
   return (
     <nav className="shadow-lg sticky top-0 z-50 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-[#F1D799]">
-              <span className="font-bold text-xl text-black">অ</span>
+      <div className="w-full px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex justify-between items-center h-16 sm:h-18">
+          {/* Logo - Mobile optimized */}
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-[#F1D799]">
+              <span className="font-bold text-lg sm:text-xl text-black">অ</span>
             </div>
             <div className="text-black">
-              <h1 className="font-bold text-xl">Akan Kasa</h1>
-              <p className="text-xs opacity-90">ne Amammere</p>
+              <h1 className="font-bold text-lg sm:text-xl leading-tight">Akan Kasa</h1>
+              <p className="text-xs opacity-90 leading-tight">ne Amammere</p>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          {/* Desktop Navigation - Hidden on mobile */}
+          <div className="hidden lg:flex items-center space-x-1">
             {navigationItems.map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${isActive(item.path) ? 'bg-[#F1D799] text-black shadow-[0_4px_6px_-1px_rgba(0,0,0,0.08)]' : 'text-black hover:bg-black/5'}`}
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 ${isActive(item.path) ? 'bg-[#F1D799] text-black shadow-[0_4px_6px_-1px_rgba(0,0,0,0.08)]' : 'text-black hover:bg-black/5'}`}
                   onMouseEnter={(e) => {
                     if (!isActive(item.path)) {
                       e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
@@ -72,13 +72,13 @@ const Navbar = () => {
           </div>
 
           {/* Language Selector & Mobile Menu Button */}
-          <div className="flex items-center space-x-4">
-            {/* Language Selector */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            {/* Language Selector - Mobile optimized */}
             <div className="relative">
               <select
                 value={currentLanguage}
                 onChange={(e) => setCurrentLanguage(e.target.value)}
-                className="rounded-lg px-3 py-1 text-sm appearance-none focus:outline-none focus:ring-2"
+                className="rounded-lg px-2 sm:px-3 py-2 sm:py-1 text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 min-h-[44px] sm:min-h-[36px]"
                 style={{
                   backgroundColor: 'rgba(0, 0, 0, 0.04)',
                   color: '#000',
@@ -91,20 +91,22 @@ const Navbar = () => {
               <Globe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black pointer-events-none" />
             </div>
 
-            {/* Mobile menu button */}
+            {/* Mobile menu button - Larger touch target */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-black hover:bg-black/5 transition-colors"
+              className="lg:hidden p-3 rounded-lg text-black hover:bg-black/5 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Improved mobile experience */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-black/10">
-            <div className="flex flex-col space-y-2">
+          <div className="lg:hidden py-4 border-t border-black/10 bg-white">
+            <div className="flex flex-col space-y-1">
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -112,19 +114,9 @@ const Navbar = () => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-3 ${isActive(item.path) ? 'bg-[#F1D799] text-black' : 'text-black hover:bg-black/5'}`}
-                    onMouseEnter={(e) => {
-                      if (!isActive(item.path)) {
-                        e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive(item.path)) {
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                      }
-                    }}
+                    className={`px-4 py-4 rounded-lg text-base font-medium transition-all duration-200 flex items-center space-x-3 min-h-[56px] ${isActive(item.path) ? 'bg-[#F1D799] text-black' : 'text-black hover:bg-black/5 active:bg-black/10'}`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-5 h-5 flex-shrink-0" />
                     <span>{item.label}</span>
                   </Link>
                 );

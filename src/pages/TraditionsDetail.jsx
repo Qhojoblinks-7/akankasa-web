@@ -49,60 +49,60 @@ const TraditionsDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header - Mobile first */}
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 max-w-4xl mx-auto">
           <button
             onClick={() => navigate('/culture')}
-            className="flex items-center text-white/80 hover:text-white mb-6 transition-colors"
+            className="flex items-center text-white/80 hover:text-white mb-4 sm:mb-6 transition-colors min-h-[44px]"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            Back to Culture
+            <span className="text-sm sm:text-base">Back to Culture</span>
           </button>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{traditionItem.title}</h1>
-          <p className="text-xl opacity-90 max-w-3xl">{traditionItem.description}</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight">{traditionItem.title}</h1>
+          <p className="text-base sm:text-lg lg:text-xl opacity-90 max-w-3xl leading-relaxed">{traditionItem.description}</p>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Metadata */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Content - Mobile first */}
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-4xl mx-auto">
+        {/* Metadata - Mobile optimized */}
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             <div className="flex items-center">
-              <Star className="w-5 h-5 text-yellow-600 mr-3" />
-              <div>
-                <p className="text-sm text-gray-500">Importance</p>
-                <p className="font-semibold text-gray-900">{traditionItem.importance}</p>
+              <Star className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-3 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm text-gray-500">Importance</p>
+                <p className="font-semibold text-gray-900 text-sm sm:text-base">{traditionItem.importance}</p>
               </div>
             </div>
             <div className="flex items-center">
-              <MapPin className="w-5 h-5 text-yellow-600 mr-3" />
-              <div>
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-3 flex-shrink-0" />
+              <div className="min-w-0">
                 <p className="text-sm text-gray-500">Region</p>
-                <p className="font-semibold text-gray-900">{traditionItem.region}</p>
+                <p className="font-semibold text-gray-900 text-sm sm:text-base">{traditionItem.region}</p>
               </div>
             </div>
-            <div className="flex items-center">
-              <Users className="w-5 h-5 text-yellow-600 mr-3" />
-              <div>
-                <p className="text-sm text-gray-500">Category</p>
-                <p className="font-semibold text-gray-900">Traditions & Customs</p>
+            <div className="flex items-center sm:col-span-2 lg:col-span-1">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-3 flex-shrink-0" />
+              <div className="min-w-0">
+                <p className="text-xs sm:text-sm text-gray-500">Category</p>
+                <p className="font-semibold text-gray-900 text-sm sm:text-base">Traditions & Customs</p>
               </div>
             </div>
           </div>
           
           {traditionItem.tags && traditionItem.tags.length > 0 && (
-            <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
               <div className="flex items-center mb-3">
-                <Tag className="w-5 h-5 text-yellow-600 mr-2" />
+                <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-2" />
                 <span className="text-sm font-medium text-gray-700">Tags</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {traditionItem.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium"
+                    className="bg-yellow-100 text-yellow-800 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
                   >
                     #{tag}
                   </span>
@@ -112,26 +112,26 @@ const TraditionsDetail = () => {
           )}
         </div>
 
-        {/* Full Script Content */}
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        {/* Full Script Content - Mobile optimized */}
+        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
           <div className="prose max-w-none">
-            <div className="whitespace-pre-line text-gray-700 leading-relaxed text-lg">
+            <div className="whitespace-pre-line text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg">
               {traditionItem.fullScript}
             </div>
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="mt-8 flex justify-between">
+        {/* Navigation - Mobile optimized */}
+        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between">
           <button
             onClick={() => navigate('/culture')}
-            className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
+            className="bg-gray-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors min-h-[44px] w-full sm:w-auto"
           >
             Back to Culture
           </button>
           <button
             onClick={() => navigate('/culture')}
-            className="bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
+            className="bg-yellow-600 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors min-h-[44px] w-full sm:w-auto"
           >
             Explore More Traditions
           </button>
