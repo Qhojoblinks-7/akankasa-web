@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { Calendar, MapPin, X,Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
 import { culturalData } from '../data/mockData';
 import ContributeModal from './ContributeModal';
+import { useNavigate } from 'react-router-dom';
 
 const CultureHighlights = () => {
-  const [activeSection, setActiveSection] = useState('traditions');
-  const [selectedRegion, setSelectedRegion] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null); // New state to hold the selected item
+  const [activeSection, setActiveSection] = useState('traditions');
+  const [selectedRegion, setSelectedRegion] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   const sections = [
     { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
@@ -35,17 +35,14 @@ const CultureHighlights = () => {
     return matchesSearch && matchesRegion;
   });
 
-  const handleContributeSubmit = (newContent) => {
-    console.log('New content submitted:', newContent);
-    alert('Thank you for your contribution! We will review it shortly.');
-  };
-
-  const handleLearnMore = (item) => {
-    setSelectedItem(item);
+    const handleContributeSubmit = (newContent) => {
+    console.log('New content submitted:', newContent);
+    alert('Thank you for your contribution! We will review it shortly.');
   };
 
-  const handleCloseDetailView = () => {
-    setSelectedItem(null);
+  const handleLearnMore = (item) => {
+    // Navigate to the detail page instead of showing modal
+    navigate(`/culture/${activeSection}/${item.id}`);
   };
 
 
@@ -138,82 +135,7 @@ const CultureHighlights = () => {
     </div>
   );
 
-  const DetailView = ({ item, onClose }) => {
-    if (!item) return null;
 
-    // Determine the section icon for the detail view
-    const section = sections.find(s => s.id === activeSection);
-    const Icon = section?.icon;
-
-    return (
-      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
-        <div className="relative p-8 w-full max-w-2xl bg-white rounded-lg shadow-xl m-4">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-          >
-            <X size={24} />
-          </button>
-          
-          <div className="flex items-center mb-4">
-            {Icon && (
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center mr-4`} style={{backgroundColor: section.color}}>
-                <Icon className="w-6 h-6 text-white" />
-              </div>
-            )}
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900">{item.title}</h3>
-              <p className="text-gray-600">{item.description}</p>
-            </div>
-          </div>
-          
-          <div className="prose max-w-none text-gray-700">
-            <p>{item.content}</p>
-            
-            {activeSection === 'history' && (
-              <>
-                <h4 className="font-semibold text-gray-900 mt-4">Timeline:</h4>
-                <p>{item.timeline}</p>
-                <h4 className="font-semibold text-gray-900 mt-4">Significance:</h4>
-                <p>{item.significance}</p>
-              </>
-            )}
-            {activeSection === 'arts' && (
-              <>
-                <h4 className="font-semibold text-gray-900 mt-4">Examples:</h4>
-                <ul>
-                  {item.examples && item.examples.map((example, index) => (
-                    <li key={index}>
-                      <strong>{example.symbol}</strong> - {example.meaning}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {activeSection === 'music' && (
-              <>
-                <h4 className="font-semibold text-gray-900 mt-4">Instruments:</h4>
-                <p>{item.instruments && item.instruments.join(', ')}</p>
-              </>
-            )}
-
-            {item.tags && item.tags.length > 0 && (
-                <div className="mt-4">
-                  <span className="font-semibold text-gray-900">Tags:</span>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {item.tags.map((tag, index) => (
-                      <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
   
 
   return (
@@ -388,14 +310,10 @@ const CultureHighlights = () => {
         </div>
       </div>
       {/* Modals */}
-      <ContributeModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleContributeSubmit}
-      />
-      <DetailView 
-        item={selectedItem}
-        onClose={handleCloseDetailView}
+            <ContributeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleContributeSubmit}
       />
     </div>
   );

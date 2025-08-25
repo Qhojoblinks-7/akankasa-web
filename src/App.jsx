@@ -38,6 +38,7 @@ import CultureDrumming from './pages/CultureDrumming';
 import CultureFolkStories from './pages/CultureFolkStories';
 import CultureResearchPapers from './pages/CultureResearchPapers';
 import FestivalPhotosPage from './pages/FestivalPhotosPage';
+import CultureDetail from './pages/CultureDetail';
 import featureFlags from './config/featureFlags';
 import UserProfile from './pages/UserProfile';
 import Contribute from './pages/Contribute';
@@ -85,6 +86,7 @@ function App() {
                   <Route path="/culture/folk-stories" element={<CultureFolkStories />} />
                   <Route path="/culture/research-papers" element={<CultureResearchPapers />} />
                   <Route path="/festival-photos" element={<FestivalPhotosPage />} />
+                  <Route path="/culture/:section/:id" element={<CultureDetail />} />
                 </>
               )}
               <Route path="/learn/alphabet" element={<LearnAlphabet />} />
