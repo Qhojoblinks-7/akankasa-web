@@ -6,6 +6,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { UserProgressProvider } from './contexts/UserProgressContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import SkipLink from './components/SkipLink';
 import Homepage from './pages/Homepage';
 import LanguageLearning from './pages/LanguageLearning';
 import CompleteBeginnerPath from './pages/CompleteBeginnerPath';
@@ -57,6 +58,7 @@ import AdinkraSymbols from './pages/AdinkraSymbols';
 import SuggestWord from './pages/SuggestWord';
 import CultureDetailPage from './pages/CultureDetailPage';
 import UserProgressPage from './pages/UserProgressPage';
+import MyProfile from './pages/MyProfile';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminDictionary from './pages/admin/AdminDictionary';
@@ -66,10 +68,17 @@ import AdminVocabulary from './pages/admin/AdminVocabulary';
 import AdminGreetings from './pages/admin/AdminGreetings';
 import AdminArticles from './pages/admin/AdminArticles';
 import AdminDocuments from './pages/admin/AdminDocuments';
+import AdminMediaLibrary from './pages/admin/AdminMediaLibrary';
 import AdminEvents from './pages/admin/AdminEvents';
 import AdminLegal from './pages/admin/AdminLegal';
 import AdminHomepage from './pages/admin/AdminHomepage';
 import AdminAlphabets from './pages/admin/AdminAlphabets';
+import AdminFolkStories from './pages/admin/AdminFolkStories';
+import AdminDrumming from './pages/admin/AdminDrumming';
+import AdminFestivalPhotos from './pages/admin/AdminFestivalPhotos';
+import AdminResearchPapers from './pages/admin/AdminResearchPapers';
+import AdminApprovalQueue from './pages/admin/AdminApprovalQueue';
+import PublicContributions from './pages/PublicContributions';
 import AdminModerationQueue from './pages/AdminModerationQueue';
 import AdminForumModeration from './pages/AdminForumModeration';
 import AdminSuggestions from './pages/AdminSuggestions';
@@ -81,8 +90,9 @@ function App() {
       <UserProgressProvider>
         <Router>
           <div className="min-h-screen bg-gray-50">
+            <SkipLink />
             <Navbar />
-            <main className="flex-1">
+            <main id="main-content" className="flex-1">
               <Routes>
                 <Route path="/" element={<Homepage />} />
                 <Route path="/learn" element={<LanguageLearning />} />
@@ -135,7 +145,9 @@ function App() {
                 
                 {/* New routes for unconnected pages */}
                 <Route path="/profile/:id" element={<UserProfile />} />
+                <Route path="/profile" element={<MyProfile />} />
                 <Route path="/contribute" element={<Contribute />} />
+                <Route path="/contribute-content" element={<PublicContributions />} />
                 <Route path="/community/join" element={<CommunityJoin />} />
                 <Route path="/community/new-post" element={<CommunityNewPost />} />
                 <Route path="/community/events/list" element={<CommunityEvents />} />
@@ -161,10 +173,16 @@ function App() {
                 <Route path="/admin/greetings" element={<AdminGreetings />} />
                 <Route path="/admin/articles" element={<AdminArticles />} />
                 <Route path="/admin/documents" element={<AdminDocuments />} />
+                <Route path="/admin/media" element={<AdminMediaLibrary />} />
                 <Route path="/admin/events" element={<AdminEvents />} />
                 <Route path="/admin/legal" element={<AdminLegal />} />
                 <Route path="/admin/homepage" element={<AdminHomepage />} />
                 <Route path="/admin/alphabets" element={<AdminAlphabets />} />
+                <Route path="/admin/folk-stories" element={<AdminFolkStories />} />
+                <Route path="/admin/drumming" element={<AdminDrumming />} />
+                <Route path="/admin/festival-photos" element={<AdminFestivalPhotos />} />
+                <Route path="/admin/research-papers" element={<AdminResearchPapers />} />
+                <Route path="/admin/approval-queue" element={<AdminApprovalQueue />} />
                 <Route path="/admin/moderation" element={<AdminModerationQueue />} />
                 <Route path="/admin/forum" element={<AdminForumModeration />} />
                 <Route path="/admin/suggestions" element={<AdminSuggestions />} />

@@ -1,14 +1,49 @@
 import React from 'react';
 import { useUserProgress } from '../contexts/UserProgressContext';
-import { BookOpen, Flame, Star, Clock, Bookmark, Award } from 'lucide-react';
+import { BookOpen, Flame, Star, Clock, Bookmark, Award, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 
 const UserProgressPage = () => {
-  const { progress } = useUserProgress();
+  const { progress, syncStatus, lastSynced, manualSync } = useUserProgress();
+
+  const formatTime = (date) => {
+    if (!date) return 'Never';
+    return new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric'
+    }).format(date);
+  };
+
+  const getStatusIcon = () => {
+    switch (syncStatus) {
+      case 'syncing': return <RefreshCw className="w-4 h-4 animate-spin text-yellow-600" />;
+      case 'synced': return <CheckCircle className="w-4 h-4 text-green-600" />;
+      case 'error': return <AlertCircle className="w-4 h-4 text-red-600" />;
+      default: return <CheckCircle className="w-4 h-4 text-gray-400" />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Learning Progress</h1>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Your Learning Progress</h1>
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1 text-sm text-gray-600">
+              {getStatusIcon()}
+              <span className="capitalize">{syncStatus}</span>
+            </div>
+            <span className="text-sm text-gray-500">Last synced: {formatTime(lastSynced)}</span>
+            <button
+              onClick={manualSync}
+              disabled={syncStatus === 'syncing'}
+              className="flex items-center px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 mr-1 ${syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
+              Sync
+            </button>
+          </div>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

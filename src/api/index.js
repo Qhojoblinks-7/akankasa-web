@@ -381,6 +381,44 @@ export const getDocument = async (id) => {
   return callApi(`/api/documents/${id}`);
 };
 
+export const downloadDocument = async (id) => {
+  if (!id) throw new Error('Document ID is required');
+  const url = `${API_BASE || ''}/api/documents/${id}/download`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    const text = await res.text();
+    let err;
+    try { err = JSON.parse(text); } catch { err = { error: text }; }
+    throw new Error(err.error || `Download failed (${res.status})`);
+  }
+  const blob = await res.blob();
+  const disposition = res.headers.get('Content-Disposition');
+  let filename = `document_${id}`;
+  if (disposition && disposition.includes('filename=')) {
+    filename = disposition.split('filename=')[1].replace(/"/g, '').trim() || filename;
+  }
+  return { blob, filename };
+};
+
+export const exportVocabulary = async (id, format = 'json') => {
+  if (!id) throw new Error('Vocabulary module ID is required');
+  const url = `${API_BASE || ''}/api/vocabulary/${id}/export?format=${encodeURIComponent(format)}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    const text = await res.text();
+    let err;
+    try { err = JSON.parse(text); } catch { err = { error: text }; }
+    throw new Error(err.error || `Export failed (${res.status})`);
+  }
+  const blob = await res.blob();
+  const disposition = res.headers.get('Content-Disposition');
+  let filename = `vocabulary_${id}.${format}`;
+  if (disposition && disposition.includes('filename=')) {
+    filename = disposition.split('filename=')[1].replace(/"/g, '').trim() || filename;
+  }
+  return { blob, filename };
+};
+
 // --- Alphabet ---
 export const getAlphabet = async () => {
   if (!API_BASE) return mockDelay(alphabetData || []);
@@ -652,4 +690,347 @@ export const mediaApi = {
     stored.unshift({ ...item, created_at: new Date().toISOString() });
     localStorage.setItem('akankasa:local_media', JSON.stringify(stored.slice(0, 200)));
   },
+};
+
+// --- Folk Stories ---
+const FOLK_STORIES_KEY = 'akankasa:folk_stories';
+const FOLK_STORIES_CONTRIB_KEY = 'akankasa:folk_stories_contributions';
+
+function _getFolkStories() {
+  const approved = JSON.parse(localStorage.getItem(FOLK_STORIES_KEY) || '[]');
+  return approved.filter(i => i.status === 'approved' || i.status === undefined);
+}
+
+function _getAllFolkStories() {
+  return JSON.parse(localStorage.getItem(FOLK_STORIES_KEY) || '[]');
+}
+
+function _saveFolkStories(items) {
+  localStorage.setItem(FOLK_STORIES_KEY, JSON.stringify(items));
+}
+
+export const getFolkStories = async () => {
+  if (!API_BASE) return mockDelay(_getFolkStories());
+  return callApi('/api/folk-stories');
+};
+
+export const getAdminFolkStories = async () => {
+  if (!API_BASE) return mockDelay(_getAllFolkStories());
+  return adminGet('/api/admin/folk-stories');
+};
+
+export const saveFolkStory = async (item) => {
+  if (!API_BASE) {
+    const items = _getAllFolkStories();
+    if (item.id) {
+      const idx = items.findIndex(i => String(i.id) === String(item.id));
+      if (idx >= 0) items[idx] = { ...items[idx], ...item };
+      else items.unshift({ ...item, status: 'approved' });
+    } else {
+      items.unshift({ ...item, id: Date.now(), status: 'approved', created_at: new Date().toISOString() });
+    }
+    _saveFolkStories(items);
+    return mockDelay(items.find(i => i.id === item.id || i.title === item.title));
+  }
+  if (item.id) return adminPut(`/api/admin/folk-stories/${item.id}`, item);
+  return adminPost('/api/admin/folk-stories', { ...item, status: 'approved' });
+};
+
+export const deleteFolkStory = async (id) => {
+  if (!API_BASE) {
+    const items = _getAllFolkStories().filter(i => String(i.id) !== String(id));
+    _saveFolkStories(items);
+    return mockDelay(true);
+  }
+  return adminDelete(`/api/admin/folk-stories/${id}`);
+};
+
+export const submitFolkStoryContribution = async (item) => {
+  if (!API_BASE) {
+    const items = JSON.parse(localStorage.getItem(FOLK_STORIES_CONTRIB_KEY) || '[]');
+    const newItem = { ...item, id: Date.now(), status: 'pending', created_at: new Date().toISOString() };
+    items.unshift(newItem);
+    localStorage.setItem(FOLK_STORIES_CONTRIB_KEY, JSON.stringify(items));
+    return mockDelay(newItem);
+  }
+  return callApi('/api/contributions/folk-stories', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...item, status: 'pending' }),
+  });
+};
+
+// --- Drumming ---
+const DRUMMING_KEY = 'akankasa:drumming';
+const DRUMMING_CONTRIB_KEY = 'akankasa:drumming_contributions';
+
+function _getDrumming() {
+  const approved = JSON.parse(localStorage.getItem(DRUMMING_KEY) || '[]');
+  return approved.filter(i => i.status === 'approved' || i.status === undefined);
+}
+
+function _getAllDrumming() {
+  return JSON.parse(localStorage.getItem(DRUMMING_KEY) || '[]');
+}
+
+function _saveDrumming(items) {
+  localStorage.setItem(DRUMMING_KEY, JSON.stringify(items));
+}
+
+export const getDrumming = async () => {
+  if (!API_BASE) return mockDelay(_getDrumming());
+  return callApi('/api/drumming');
+};
+
+export const getAdminDrumming = async () => {
+  if (!API_BASE) return mockDelay(_getAllDrumming());
+  return adminGet('/api/admin/drumming');
+};
+
+export const saveDrumming = async (item) => {
+  if (!API_BASE) {
+    const items = _getAllDrumming();
+    if (item.id) {
+      const idx = items.findIndex(i => String(i.id) === String(item.id));
+      if (idx >= 0) items[idx] = { ...items[idx], ...item };
+      else items.unshift({ ...item, status: 'approved' });
+    } else {
+      items.unshift({ ...item, id: Date.now(), status: 'approved', created_at: new Date().toISOString() });
+    }
+    _saveDrumming(items);
+    return mockDelay(items.find(i => i.id === item.id || i.title === item.title));
+  }
+  if (item.id) return adminPut(`/api/admin/drumming/${item.id}`, item);
+  return adminPost('/api/admin/drumming', { ...item, status: 'approved' });
+};
+
+export const deleteDrumming = async (id) => {
+  if (!API_BASE) {
+    const items = _getAllDrumming().filter(i => String(i.id) !== String(id));
+    _saveDrumming(items);
+    return mockDelay(true);
+  }
+  return adminDelete(`/api/admin/drumming/${id}`);
+};
+
+export const submitDrummingContribution = async (item) => {
+  if (!API_BASE) {
+    const items = JSON.parse(localStorage.getItem(DRUMMING_CONTRIB_KEY) || '[]');
+    const newItem = { ...item, id: Date.now(), status: 'pending', created_at: new Date().toISOString() };
+    items.unshift(newItem);
+    localStorage.setItem(DRUMMING_CONTRIB_KEY, JSON.stringify(items));
+    return mockDelay(newItem);
+  }
+  return callApi('/api/contributions/drumming', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...item, status: 'pending' }),
+  });
+};
+
+// --- Festival Photos ---
+const FESTIVAL_PHOTOS_KEY = 'akankasa:festival_photos';
+const FESTIVAL_PHOTOS_CONTRIB_KEY = 'akankasa:festival_photos_contributions';
+
+function _getFestivalPhotos() {
+  const approved = JSON.parse(localStorage.getItem(FESTIVAL_PHOTOS_KEY) || '[]');
+  return approved.filter(i => i.status === 'approved' || i.status === undefined);
+}
+
+function _getAllFestivalPhotos() {
+  return JSON.parse(localStorage.getItem(FESTIVAL_PHOTOS_KEY) || '[]');
+}
+
+function _saveFestivalPhotos(items) {
+  localStorage.setItem(FESTIVAL_PHOTOS_KEY, JSON.stringify(items));
+}
+
+export const getFestivalPhotos = async () => {
+  if (!API_BASE) return mockDelay(_getFestivalPhotos());
+  return callApi('/api/festival-photos');
+};
+
+export const getAdminFestivalPhotos = async () => {
+  if (!API_BASE) return mockDelay(_getAllFestivalPhotos());
+  return adminGet('/api/admin/festival-photos');
+};
+
+export const saveFestivalPhoto = async (item) => {
+  if (!API_BASE) {
+    const items = _getAllFestivalPhotos();
+    if (item.id) {
+      const idx = items.findIndex(i => String(i.id) === String(item.id));
+      if (idx >= 0) items[idx] = { ...items[idx], ...item };
+      else items.unshift({ ...item, status: 'approved' });
+    } else {
+      items.unshift({ ...item, id: Date.now(), status: 'approved', created_at: new Date().toISOString() });
+    }
+    _saveFestivalPhotos(items);
+    return mockDelay(items.find(i => i.id === item.id || i.title === item.title));
+  }
+  if (item.id) return adminPut(`/api/admin/festival-photos/${item.id}`, item);
+  return adminPost('/api/admin/festival-photos', { ...item, status: 'approved' });
+};
+
+export const deleteFestivalPhoto = async (id) => {
+  if (!API_BASE) {
+    const items = _getAllFestivalPhotos().filter(i => String(i.id) !== String(id));
+    _saveFestivalPhotos(items);
+    return mockDelay(true);
+  }
+  return adminDelete(`/api/admin/festival-photos/${id}`);
+};
+
+export const submitFestivalPhotoContribution = async (item) => {
+  if (!API_BASE) {
+    const items = JSON.parse(localStorage.getItem(FESTIVAL_PHOTOS_CONTRIB_KEY) || '[]');
+    const newItem = { ...item, id: Date.now(), status: 'pending', created_at: new Date().toISOString() };
+    items.unshift(newItem);
+    localStorage.setItem(FESTIVAL_PHOTOS_CONTRIB_KEY, JSON.stringify(items));
+    return mockDelay(newItem);
+  }
+  return callApi('/api/contributions/festival-photos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...item, status: 'pending' }),
+  });
+};
+
+// --- Research Papers ---
+const RESEARCH_PAPERS_KEY = 'akankasa:research_papers';
+const RESEARCH_PAPERS_CONTRIB_KEY = 'akankasa:research_papers_contributions';
+
+function _getResearchPapers() {
+  const approved = JSON.parse(localStorage.getItem(RESEARCH_PAPERS_KEY) || '[]');
+  return approved.filter(i => i.status === 'approved' || i.status === undefined);
+}
+
+function _getAllResearchPapers() {
+  return JSON.parse(localStorage.getItem(RESEARCH_PAPERS_KEY) || '[]');
+}
+
+function _saveResearchPapers(items) {
+  localStorage.setItem(RESEARCH_PAPERS_KEY, JSON.stringify(items));
+}
+
+export const getResearchPapers = async () => {
+  if (!API_BASE) return mockDelay(_getResearchPapers());
+  return callApi('/api/research-papers');
+};
+
+export const getAdminResearchPapers = async () => {
+  if (!API_BASE) return mockDelay(_getAllResearchPapers());
+  return adminGet('/api/admin/research-papers');
+};
+
+export const saveResearchPaper = async (item) => {
+  if (!API_BASE) {
+    const items = _getAllResearchPapers();
+    if (item.id) {
+      const idx = items.findIndex(i => String(i.id) === String(item.id));
+      if (idx >= 0) items[idx] = { ...items[idx], ...item };
+      else items.unshift({ ...item, status: 'approved' });
+    } else {
+      items.unshift({ ...item, id: Date.now(), status: 'approved', created_at: new Date().toISOString() });
+    }
+    _saveResearchPapers(items);
+    return mockDelay(items.find(i => i.id === item.id || i.title === item.title));
+  }
+  if (item.id) return adminPut(`/api/admin/research-papers/${item.id}`, item);
+  return adminPost('/api/admin/research-papers', { ...item, status: 'approved' });
+};
+
+export const deleteResearchPaper = async (id) => {
+  if (!API_BASE) {
+    const items = _getAllResearchPapers().filter(i => String(i.id) !== String(id));
+    _saveResearchPapers(items);
+    return mockDelay(true);
+  }
+  return adminDelete(`/api/admin/research-papers/${id}`);
+};
+
+export const submitResearchPaperContribution = async (item) => {
+  if (!API_BASE) {
+    const items = JSON.parse(localStorage.getItem(RESEARCH_PAPERS_CONTRIB_KEY) || '[]');
+    const newItem = { ...item, id: Date.now(), status: 'pending', created_at: new Date().toISOString() };
+    items.unshift(newItem);
+    localStorage.setItem(RESEARCH_PAPERS_CONTRIB_KEY, JSON.stringify(items));
+    return mockDelay(newItem);
+  }
+  return callApi('/api/contributions/research-papers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...item, status: 'pending' }),
+  });
+};
+
+// --- Contributions / Approval Queue ---
+export const getPendingContributions = async (type) => {
+  if (!API_BASE) {
+    const keys = {
+      'folk-stories': FOLK_STORIES_CONTRIB_KEY,
+      'drumming': DRUMMING_CONTRIB_KEY,
+      'festival-photos': FESTIVAL_PHOTOS_CONTRIB_KEY,
+      'research-papers': RESEARCH_PAPERS_CONTRIB_KEY,
+    };
+    const mainKeys = {
+      'folk-stories': FOLK_STORIES_KEY,
+      'drumming': DRUMMING_KEY,
+      'festival-photos': FESTIVAL_PHOTOS_KEY,
+      'research-papers': RESEARCH_PAPERS_KEY,
+    };
+    // Check both contribution queue and main list for pending items
+    const contribs = JSON.parse(localStorage.getItem(keys[type]) || '[]');
+    const mainItems = JSON.parse(localStorage.getItem(mainKeys[type]) || '[]');
+    const pending = [...contribs.filter(i => i.status === 'pending'), ...mainItems.filter(i => i.status === 'pending')];
+    return mockDelay(pending);
+  }
+  return adminGet(`/api/admin/contributions/${type}`);
+};
+
+export const approveContribution = async (type, id) => {
+  if (!API_BASE) {
+    const keys = {
+      'folk-stories': FOLK_STORIES_CONTRIB_KEY,
+      'drumming': DRUMMING_CONTRIB_KEY,
+      'festival-photos': FESTIVAL_PHOTOS_CONTRIB_KEY,
+      'research-papers': RESEARCH_PAPERS_CONTRIB_KEY,
+    };
+    const mainKeys = {
+      'folk-stories': FOLK_STORIES_KEY,
+      'drumming': DRUMMING_KEY,
+      'festival-photos': FESTIVAL_PHOTOS_KEY,
+      'research-papers': RESEARCH_PAPERS_KEY,
+    };
+    // Find in contributions
+    const contribs = JSON.parse(localStorage.getItem(keys[type]) || '[]');
+    const item = contribs.find(i => String(i.id) === String(id));
+    if (item) {
+      // Move to main list as approved
+      const mainItems = JSON.parse(localStorage.getItem(mainKeys[type]) || '[]');
+      mainItems.unshift({ ...item, status: 'approved', approved_at: new Date().toISOString() });
+      localStorage.setItem(mainKeys[type], JSON.stringify(mainItems));
+      // Remove from contributions
+      const updated = contribs.filter(i => String(i.id) !== String(id));
+      localStorage.setItem(keys[type], JSON.stringify(updated));
+    }
+    return mockDelay(true);
+  }
+  return adminPost(`/api/admin/contributions/${type}/${id}/approve`, {});
+};
+
+export const rejectContribution = async (type, id) => {
+  if (!API_BASE) {
+    const keys = {
+      'folk-stories': FOLK_STORIES_CONTRIB_KEY,
+      'drumming': DRUMMING_CONTRIB_KEY,
+      'festival-photos': FESTIVAL_PHOTOS_CONTRIB_KEY,
+      'research-papers': RESEARCH_PAPERS_CONTRIB_KEY,
+    };
+    const contribs = JSON.parse(localStorage.getItem(keys[type]) || '[]');
+    const updated = contribs.map(i => String(i.id) === String(id) ? { ...i, status: 'rejected' } : i);
+    localStorage.setItem(keys[type], JSON.stringify(updated));
+    return mockDelay(true);
+  }
+  return adminPost(`/api/admin/contributions/${type}/${id}/reject`, {});
 };

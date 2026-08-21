@@ -79,7 +79,7 @@ const AdminForumModeration = () => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard">
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
             <div>
@@ -118,17 +118,17 @@ const AdminForumModeration = () => {
                             <span className={`px-2 py-1 rounded-full ${post.status === 'approved' ? 'bg-green-100 text-green-700' : post.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>{post.status}</span>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <button onClick={() => loadComments(post.id)} className="p-2 text-gray-600 hover:text-gray-900 transition-colors" title="View comments">
-                            <MessageSquare className="w-4 h-4" />
-                          </button>
-                          <button onClick={() => moderatePost(post.id, 'approved')} className="p-2 text-amber-600 hover:bg-amber-50 rounded transition-colors" title="Approve">
-                            <CheckCircle className="w-4 h-4" />
-                          </button>
-                          <button onClick={() => moderatePost(post.id, 'rejected')} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors" title="Reject">
-                            <XCircle className="w-4 h-4" />
-                          </button>
-                        </div>
+                         <div className="flex items-center space-x-2">
+                           <button onClick={() => loadComments(post.id)} className="p-2 text-gray-600 hover:text-gray-900 transition-colors" aria-label={`View comments for ${post.title}`}>
+                             <MessageSquare className="w-4 h-4" />
+                           </button>
+                           <button onClick={() => moderatePost(post.id, 'approved')} className="p-2 text-amber-600 hover:bg-amber-50 rounded transition-colors" aria-label={`Approve ${post.title}`}>
+                             <CheckCircle className="w-4 h-4" />
+                           </button>
+                           <button onClick={() => moderatePost(post.id, 'rejected')} className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors" aria-label={`Reject ${post.title}`}>
+                             <XCircle className="w-4 h-4" />
+                           </button>
+                         </div>
                       </div>
                     </div>
                   ))}

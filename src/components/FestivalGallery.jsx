@@ -177,8 +177,8 @@ const FestivalGallery = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-akan-gold mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading festival gallery...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-akan-gold mx-auto mb-4" aria-hidden="true"></div>
+          <p className="text-gray-600" aria-live="polite">Loading festival gallery...</p>
         </div>
       </div>
     );
@@ -221,10 +221,10 @@ const FestivalGallery = () => {
       <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filteredPhotos.map((photo, index) => (
-            <div
+            <button
               key={photo.id}
-              className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer"
               onClick={() => openLightbox(index)}
+              className="group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 w-full text-left"
             >
               <div className="aspect-w-4 aspect-h-3">
                 <img
@@ -249,6 +249,7 @@ const FestivalGallery = () => {
                       toggleLike(photo.id);
                     }}
                     className="p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors"
+                    aria-label={likedImages.has(photo.id) ? `Remove ${photo.title} from favorites` : `Add ${photo.title} to favorites`}
                   >
                     <Heart
                       className={`w-4 h-4 ${
@@ -257,18 +258,19 @@ const FestivalGallery = () => {
                     />
                   </button>
                 </div>
-              </div>
-            </div>
-          ))}
+                </div>
+              </button>
+            ))}
         </div>
       </div>
 
       {/* Lightbox */}
       {selectedImage && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center" role="dialog" aria-modal="true" aria-label={`${selectedImage.title} lightbox`}>
           <button
             onClick={closeLightbox}
             className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
+            aria-label="Close lightbox"
           >
             <X className="w-8 h-8" />
           </button>
@@ -276,6 +278,7 @@ const FestivalGallery = () => {
           <button
             onClick={prevImage}
             className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors"
+            aria-label="Previous image"
           >
             <ChevronLeft className="w-8 h-8" />
           </button>
@@ -283,6 +286,7 @@ const FestivalGallery = () => {
           <button
             onClick={nextImage}
             className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition-colors"
+            aria-label="Next image"
           >
             <ChevronRight className="w-8 h-8" />
           </button>

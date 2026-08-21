@@ -10,7 +10,7 @@ const AdminEvents = () => {
   const [items, setItems] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ title: '', description: '', event_date: '', event_time: '', location: '', event_type: 'online', max_participants: '', status: 'upcoming' });
+  const [form, setForm] = useState({ title: '', description: '', event_date: '', event_time: '', location: '', event_type: 'online', max_participants: '', status: 'upcoming', publish_at: '', unpublish_at: '' });
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
@@ -33,20 +33,20 @@ const AdminEvents = () => {
 
   const openCreate = () => {
     setEditingId(null);
-    setForm({ title: '', description: '', event_date: '', event_time: '', location: '', event_type: 'online', max_participants: '', status: 'upcoming' });
+    setForm({ title: '', description: '', event_date: '', event_time: '', location: '', event_type: 'online', max_participants: '', status: 'upcoming', publish_at: '', unpublish_at: '' });
     setModalOpen(true);
   };
 
   const openEdit = (item) => {
     setEditingId(item.id);
-    setForm({ id: item.id, title: item.title || '', description: item.description || '', event_date: item.event_date || '', event_time: item.event_time || '', location: item.location || '', event_type: item.event_type || 'online', max_participants: item.max_participants || '', status: item.status || 'upcoming' });
+    setForm({ id: item.id, title: item.title || '', description: item.description || '', event_date: item.event_date || '', event_time: item.event_time || '', location: item.location || '', event_type: item.event_type || 'online', max_participants: item.max_participants || '', status: item.status || 'upcoming', publish_at: item.publish_at || '', unpublish_at: item.unpublish_at || '' });
     setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
     setEditingId(null);
-    setForm({ title: '', description: '', event_date: '', event_time: '', location: '', event_type: 'online', max_participants: '', status: 'upcoming' });
+    setForm({ title: '', description: '', event_date: '', event_time: '', location: '', event_type: 'online', max_participants: '', status: 'upcoming', publish_at: '', unpublish_at: '' });
   };
 
   const handleSubmit = async () => {
@@ -84,7 +84,7 @@ const AdminEvents = () => {
     <div className="min-h-screen bg-[#fafafa]">
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center space-x-4">
-          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
+          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
           <div><h1 className="text-2xl font-display font-bold text-[#564c38]">Events</h1><p className="text-sm text-gray-600">Organize community gatherings and workshops</p></div>
           <button onClick={openCreate} className="ml-auto flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors"><Plus className="w-4 h-4 mr-2" /> New Event</button>
         </div>
@@ -100,10 +100,10 @@ const AdminEvents = () => {
                   <td className="px-6 py-4 text-sm text-gray-600">{item.event_date}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{item.location || '-'}</td>
                   <td className="px-6 py-4 text-sm capitalize">{item.status}</td>
-                  <td className="px-6 py-4 text-right text-sm">
-                    <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3"><Edit className="w-4 h-4" /></button>
-                    <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors"><Trash2 className="w-4 h-4" /></button>
-                  </td>
+                   <td className="px-6 py-4 text-right text-sm">
+                     <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
+                     <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
+                   </td>
                 </tr>
               ))}
             </tbody>
@@ -141,12 +141,20 @@ const AdminEvents = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Maximum attendees</label>
               <input type="number" value={form.max_participants} onChange={e => setForm({...form, max_participants: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Status</label>
-              <select value={form.status} onChange={e => setForm({...form, status: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }}>
-                <option value="upcoming">Upcoming</option><option value="past">Past</option><option value="cancelled">Cancelled</option>
-              </select>
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Status</label>
+                <select value={form.status} onChange={e => setForm({...form, status: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }}>
+                  <option value="upcoming">Upcoming</option><option value="past">Past</option><option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Publish at</label>
+                <input type="datetime-local" value={form.publish_at} onChange={e => setForm({...form, publish_at: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Unpublish at</label>
+                <input type="datetime-local" value={form.unpublish_at} onChange={e => setForm({...form, unpublish_at: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+              </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Event description</label>

@@ -573,7 +573,7 @@ const init = async () => {
     const offset = (pageNum - 1) * limitNum;
     const db = getDb();
 
-    let where = 'WHERE is_published = 1';
+    let where = 'WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now"))';
     const params = [];
 
     if (category && category !== 'all') {
@@ -603,7 +603,7 @@ const init = async () => {
 
   app.get('/api/culture/:id', (req, res) => {
     const db = getDb();
-    db.get('SELECT * FROM culture_articles WHERE id = ? AND is_published = 1', [req.params.id], (err, row) => {
+    db.get('SELECT * FROM culture_articles WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now"))', [req.params.id], (err, row) => {
       if (err) return res.status(500).json({ error: err.message });
       if (!row) return res.status(404).json({ error: 'Not found' });
       const parsed = {
@@ -680,7 +680,7 @@ const init = async () => {
     const offset = (pageNum - 1) * limitNum;
     const db = getDb();
 
-    let where = 'WHERE is_published = 1';
+    let where = 'WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now"))';
     const params = [];
 
     if (category && category !== 'all') {
@@ -713,7 +713,7 @@ const init = async () => {
 
   app.get('/api/documents/:id', (req, res) => {
     const db = getDb();
-    db.get('SELECT * FROM documents WHERE id = ? AND is_published = 1', [req.params.id], (err, row) => {
+    db.get('SELECT * FROM documents WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now"))', [req.params.id], (err, row) => {
       if (err) return res.status(500).json({ error: err.message });
       if (!row) return res.status(404).json({ error: 'Not found' });
       const parsed = {
@@ -799,7 +799,7 @@ const init = async () => {
 
   app.get('/api/events', (req, res) => {
     const db = getDb();
-    db.all('SELECT * FROM events WHERE status = ? ORDER BY event_date ASC', ['upcoming'], (err, rows) => {
+    db.all('SELECT * FROM events WHERE status = ? AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now")) ORDER BY event_date ASC', ['upcoming'], (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);
     });
@@ -830,7 +830,7 @@ const init = async () => {
 
   app.get('/api/lessons', (req, res) => {
     const db = getDb();
-    db.all('SELECT * FROM lessons WHERE is_published = 1 ORDER BY created_at DESC', (err, rows) => {
+    db.all('SELECT * FROM lessons WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now")) ORDER BY created_at DESC', (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       const parsed = rows.map(row => ({
         ...row,
@@ -844,7 +844,7 @@ const init = async () => {
 
   app.get('/api/lessons/:id', (req, res) => {
     const db = getDb();
-    db.get('SELECT * FROM lessons WHERE id = ? AND is_published = 1', [req.params.id], (err, row) => {
+    db.get('SELECT * FROM lessons WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now"))', [req.params.id], (err, row) => {
       if (err) return res.status(500).json({ error: err.message });
       if (!row) return res.status(404).json({ error: 'Not found' });
       const parsed = {
@@ -859,7 +859,7 @@ const init = async () => {
 
   app.get('/api/vocabulary/modules', (req, res) => {
     const db = getDb();
-    db.all('SELECT * FROM vocabulary_modules WHERE is_published = 1 ORDER BY created_at DESC', (err, rows) => {
+    db.all('SELECT * FROM vocabulary_modules WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now")) ORDER BY created_at DESC', (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       const parsed = rows.map(row => ({
         ...row,
@@ -871,7 +871,7 @@ const init = async () => {
 
   app.get('/api/vocabulary/modules/:id', (req, res) => {
     const db = getDb();
-    db.get('SELECT * FROM vocabulary_modules WHERE id = ? AND is_published = 1', [req.params.id], (err, row) => {
+    db.get('SELECT * FROM vocabulary_modules WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now"))', [req.params.id], (err, row) => {
       if (err) return res.status(500).json({ error: err.message });
       if (!row) return res.status(404).json({ error: 'Not found' });
       const parsed = {
@@ -885,7 +885,7 @@ const init = async () => {
   app.get('/api/greetings', (req, res) => {
     const { time_of_day } = req.query;
     const db = getDb();
-    let where = 'WHERE is_published = 1';
+    let where = 'WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now"))';
     const params = [];
     if (time_of_day && time_of_day !== 'all') {
       where += ' AND time_of_day = ?';
@@ -933,7 +933,7 @@ const init = async () => {
 
   app.get('/api/homepage', (req, res) => {
     const db = getDb();
-    db.all('SELECT * FROM homepage_content WHERE is_active = 1 ORDER BY sort_order ASC, created_at ASC', (err, rows) => {
+    db.all('SELECT * FROM homepage_content WHERE is_active = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now")) ORDER BY sort_order ASC, created_at ASC', (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(rows);
     });
@@ -983,28 +983,28 @@ const init = async () => {
   });
 
   app.post('/api/admin/lessons', (req, res) => {
-    const { title, description, level, duration, overview, objectives, content, quiz, is_published } = req.body;
+    const { title, description, level, duration, overview, objectives, content, quiz, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO lessons (title, description, level, duration, overview, objectives, content, quiz, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, description || '', level || 'beginner', duration || '', overview || '', JSON.stringify(objectives || []), JSON.stringify(content || []), JSON.stringify(quiz || []), is_published ? 1 : 0],
+      'INSERT INTO lessons (title, description, level, duration, overview, objectives, content, quiz, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', level || 'beginner', duration || '', overview || '', JSON.stringify(objectives || []), JSON.stringify(content || []), JSON.stringify(quiz || []), is_published ? 1 : 0, publish_at || null, unpublish_at || null],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, title, description, level, duration, overview, objectives, content, quiz, is_published });
+        res.status(201).json({ id: this.lastID, title, description, level, duration, overview, objectives, content, quiz, is_published, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/lessons/:id', (req, res) => {
-    const { title, description, level, duration, overview, objectives, content, quiz, is_published } = req.body;
+    const { title, description, level, duration, overview, objectives, content, quiz, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'UPDATE lessons SET title = ?, description = ?, level = ?, duration = ?, overview = ?, objectives = ?, content = ?, quiz = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [title, description || '', level || 'beginner', duration || '', overview || '', JSON.stringify(objectives || []), JSON.stringify(content || []), JSON.stringify(quiz || []), is_published ? 1 : 0, req.params.id],
+      'UPDATE lessons SET title = ?, description = ?, level = ?, duration = ?, overview = ?, objectives = ?, content = ?, quiz = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', level || 'beginner', duration || '', overview || '', JSON.stringify(objectives || []), JSON.stringify(content || []), JSON.stringify(quiz || []), is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, title, description, level, duration, overview, objectives, content, quiz, is_published });
+        res.json({ id: req.params.id, title, description, level, duration, overview, objectives, content, quiz, is_published, publish_at, unpublish_at });
       }
     );
   });
@@ -1041,28 +1041,28 @@ const init = async () => {
   });
 
   app.post('/api/admin/vocabulary', (req, res) => {
-    const { title, description, words, is_published } = req.body;
+    const { title, description, words, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO vocabulary_modules (title, description, words, is_published) VALUES (?, ?, ?, ?)',
-      [title, description || '', JSON.stringify(words || []), is_published ? 1 : 0],
+      'INSERT INTO vocabulary_modules (title, description, words, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?)',
+      [title, description || '', JSON.stringify(words || []), is_published ? 1 : 0, publish_at || null, unpublish_at || null],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, title, description, words, is_published });
+        res.status(201).json({ id: this.lastID, title, description, words, is_published, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/vocabulary/:id', (req, res) => {
-    const { title, description, words, is_published } = req.body;
+    const { title, description, words, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'UPDATE vocabulary_modules SET title = ?, description = ?, words = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [title, description || '', JSON.stringify(words || []), is_published ? 1 : 0, req.params.id],
+      'UPDATE vocabulary_modules SET title = ?, description = ?, words = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', JSON.stringify(words || []), is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, title, description, words, is_published });
+        res.json({ id: req.params.id, title, description, words, is_published, publish_at, unpublish_at });
       }
     );
   });
@@ -1095,28 +1095,28 @@ const init = async () => {
   });
 
   app.post('/api/admin/greetings', (req, res) => {
-    const { akan, english, pronunciation, context, audio_url, time_of_day, is_published } = req.body;
+    const { akan, english, pronunciation, context, audio_url, time_of_day, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO greetings (akan, english, pronunciation, context, audio_url, time_of_day, is_published) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [akan, english, pronunciation || '', context || '', audio_url || '', time_of_day || 'general', is_published ? 1 : 0],
+      'INSERT INTO greetings (akan, english, pronunciation, context, audio_url, time_of_day, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [akan, english, pronunciation || '', context || '', audio_url || '', time_of_day || 'general', is_published ? 1 : 0, publish_at || null, unpublish_at || null],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, akan, english, pronunciation, context, audio_url, time_of_day, is_published });
+        res.status(201).json({ id: this.lastID, akan, english, pronunciation, context, audio_url, time_of_day, is_published, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/greetings/:id', (req, res) => {
-    const { akan, english, pronunciation, context, audio_url, time_of_day, is_published } = req.body;
+    const { akan, english, pronunciation, context, audio_url, time_of_day, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'UPDATE greetings SET akan = ?, english = ?, pronunciation = ?, context = ?, audio_url = ?, time_of_day = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [akan, english, pronunciation || '', context || '', audio_url || '', time_of_day || 'general', is_published ? 1 : 0, req.params.id],
+      'UPDATE greetings SET akan = ?, english = ?, pronunciation = ?, context = ?, audio_url = ?, time_of_day = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [akan, english, pronunciation || '', context || '', audio_url || '', time_of_day || 'general', is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, akan, english, pronunciation, context, audio_url, time_of_day, is_published });
+        res.json({ id: req.params.id, akan, english, pronunciation, context, audio_url, time_of_day, is_published, publish_at, unpublish_at });
       }
     );
   });
@@ -1161,40 +1161,40 @@ const init = async () => {
   });
 
   app.post('/api/admin/articles', (req, res) => {
-    const { title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published } = req.body;
+    const { title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      `INSERT INTO culture_articles (title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO culture_articles (title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published, publish_at, unpublish_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         title, description || '', content || '', category || 'general', region || '', timeline || '', significance || '',
         examples ? (Array.isArray(examples) ? examples.map(ex => ex.symbol || ex).join(',') : String(examples)) : '',
         instruments ? (Array.isArray(instruments) ? instruments.join(',') : String(instruments)) : '',
         tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '',
-        is_published ? 1 : 0, 'approved'
+        is_published ? 1 : 0, publish_at || null, unpublish_at || null, 'approved'
       ],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published });
+        res.status(201).json({ id: this.lastID, title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/articles/:id', (req, res) => {
-    const { title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published } = req.body;
+    const { title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      `UPDATE culture_articles SET title = ?, description = ?, content = ?, category = ?, region = ?, timeline = ?, significance = ?, examples = ?, instruments = ?, tags = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+      `UPDATE culture_articles SET title = ?, description = ?, content = ?, category = ?, region = ?, timeline = ?, significance = ?, examples = ?, instruments = ?, tags = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
       [
         title, description || '', content || '', category || 'general', region || '', timeline || '', significance || '',
         examples ? (Array.isArray(examples) ? examples.map(ex => ex.symbol || ex).join(',') : String(examples)) : '',
         instruments ? (Array.isArray(instruments) ? instruments.join(',') : String(instruments)) : '',
         tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '',
-        is_published ? 1 : 0, req.params.id
+        is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id
       ],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published });
+        res.json({ id: req.params.id, title, description, content, category, region, timeline, significance, examples, instruments, tags, is_published, publish_at, unpublish_at });
       }
     );
   });
@@ -1231,28 +1231,28 @@ const init = async () => {
   });
 
   app.post('/api/admin/documents', (req, res) => {
-    const { title, description, file_url, file_type, category, level, author, tags, is_published } = req.body;
+    const { title, description, file_url, file_type, category, level, author, tags, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO documents (title, description, file_url, file_type, category, level, author, tags, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, description || '', file_url || '', file_type || 'pdf', category || 'general', level || 'beginner', author || '', tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '', is_published ? 1 : 0],
+      'INSERT INTO documents (title, description, file_url, file_type, category, level, author, tags, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', file_url || '', file_type || 'pdf', category || 'general', level || 'beginner', author || '', tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '', is_published ? 1 : 0, publish_at || null, unpublish_at || null],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, title, description, file_url, file_type, category, level, author, tags, is_published });
+        res.status(201).json({ id: this.lastID, title, description, file_url, file_type, category, level, author, tags, is_published, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/documents/:id', (req, res) => {
-    const { title, description, file_url, file_type, category, level, author, tags, is_published } = req.body;
+    const { title, description, file_url, file_type, category, level, author, tags, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'UPDATE documents SET title = ?, description = ?, file_url = ?, file_type = ?, category = ?, level = ?, author = ?, tags = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [title, description || '', file_url || '', file_type || 'pdf', category || 'general', level || 'beginner', author || '', tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '', is_published ? 1 : 0, req.params.id],
+      'UPDATE documents SET title = ?, description = ?, file_url = ?, file_type = ?, category = ?, level = ?, author = ?, tags = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', file_url || '', file_type || 'pdf', category || 'general', level || 'beginner', author || '', tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '', is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, title, description, file_url, file_type, category, level, author, tags, is_published });
+        res.json({ id: req.params.id, title, description, file_url, file_type, category, level, author, tags, is_published, publish_at, unpublish_at });
       }
     );
   });
@@ -1263,6 +1263,47 @@ const init = async () => {
       if (err) return res.status(500).json({ error: err.message });
       if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
       res.status(204).send();
+    });
+  });
+
+  app.get('/api/documents/:id/download', (req, res) => {
+    const db = getDb();
+    db.get('SELECT * FROM documents WHERE id = ? AND is_published = 1', [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      const relativePath = row.file_url.replace(/^\//, '');
+      const absolutePath = join(uploadDir, relativePath);
+      res.download(absolutePath, row.title ? `${row.title}${getExtension(row.file_type)}` : undefined, (dlErr) => {
+        if (dlErr) {
+          console.error('Download error:', dlErr);
+        }
+      });
+    });
+  });
+
+  const getExtension = (fileType) => {
+    const map = { pdf: '.pdf', doc: '.doc', 'docx': '.docx', txt: '.txt', video: '.mp4', audio: '.mp3', image: '' };
+    return map[fileType] || '';
+  };
+
+  app.get('/api/vocabulary/:id/export', (req, res) => {
+    const db = getDb();
+    db.get('SELECT * FROM vocabulary_modules WHERE id = ? AND is_published = 1', [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      const format = (req.query.format || 'json').toLowerCase();
+      const words = row.words ? JSON.parse(row.words) : [];
+      const filename = `${row.title || 'vocabulary'}_export.${format}`;
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      if (format === 'csv') {
+        res.setHeader('Content-Type', 'text/csv');
+        const header = 'Akan,English,Pronunciation\n';
+        const body = words.map(w => `${w.akan || ''},${w.english || ''},${w.pronunciation || ''}`).join('\n');
+        res.send(header + body);
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.json({ module: row.title, exportedAt: new Date().toISOString(), words });
+      }
     });
   });
 
@@ -1285,28 +1326,28 @@ const init = async () => {
   });
 
   app.post('/api/admin/events', (req, res) => {
-    const { title, description, event_date, event_time, location, event_type, max_participants, status } = req.body;
+    const { title, description, event_date, event_time, location, event_type, max_participants, status, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO events (title, description, event_date, event_time, location, event_type, max_participants, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, description || '', event_date, event_time || '', location || '', event_type || 'online', max_participants || null, status || 'upcoming'],
+      'INSERT INTO events (title, description, event_date, event_time, location, event_type, max_participants, status, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', event_date, event_time || '', location || '', event_type || 'online', max_participants || null, status || 'upcoming', publish_at || null, unpublish_at || null],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, title, description, event_date, event_time, location, event_type, max_participants, status });
+        res.status(201).json({ id: this.lastID, title, description, event_date, event_time, location, event_type, max_participants, status, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/events/:id', (req, res) => {
-    const { title, description, event_date, event_time, location, event_type, max_participants, status } = req.body;
+    const { title, description, event_date, event_time, location, event_type, max_participants, status, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'UPDATE events SET title = ?, description = ?, event_date = ?, event_time = ?, location = ?, event_type = ?, max_participants = ?, status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [title, description || '', event_date, event_time || '', location || '', event_type || 'online', max_participants || null, status || 'upcoming', req.params.id],
+      'UPDATE events SET title = ?, description = ?, event_date = ?, event_time = ?, location = ?, event_type = ?, max_participants = ?, status = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', event_date, event_time || '', location || '', event_type || 'online', max_participants || null, status || 'upcoming', publish_at || null, unpublish_at || null, req.params.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, title, description, event_date, event_time, location, event_type, max_participants, status });
+        res.json({ id: req.params.id, title, description, event_date, event_time, location, event_type, max_participants, status, publish_at, unpublish_at });
       }
     );
   });
@@ -1393,28 +1434,28 @@ const init = async () => {
   });
 
   app.post('/api/admin/homepage', (req, res) => {
-    const { section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active } = req.body;
+    const { section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO homepage_content (section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [section, title || '', subtitle || '', body || '', image_url || '', link_url || '', link_text || '', sort_order || 0, is_active ? 1 : 1],
+      'INSERT INTO homepage_content (section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [section, title || '', subtitle || '', body || '', image_url || '', link_url || '', link_text || '', sort_order || 0, is_active ? 1 : 1, publish_at || null, unpublish_at || null],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active });
+        res.status(201).json({ id: this.lastID, section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/homepage/:id', (req, res) => {
-    const { section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active } = req.body;
+    const { section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'UPDATE homepage_content SET section = ?, title = ?, subtitle = ?, body = ?, image_url = ?, link_url = ?, link_text = ?, sort_order = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [section, title || '', subtitle || '', body || '', image_url || '', link_url || '', link_text || '', sort_order || 0, is_active ? 1 : 0, req.params.id],
+      'UPDATE homepage_content SET section = ?, title = ?, subtitle = ?, body = ?, image_url = ?, link_url = ?, link_text = ?, sort_order = ?, is_active = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [section, title || '', subtitle || '', body || '', image_url || '', link_url || '', link_text || '', sort_order || 0, is_active ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active });
+        res.json({ id: req.params.id, section, title, subtitle, body, image_url, link_url, link_text, sort_order, is_active, publish_at, unpublish_at });
       }
     );
   });
@@ -1446,28 +1487,28 @@ const init = async () => {
   });
 
   app.post('/api/admin/alphabets', (req, res) => {
-    const { letter, pronunciation, example, audio_url, is_published } = req.body;
+    const { letter, pronunciation, example, audio_url, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO alphabets (letter, pronunciation, example, audio_url, is_published) VALUES (?, ?, ?, ?, ?)',
-      [letter, pronunciation || '', example || '', audio_url || '', is_published ? 1 : 0],
+      'INSERT INTO alphabets (letter, pronunciation, example, audio_url, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [letter, pronunciation || '', example || '', audio_url || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, letter, pronunciation, example, audio_url, is_published });
+        res.status(201).json({ id: this.lastID, letter, pronunciation, example, audio_url, is_published, publish_at, unpublish_at });
       }
     );
   });
 
   app.put('/api/admin/alphabets/:id', (req, res) => {
-    const { letter, pronunciation, example, audio_url, is_published } = req.body;
+    const { letter, pronunciation, example, audio_url, is_published, publish_at, unpublish_at } = req.body;
     const db = getDb();
     db.run(
-      'UPDATE alphabets SET letter = ?, pronunciation = ?, example = ?, audio_url = ?, is_published = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [letter, pronunciation || '', example || '', audio_url || '', is_published ? 1 : 0, req.params.id],
+      'UPDATE alphabets SET letter = ?, pronunciation = ?, example = ?, audio_url = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [letter, pronunciation || '', example || '', audio_url || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-        res.json({ id: req.params.id, letter, pronunciation, example, audio_url, is_published });
+        res.json({ id: req.params.id, letter, pronunciation, example, audio_url, is_published, publish_at, unpublish_at });
       }
     );
   });
@@ -1483,7 +1524,7 @@ const init = async () => {
 
   app.get('/api/alphabet', (req, res) => {
     const db = getDb();
-    db.all('SELECT * FROM alphabets WHERE is_published = 1 ORDER BY letter ASC', (err, rows) => {
+    db.all('SELECT * FROM alphabets WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime("now")) AND (unpublish_at IS NULL OR unpublish_at > datetime("now")) ORDER BY letter ASC', (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
       const data = rows.map(row => ({
         ...row,
@@ -1707,8 +1748,18 @@ const init = async () => {
     const table = req.query.table;
     const id = req.query.id;
     if (!table || !id) return res.status(400).json({ error: 'table and id are required' });
-    const rows = [];
-    res.json(rows);
+    db.all('SELECT id, table_name, record_id, data, changed_by, created_at FROM content_versions WHERE table_name = ? AND record_id = ? ORDER BY created_at DESC', [table, id], (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      const versions = (rows || []).map(row => ({
+        id: row.id,
+        table: row.table_name,
+        recordId: row.record_id,
+        data: JSON.parse(row.data || '{}'),
+        changed_by: row.changed_by,
+        created_at: row.created_at
+      }));
+      res.json(versions);
+    });
   });
 
    app.post('/api/admin/versions', (req, res) => {

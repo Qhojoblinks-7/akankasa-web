@@ -92,6 +92,8 @@ export const initDatabase = async () => {
       author_email TEXT,
       status TEXT DEFAULT 'pending',
       is_published INTEGER DEFAULT 0,
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
@@ -99,6 +101,8 @@ export const initDatabase = async () => {
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_category ON culture_articles(category)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_status ON culture_articles(status)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_published ON culture_articles(is_published)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_publish_at ON culture_articles(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_unpublish_at ON culture_articles(unpublish_at)`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS documents (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -111,6 +115,8 @@ export const initDatabase = async () => {
       author TEXT,
       tags TEXT,
       is_published INTEGER DEFAULT 1,
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
@@ -118,6 +124,10 @@ export const initDatabase = async () => {
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_category ON documents(category)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_level ON documents(level)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_published ON documents(is_published)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_publish_at ON documents(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_unpublish_at ON documents(unpublish_at)`);
+  await runSql(db, `ALTER TABLE documents ADD COLUMN publish_at TEXT`);
+  await runSql(db, `ALTER TABLE documents ADD COLUMN unpublish_at TEXT`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS forum_posts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -160,12 +170,18 @@ export const initDatabase = async () => {
       event_type TEXT DEFAULT 'online',
       max_participants INTEGER,
       status TEXT DEFAULT 'upcoming',
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_date ON events(event_date)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_status ON events(status)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_publish_at ON events(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_unpublish_at ON events(unpublish_at)`);
+  await runSql(db, `ALTER TABLE events ADD COLUMN publish_at TEXT`);
+  await runSql(db, `ALTER TABLE events ADD COLUMN unpublish_at TEXT`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS lessons (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -178,12 +194,18 @@ export const initDatabase = async () => {
       content TEXT,
       quiz TEXT,
       is_published INTEGER DEFAULT 1,
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_level ON lessons(level)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_published ON lessons(is_published)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_publish_at ON lessons(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_unpublish_at ON lessons(unpublish_at)`);
+  await runSql(db, `ALTER TABLE lessons ADD COLUMN publish_at TEXT`);
+  await runSql(db, `ALTER TABLE lessons ADD COLUMN unpublish_at TEXT`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS vocabulary_modules (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -191,11 +213,17 @@ export const initDatabase = async () => {
       description TEXT,
       words TEXT,
       is_published INTEGER DEFAULT 1,
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_vocab_published ON vocabulary_modules(is_published)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_vocab_publish_at ON vocabulary_modules(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_vocab_unpublish_at ON vocabulary_modules(unpublish_at)`);
+  await runSql(db, `ALTER TABLE vocabulary_modules ADD COLUMN publish_at TEXT`);
+  await runSql(db, `ALTER TABLE vocabulary_modules ADD COLUMN unpublish_at TEXT`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS greetings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -206,11 +234,17 @@ export const initDatabase = async () => {
       audio_url TEXT,
       time_of_day TEXT DEFAULT 'general',
       is_published INTEGER DEFAULT 1,
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_greeting_time ON greetings(time_of_day)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_greeting_publish_at ON greetings(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_greeting_unpublish_at ON greetings(unpublish_at)`);
+  await runSql(db, `ALTER TABLE greetings ADD COLUMN publish_at TEXT`);
+  await runSql(db, `ALTER TABLE greetings ADD COLUMN unpublish_at TEXT`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS legal_pages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -261,11 +295,17 @@ export const initDatabase = async () => {
       link_text TEXT,
       sort_order INTEGER DEFAULT 0,
       is_active INTEGER DEFAULT 1,
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_homepage_section ON homepage_content(section)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_homepage_publish_at ON homepage_content(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_homepage_unpublish_at ON homepage_content(unpublish_at)`);
+  await runSql(db, `ALTER TABLE homepage_content ADD COLUMN publish_at TEXT`);
+  await runSql(db, `ALTER TABLE homepage_content ADD COLUMN unpublish_at TEXT`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS festivals (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -292,11 +332,17 @@ export const initDatabase = async () => {
       example TEXT,
       audio_url TEXT,
       is_published INTEGER DEFAULT 1,
+      publish_at TEXT,
+      unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_letter ON alphabets(letter)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_publish_at ON alphabets(publish_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_unpublish_at ON alphabets(unpublish_at)`);
+  await runSql(db, `ALTER TABLE alphabets ADD COLUMN publish_at TEXT`);
+  await runSql(db, `ALTER TABLE alphabets ADD COLUMN unpublish_at TEXT`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

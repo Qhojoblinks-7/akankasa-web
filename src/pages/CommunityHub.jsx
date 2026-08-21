@@ -248,7 +248,7 @@ const CommunityHub = () => {
                   </div>
                 ) : (
                   posts.map((post) => (
-                    <article key={post.id} className="border-b border-gray-800 p-4 hover:bg-gray-900/50 transition-colors cursor-pointer" onClick={() => navigate(`/community/discussion/${post.id}`)}>
+                    <Link key={post.id} to={`/community/discussion/${post.id}`} className="block border-b border-gray-800 p-4 hover:bg-gray-900/50 transition-colors">
                       <div className="flex space-x-4">
                         <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center text-white font-medium flex-shrink-0">
                           {(post.author_name || 'A').charAt(0).toUpperCase()}
@@ -289,14 +289,14 @@ const CommunityHub = () => {
                               </div>
                             </button>
                           </div>
-                        </div>
+                          </div>
                       </div>
-                    </article>
+                    </Link>
                   ))
                 )}
-              </div>
-            </>
-          )}
+                </div>
+              </>
+            )}
 
           {/* Thread View */}
           {isThread && (
@@ -434,9 +434,9 @@ const CommunityHub = () => {
                                   </div>
                                 </button>
                               </div>
+                              </div>
                             </div>
-                          </div>
-                        </article>
+                      </article>
                       ))
                     )}
                   </div>
@@ -541,13 +541,13 @@ const CommunityHub = () => {
             <div className="bg-gray-900 rounded-2xl p-4">
               <h3 className="text-xl font-bold mb-4">Trends for you</h3>
               <div className="grid grid-cols-3 gap-3">
-                {trends.slice(0, 9).map((trend, index) => (
-                  <div key={index} className="cursor-pointer hover:bg-gray-800 p-2 rounded-lg transition-colors">
-                    <p className="text-xs text-gray-500 truncate">{trend.category}</p>
-                    <p className="font-bold text-white text-sm truncate">{trend.topic}</p>
-                    <p className="text-xs text-gray-500 truncate">{trend.posts}</p>
-                  </div>
-                ))}
+                 {trends.slice(0, 9).map((trend, index) => (
+                   <button key={index} type="button" className="cursor-pointer hover:bg-gray-800 p-2 rounded-lg transition-colors w-full text-left">
+                     <p className="text-xs text-gray-500 truncate">{trend.category}</p>
+                     <p className="font-bold text-white text-sm truncate">{trend.topic}</p>
+                     <p className="text-xs text-gray-500 truncate">{trend.posts}</p>
+                   </button>
+                 ))}
               </div>
               <button className="mt-4 text-yellow-500 hover:text-yellow-400 text-sm">Show more</button>
             </div>

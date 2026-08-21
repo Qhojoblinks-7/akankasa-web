@@ -58,7 +58,7 @@ const AdminModerationQueue = () => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+            <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard">
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
             <div>
@@ -75,7 +75,7 @@ const AdminModerationQueue = () => {
       </header>
 
       <main className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">{error}</div>}
+        {error && <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg" role="alert" aria-live="assertive">{error}</div>}
         {items.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
             <CheckCircle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
@@ -152,12 +152,13 @@ const AdminModerationQueue = () => {
                       <XCircle className="w-4 h-4 mr-2" />
                       Reject
                     </button>
-                    <button
-                      onClick={() => setSelectedItem(item)}
-                      className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      <Eye className="w-4 h-4" />
-                    </button>
+                     <button
+                       onClick={() => setSelectedItem(item)}
+                       className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                       aria-label={`View details for ${item.title}`}
+                     >
+                       <Eye className="w-4 h-4" />
+                     </button>
                   </div>
                 </div>
               ))}

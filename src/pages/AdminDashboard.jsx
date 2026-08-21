@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Volume2, Users, Plus, Search, Edit, Trash2, Upload, ArrowLeft, Clock, MessageSquare, FileText, Calendar, Home, HelpCircle, Shield } from 'lucide-react';
+import { BookOpen, Volume2, Users, Plus, Search, Edit, Trash2, Upload, ArrowLeft, Clock, MessageSquare, FileText, Calendar, Home, HelpCircle, Shield, Music, Camera, Book } from 'lucide-react';
 import { adminGet } from '../api';
 
 const AdminDashboard = () => {
@@ -43,6 +43,7 @@ const AdminDashboard = () => {
           <button
             onClick={() => { localStorage.removeItem('akankasa:admin_token'); navigate('/admin/login'); }}
             className="px-5 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm font-medium transition-colors"
+            aria-label="Sign out of admin"
           >
             Sign out
           </button>
@@ -99,7 +100,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{error}</div>}
+          {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm" role="alert" aria-live="assertive">{error}</div>}
           <h2 className="text-lg font-display font-semibold text-[#564c38] mb-1">What would you like to manage?</h2>
           <p className="text-sm text-gray-600 mb-6">Choose a section below to add, edit, or remove content.</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -116,7 +117,11 @@ const AdminDashboard = () => {
             <button onClick={() => navigate('/admin/moderation')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><Shield className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Moderation</span></button>
             <button onClick={() => navigate('/admin/forum')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><MessageSquare className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Forum</span></button>
             <button onClick={() => navigate('/admin/suggestions')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><BookOpen className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Suggestions</span></button>
-            <button onClick={() => navigate('/admin/users')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><Users className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Users</span></button>
+            <button onClick={() => navigate('/admin/approval-queue')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><Clock className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Approval Queue</span></button>
+            <button onClick={() => navigate('/admin/folk-stories')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><Book className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Folk Stories</span></button>
+            <button onClick={() => navigate('/admin/drumming')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><Music className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Drumming</span></button>
+            <button onClick={() => navigate('/admin/festival-photos')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><Camera className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Festival Photos</span></button>
+            <button onClick={() => navigate('/admin/research-papers')} className="p-4 border border-gray-200 rounded-xl hover:border-amber-300 hover:shadow-md transition-all text-center bg-white"><FileText className="w-6 h-6 text-amber-500 mx-auto mb-2" /><span className="text-sm font-medium text-[#564c38]">Research Papers</span></button>
           </div>
         </div>
       </main>

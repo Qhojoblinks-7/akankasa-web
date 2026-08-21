@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 const UserProgressContext = createContext();
 
@@ -43,6 +43,50 @@ export const UserProgressProvider = ({ children }) => {
       };
     }
   });
+  const [syncStatus, setSyncStatus] = useState('idle'); // idle | syncing | synced | error
+  const [lastSynced, setLastSynced] = useState(null);
+
+  const saveToBackend = useCallback(async (data) => {
+    setSyncStatus('syncing');
+    try {
+      const result = await saveUserProgress(data);
+      setSyncStatus(result ? 'synced' : 'error');
+      if (result) setLastSynced(new Date());
+    } catch {
+      setSyncStatus('error');
+    }
+  }, []);
+
+  useEffect(() => {
+    const sync = async () => {
+      const token = localStorage.getItem('akankasa:auth_token');
+      if (!token) {
+        setSyncStatus('idle');
+        return;
+      }
+      await saveToBackend(progress);
+    };
+    const timer = setTimeout(sync, 800);
+    return () => clearTimeout(timer);
+  }, [progress, saveToBackend]);
+
+  useEffect(() => {
+    const load = async () => {
+      const token = localStorage.getItem('akankasa:auth_token');
+      if (!token) return;
+      try {
+        const data = await getUserProgress();
+        if (data && data.progress) {
+          setProgress(prev => ({ ...prev, ...data.progress }));
+          setLastSynced(new Date());
+          setSyncStatus('synced');
+        }
+      } catch {
+        // offline — keep local state
+      }
+    };
+    load();
+  }, []);
 
   useEffect(() => {
     try {
@@ -120,15 +164,24 @@ export const UserProgressProvider = ({ children }) => {
     });
   };
 
+  const manualSync = async () => {
+    const token = localStorage.getItem('akankasa:auth_token');
+    if (!token) return;
+    await saveToBackend(progress);
+  };
+
   const value = {
     progress,
+    syncStatus,
+    lastSynced,
     updateProgress,
     markLessonComplete,
     saveQuizScore,
     toggleBookmark,
     toggleSavedWord,
     recordStudyTime,
-    checkAchievements
+    checkAchievements,
+    manualSync
   };
 
   return (

@@ -13,6 +13,7 @@ const EventRegistration = () => {
     email: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [registrationId, setRegistrationId] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -72,7 +73,9 @@ const EventRegistration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await registerForEvent(eventId, formData);
+      const result = await registerForEvent(eventId, formData);
+      const regId = result?.id || `REG-${Date.now().toString(36).toUpperCase()}`;
+      setRegistrationId(regId);
       setSubmitted(true);
     } catch (err) {
       setError(err.message || 'Registration failed');
@@ -82,10 +85,25 @@ const EventRegistration = () => {
   if (submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4 text-green-600">Registration Successful!</h2>
-          <p className="text-gray-600 mb-4">Thank you for registering, {formData.name}.</p>
-          <button onClick={() => navigate('/community/events')} className="text-blue-600 hover:underline">Back to Events</button>
+        <div className="text-center max-w-md mx-auto p-8">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold mb-2 text-green-600">Registration Successful!</h2>
+          <p className="text-gray-600 mb-2">Thank you for registering, {formData.name}.</p>
+          <p className="text-sm text-gray-500 mb-4">A confirmation email has been sent to <strong>{formData.email}</strong>.</p>
+          {registrationId && (
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+              <p className="text-sm text-gray-600 mb-1">Registration ID</p>
+              <p className="text-lg font-mono font-bold text-[#564c38]">{registrationId}</p>
+            </div>
+          )}
+          <div className="space-x-4">
+            <button onClick={() => navigate('/community/events')} className="text-blue-600 hover:underline">Back to Events</button>
+            <button onClick={() => { setSubmitted(false); setRegistrationId(null); }} className="text-gray-600 hover:underline">Register Another</button>
+          </div>
         </div>
       </div>
     );

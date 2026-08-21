@@ -124,7 +124,7 @@ const Dictionary = () => {
 
   <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg" role="alert" aria-live="assertive">
             {error}
           </div>
         )}
@@ -154,7 +154,7 @@ const Dictionary = () => {
 
             <div className="flex-1 relative">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" aria-hidden="true" />
                 <input
                   type="text"
                   value={searchTerm}
@@ -162,16 +162,18 @@ const Dictionary = () => {
                   placeholder={`Search in ${searchDirection === 'akan-english' ? 'Akan' : 'English'}...`}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                   style={{'--tw-ring-color': '#564c38'}}
+                  aria-label={`Search dictionary in ${searchDirection === 'akan-english' ? 'Akan' : 'English'}`}
                 />
               </div>
               
               {suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 z-10">
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 z-10" role="listbox" aria-label="Search suggestions">
                   {suggestions.map((suggestion, index) => (
                     <button
                       key={index}
                       onClick={() => { setSearchTerm(suggestion); setPage(1); }}
                       className="w-full text-left px-4 py-2 hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg"
+                      role="option"
                     >
                       {suggestion}
                     </button>
@@ -275,7 +277,7 @@ const Dictionary = () => {
           <div className="divide-y divide-gray-200 md:grid md:grid-cols-3">
             <div className="md:col-span-2">
               {loading ? (
-                <div className="px-6 py-12 text-center text-gray-500">Loading...</div>
+                <div className="px-6 py-12 text-center text-gray-500" aria-live="polite" aria-busy="true">Loading...</div>
               ) : total === 0 ? (
                 <div className="px-6 py-12 text-center">
                   <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -333,6 +335,7 @@ const Dictionary = () => {
                               : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
                           }`}
                           aria-pressed={favorites.includes(word.id)}
+                          aria-label={favorites.includes(word.id) ? `Remove ${word.primary_akan} from favorites` : `Add ${word.primary_akan} to favorites`}
                         >
                           <Heart className={`w-5 h-5 ${favorites.includes(word.id) ? 'fill-current' : ''}`} />
                         </button>
@@ -355,7 +358,7 @@ const Dictionary = () => {
             <aside className="md:col-span-1 border-l border-gray-100 p-4 bg-gray-50">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">Favorites ({favorites.length})</h3>
-                <button onClick={() => setFavorites([])} className="text-sm text-gray-500 hover:text-gray-700">Clear</button>
+                <button onClick={() => setFavorites([])} className="text-sm text-gray-500 hover:text-gray-700" aria-label="Clear all favorites">Clear</button>
               </div>
               {favorites.length === 0 ? (
                 <p className="text-sm text-gray-600">No favorites yet. Click the heart next to a word to save it here.</p>
@@ -372,9 +375,9 @@ const Dictionary = () => {
                         </div>
                         <div className="flex items-center space-x-2">
                           {w.audio && (
-                            <button onClick={() => { setPlayingAudio(w.audio); }} className="text-yellow-600">Play</button>
+                            <button onClick={() => { setPlayingAudio(w.audio); }} className="text-yellow-600" aria-label={`Play pronunciation for ${w.primary_akan}`}>Play</button>
                           )}
-                          <button onClick={() => setFavorites(prev => prev.filter(id => id !== fid))} className="text-gray-400 hover:text-red-500"><X className="w-4 h-4" /></button>
+                          <button onClick={() => setFavorites(prev => prev.filter(id => id !== fid))} className="text-gray-400 hover:text-red-500" aria-label={`Remove ${w.primary_akan} from favorites`}><X className="w-4 h-4" /></button>
                         </div>
                       </li>
                     );

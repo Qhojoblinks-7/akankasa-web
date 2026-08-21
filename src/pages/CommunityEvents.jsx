@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { getEvents } from '../api';
+import ShareButtons from '../components/ShareButtons';
 
 const CommunityEvents = () => {
   const [events, setEvents] = useState([]);
@@ -25,7 +26,10 @@ const CommunityEvents = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4">
-        <h1 className="text-3xl font-bold text-akan-red mb-8">Community Events</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-akan-red">Community Events</h1>
+          <ShareButtons />
+        </div>
         {loading ? (
           <div className="text-center py-12 text-gray-500">Loading events...</div>
         ) : (

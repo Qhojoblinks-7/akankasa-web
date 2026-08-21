@@ -64,6 +64,7 @@ const Navbar = () => {
                       e.currentTarget.style.backgroundColor = 'transparent';
                     }
                   }}
+                  aria-current={isActive(item.path) ? 'page' : undefined}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{item.label}</span>
@@ -96,6 +97,9 @@ const Navbar = () => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden p-2 rounded-lg text-black hover:bg-black/5 transition-colors"
+              aria-label={isMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -104,7 +108,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-black/10">
+          <div id="mobile-menu" className="md:hidden py-4 border-t border-black/10">
             <div className="flex flex-col space-y-2">
               {navigationItems.map((item) => {
                 const Icon = item.icon;
@@ -124,6 +128,7 @@ const Navbar = () => {
                         e.currentTarget.style.backgroundColor = 'transparent';
                       }
                     }}
+                    aria-current={isActive(item.path) ? 'page' : undefined}
                   >
                     <Icon className="w-5 h-5" />
                     <span>{item.label}</span>

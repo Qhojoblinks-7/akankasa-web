@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ArrowRight, BookOpen, Users, Book, Search, Play, Star, Calendar, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import HeroSection from '../components/layout/Hero'
 import FeatureSection from '../components/FeatureSection';
@@ -16,10 +16,10 @@ const iconMap = {
 };
 
 const colorMap = {
-  'basicGreetings': 'var(--color-yellow-600)',
-  'adinkraSymbols': 'var(--color-yellow-500)',
-  'akanDictionary': 'var(--color-yellow-400)',
-  'culturalEvents': 'var(--color-yellow-600)',
+  'basicGreetings': '#ca8a04',
+  'adinkraSymbols': '#f59e0b',
+  'akanDictionary': '#fbbf24',
+  'culturalEvents': '#ca8a04',
 };
 
 const Homepage = () => {
@@ -41,7 +41,7 @@ const Homepage = () => {
             category: item.subtitle || 'Feature',
             link: item.link_url || '/',
             icon: Icon,
-            color: colorMap[key] || 'var(--color-yellow-400)',
+            color: colorMap[key] || '#fbbf24',
           };
         }));
       } catch (err) {
@@ -55,20 +55,20 @@ const Homepage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
   {/* Hero Section (shared component) */}
   <HeroSection />
 
   <FeatureSection />
 
       {/* Featured Content */}
-      <section className="py-16 bg-black-70">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               {t('featuredContentTitle')}
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               {t('featuredContentDesc')}
             </p>
           </div>
@@ -78,7 +78,7 @@ const Homepage = () => {
           ) : featuredContent.length === 0 ? (
             <div className="text-center py-12 text-gray-500">No featured content available.</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {featuredContent.map((content, index) => {
                 const Icon = content.icon;
                 return (
@@ -90,23 +90,23 @@ const Homepage = () => {
                   >
                      <Link
                        to={content.link}
-                       className="block bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden group border border-gray-100"
+                       className="block bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group border border-gray-100 h-full"
                      >
-                      <div className="h-32 relative" style={{backgroundColor: content.color}}>
+                      <div className="h-28 sm:h-32 relative" style={{backgroundColor: content.color}}>
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <Icon className="w-12 h-12 text-black" />
+                          <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-black/80" />
                         </div>
                       </div>
-                      <div className="p-6">
-                        <span className="inline-block px-3 py-1 text-xs font-medium rounded-full mb-3" style={{backgroundColor: 'var(--color-primary)', color: 'var(--color-highlight)'}}>
+                      <div className="p-4 sm:p-6">
+                        <span className="inline-block px-2.5 py-1 text-xs font-medium rounded-full mb-2.5 sm:mb-3 bg-[#564c38] text-white">
                           {content.category}
                         </span>
-                         <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#564c38] transition-colors">
+                         <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 group-hover:text-[#564c38] transition-colors">
                           {content.title}
                         </h3>
-                        <p className="text-gray-600 text-sm">{content.description}</p>
+                         <p className="text-gray-600 text-sm leading-relaxed">{content.description}</p>
                       </div>
-                    </Link>
+                     </Link>
                   </motion.div>
                 );
               })}
@@ -116,19 +116,24 @@ const Homepage = () => {
       </section>
 
       {/* Stats Section */}
-  {/* <section className="py-16 text-white" style={{backgroundColor: 'var(--color-highlight)'}}>
+      <section className="py-12 sm:py-16 lg:py-20 text-white bg-[#564c38]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
               {t('growingTogetherTitle')}
             </h2>
-            <p className="text-xl opacity-90">
+            <p className="text-base sm:text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
               {t('growingTogetherDesc')}
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+            {[
+              { number: '500+', label: 'Dictionary Words' },
+              { number: '50+', label: 'Audio Pronunciations' },
+              { number: '12', label: 'Learning Modules' },
+              { number: '1000+', label: 'Community Members' },
+            ].map((stat, index) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, scale: 0.5 }}
@@ -136,47 +141,47 @@ const Homepage = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-4xl md:text-5xl font-bold mb-2">{stat.number}</div>
-                <div className="text-lg opacity-90">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-1.5 sm:mb-2">{stat.number}</div>
+                <div className="text-sm sm:text-lg opacity-90">{stat.label}</div>
               </motion.div>
             ))}
           </div>
         </div>
-      </section> */}
+      </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
             {t('readyToBegin')}
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
             {t('readyToBeginDesc')}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
              <Link
                to="/learn"
-               className="px-8 py-4 rounded-xl font-semibold text-white transition-all duration-200 inline-flex items-center justify-center space-x-2 hover:shadow-lg hover:-translate-y-0.5"
+               className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-white transition-all duration-200 inline-flex items-center justify-center space-x-2 hover:shadow-lg hover:-translate-y-0.5 text-sm sm:text-base"
                style={{backgroundColor: '#f59e0b'}}
                onMouseEnter={(e) => e.target.style.backgroundColor = '#ca8a04'}
                onMouseLeave={(e) => e.target.style.backgroundColor = '#f59e0b'}
                            >
                 <Play className="w-5 h-5" />
                 <span>{t('startLearningNow')}</span>
-              </Link>
-               <Link
-                 to="/community"
-                 className="border-2 px-8 py-4 rounded-xl font-semibold transition-all duration-200 inline-flex items-center justify-center space-x-2 hover:shadow-lg hover:-translate-y-0.5"
-                 style={{borderColor: 'var(--color-highlight)', color: 'var(--color-highlight)'}}
-                 onMouseEnter={(e) => {
-                   e.target.style.backgroundColor = '#f59e0b';
-                   e.target.style.color = 'white';
-                 }}
-                 onMouseLeave={(e) => {
-                   e.target.style.backgroundColor = 'transparent';
-                   e.target.style.color = 'var(--color-highlight)';
-                 }}
-               >
+             </Link>
+              <Link
+                to="/community"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-200 inline-flex items-center justify-center space-x-2 hover:shadow-lg hover:-translate-y-0.5 border-2 text-sm sm:text-base"
+                style={{borderColor: '#564c38', color: '#564c38'}}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#564c38';
+                  e.target.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#564c38';
+                }}
+              >
                 <Users className="w-5 h-5" />
                 <span>{t('joinCommunity')}</span>
               </Link>

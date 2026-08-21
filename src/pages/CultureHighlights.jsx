@@ -1,15 +1,16 @@
 // src/components/CultureHighlights.jsx
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, X,Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
+import { Calendar, MapPin, Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
 import { getCultureArticles, submitCultureArticle } from '../api';
+import { Link } from 'react-router-dom';
 import ContributeModal from './ContributeModal';
+import ShareButtons from '../components/ShareButtons';
 
 const CultureHighlights = () => {
   const [activeSection, setActiveSection] = useState('traditions');
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -61,183 +62,91 @@ const CultureHighlights = () => {
     }
   };
 
-  const handleLearnMore = (item) => {
-    setSelectedItem(item);
-  };
-
-  const handleCloseDetailView = () => {
-    setSelectedItem(null);
-  };
-
-
   const CultureCard = ({ item, sectionType }) => (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="relative h-48" style={{background: 'linear-gradient(135deg, #f1d799 0%, #564c38 100%)'}}>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-white text-center">
-            <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-            <p className="text-sm opacity-90">{item.description}</p>
-          </div>
-        </div>
-        <div className="absolute top-4 right-4">
-          <span className="bg-white/20 text-white px-2 py-1 rounded-full text-xs">
-            {item.region || 'All Regions'}
-          </span>
-        </div>
-      </div>
-      <div className="p-6">
-        <div className="mb-4">
-          <p className="text-gray-700 leading-relaxed">{item.content}</p>
-        </div>
-
-        {sectionType === 'history' && item.timeline && (
-          <div className="mb-4">
-            <div className="flex items-center text-sm text-gray-600">
-              <Calendar className="w-4 h-4 mr-2" />
-              <span>{item.timeline}</span>
-            </div>
-            {item.significance && (
-              <div className="mt-2">
-                <span className="font-semibold text-gray-900">Significance:</span>
-                <p className="text-gray-700 text-sm">{item.significance}</p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {sectionType === 'arts' && item.examples && (
-          <div className="mb-4">
-            <h4 className="font-semibold text-gray-900 mb-2">Examples:</h4>
-            <div className="space-y-2">
-              {item.examples.map((example, index) => (
-                <div key={index} className="bg-gray-50 p-3 rounded-lg">
-                  <div className="font-medium text-gray-900">{example.symbol}</div>
-                  <div className="text-sm text-gray-600">{example.meaning}</div>
-                  <div className="text-xs text-gray-500">{example.description}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {sectionType === 'music' && item.instruments && (
-          <div className="mb-4">
-            <h4 className="font-semibold text-gray-900 mb-2">Instruments:</h4>
-            <div className="flex flex-wrap gap-2">
-              {item.instruments.map((instrument, index) => (
-                <span key={index} className="px-2 py-1 rounded-full text-sm" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
-                  {instrument}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {item.tags && (
-          <div className="flex flex-wrap gap-2">
-            {item.tags.map((tag, index) => (
-              <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <button
-            onClick={() => handleLearnMore(item)} // This is the new onClick handler
-            className="font-medium text-sm flex items-center transition-colors"
-            style={{color: '#564c38'}}
-            onMouseEnter={(e) => e.target.style.color = '#695e46'}
-            onMouseLeave={(e) => e.target.style.color = '#564c38'}
-          >
-            Learn More
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const DetailView = ({ item, onClose }) => {
-    if (!item) return null;
-
-    // Determine the section icon for the detail view
-    const section = sections.find(s => s.id === activeSection);
-    const Icon = section?.icon;
-
-    return (
-      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
-        <div className="relative p-8 w-full max-w-2xl bg-white rounded-lg shadow-xl m-4">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-          >
-            <X size={24} />
-          </button>
-          
-          <div className="flex items-center mb-4">
-            {Icon && (
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center mr-4`} style={{backgroundColor: section.color}}>
-                <Icon className="w-6 h-6 text-white" />
-              </div>
-            )}
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900">{item.title}</h3>
-              <p className="text-gray-600">{item.description}</p>
-            </div>
-          </div>
-          
-          <div className="prose max-w-none text-gray-700">
-            <p>{item.content}</p>
-            
-            {activeSection === 'history' && (
-              <>
-                <h4 className="font-semibold text-gray-900 mt-4">Timeline:</h4>
-                <p>{item.timeline}</p>
-                <h4 className="font-semibold text-gray-900 mt-4">Significance:</h4>
-                <p>{item.significance}</p>
-              </>
-            )}
-            {activeSection === 'arts' && (
-              <>
-                <h4 className="font-semibold text-gray-900 mt-4">Examples:</h4>
-                <ul>
-                  {item.examples && item.examples.map((example, index) => (
-                    <li key={index}>
-                      <strong>{example.symbol}</strong> - {example.meaning}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {activeSection === 'music' && (
-              <>
-                <h4 className="font-semibold text-gray-900 mt-4">Instruments:</h4>
-                <p>{item.instruments && item.instruments.join(', ')}</p>
-              </>
-            )}
-
-            {item.tags && item.tags.length > 0 && (
-                <div className="mt-4">
-                  <span className="font-semibold text-gray-900">Tags:</span>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {item.tags.map((tag, index) => (
-                      <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-            )}
+    <Link to={`/culture/${item.id}`} className="block bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 border border-gray-100">
+      <div className="relative h-48" style={{background: 'linear-gradient(135deg, #f1d799 0%, #564c38 100%)'}}>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-white text-center">
+            <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+            <p className="text-sm opacity-90">{item.description}</p>
           </div>
         </div>
+        <div className="absolute top-4 right-4">
+          <span className="bg-white/20 text-white px-2 py-1 rounded-full text-xs">
+            {item.region || 'All Regions'}
+          </span>
+        </div>
       </div>
-    );
-  };
-  
+      <div className="p-6">
+        <div className="mb-4">
+          <p className="text-gray-700 leading-relaxed line-clamp-3">{item.content}</p>
+        </div>
 
-  return (
+        {sectionType === 'history' && item.timeline && (
+          <div className="mb-4">
+            <div className="flex items-center text-sm text-gray-600">
+              <Calendar className="w-4 h-4 mr-2" />
+              <span>{item.timeline}</span>
+            </div>
+            {item.significance && (
+              <div className="mt-2">
+                <span className="font-semibold text-gray-900">Significance:</span>
+                <p className="text-gray-700 text-sm">{item.significance}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {sectionType === 'arts' && item.examples && (
+          <div className="mb-4">
+            <h4 className="font-semibold text-gray-900 mb-2">Examples:</h4>
+            <div className="space-y-2">
+              {item.examples.map((example, index) => (
+                <div key={index} className="bg-gray-50 p-3 rounded-lg">
+                  <div className="font-medium text-gray-900">{example.symbol}</div>
+                  <div className="text-sm text-gray-600">{example.meaning}</div>
+                  <div className="text-xs text-gray-500">{example.description}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {sectionType === 'music' && item.instruments && (
+          <div className="mb-4">
+            <h4 className="font-semibold text-gray-900 mb-2">Instruments:</h4>
+            <div className="flex flex-wrap gap-2">
+              {item.instruments.map((instrument, index) => (
+                <span key={index} className="px-2 py-1 rounded-full text-sm" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
+                  {instrument}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {item.tags && (
+          <div className="flex flex-wrap gap-2">
+            {item.tags.map((tag, index) => (
+              <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+          <span className="font-medium text-sm flex items-center transition-colors" style={{color: '#564c38'}}>
+            Read more
+            <ChevronRight className="w-4 h-4 ml-1" />
+          </span>
+          <ShareButtons url={`${window.location.origin}/culture/${item.id}`} title={item.title} />
+        </div>
+      </div>
+    </Link>
+  );
+
+   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
@@ -248,33 +157,37 @@ const CultureHighlights = () => {
           </p>
         </div>
       </div>
-      {/* Section Navigation */}
-      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto">
-            {sections.map((section) => {
-              const Icon = section.icon;
-              return (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
-                  style={activeSection === section.id
-                    ? {borderColor: '#f59e0b', color: '#564c38'}
-                    : {borderColor: 'transparent', color: '#6b7280'}}
-                  onMouseEnter={(e) => {
-                    if (activeSection !== section.id) {
-                      e.target.style.color = '#374151';
-                      e.target.style.borderColor = '#d1d5db';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activeSection !== section.id) {
-                      e.target.style.color = '#6b7280';
-                      e.target.style.borderColor = 'transparent';
-                    }
-                  }}
-                >
+      {/* Section Navigation */}
+      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex space-x-8 overflow-x-auto" role="tablist" aria-label="Culture sections">
+            {sections.map((section) => {
+              const Icon = section.icon;
+              return (
+                <button
+                  key={section.id}
+                  onClick={() => setActiveSection(section.id)}
+                  className="flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap transition-colors"
+                  style={activeSection === section.id
+                    ? {borderColor: '#f59e0b', color: '#564c38'}
+                    : {borderColor: 'transparent', color: '#6b7280'}}
+                  onMouseEnter={(e) => {
+                    if (activeSection !== section.id) {
+                      e.target.style.color = '#374151';
+                      e.target.style.borderColor = '#d1d5db';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeSection !== section.id) {
+                      e.target.style.color = '#6b7280';
+                      e.target.style.borderColor = 'transparent';
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={activeSection === section.id}
+                  aria-controls="culture-content-panel"
+                  aria-label={section.label}
+                >
                   <Icon className="w-5 h-5" />
                   <span>{section.label}</span>
                 </button>
@@ -318,9 +231,9 @@ const CultureHighlights = () => {
             </div>
           </div>
         </div>
-        {/* Section Content */}
-        <div className="mb-8">
-          <div className="flex items-center mb-6">
+         {/* Section Content */}
+         <div id="culture-content-panel" className="mb-8" role="tabpanel">
+           <div className="flex items-center mb-6">
             {sections.find(s => s.id === activeSection) && (() => {
               const Icon = sections.find(s => s.id === activeSection).icon;
               return (
@@ -340,7 +253,7 @@ const CultureHighlights = () => {
           </div>
           {/* Content Grid */}
           {loading ? (
-            <div className="text-center py-12 text-gray-500">Loading...</div>
+            <div className="text-center py-12 text-gray-500" aria-live="polite" aria-busy="true">Loading...</div>
           ) : filteredContent.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -411,17 +324,13 @@ const CultureHighlights = () => {
         </div>
       </div>
       {/* Modals */}
-      <ContributeModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleContributeSubmit}
-      />
-      <DetailView 
-        item={selectedItem}
-        onClose={handleCloseDetailView}
-      />
-    </div>
-  );
+       <ContributeModal
+         isOpen={isModalOpen}
+         onClose={() => setIsModalOpen(false)}
+         onSubmit={handleContributeSubmit}
+       />
+     </div>
+   );
 };
 
 export default CultureHighlights;

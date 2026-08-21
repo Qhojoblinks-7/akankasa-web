@@ -71,12 +71,12 @@ const FlashcardModule = ({ words, title }) => {
         </div>
 
         <div className="flex justify-center mb-6">
-          <div onClick={() => setIsFlipped(!isFlipped)} className="w-full max-w-md aspect-[3/2] cursor-pointer perspective-1000">
+          <button type="button" onClick={() => setIsFlipped(!isFlipped)} className="w-full max-w-md aspect-[3/2] cursor-pointer perspective-1000" aria-label={isFlipped ? 'Show Akan word' : 'Show English translation'}>
             <div className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`} style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
               <div className="absolute inset-0 bg-gradient-to-br from-[#564c38] to-[#695e46] rounded-xl shadow-lg flex flex-col items-center justify-center p-6 text-white" style={{ backfaceVisibility: 'hidden' }}>
                 <p className="text-3xl font-bold mb-2">{currentWord.akan || currentWord.word}</p>
                 <p className="text-sm opacity-80 mb-4">{currentWord.pronunciation || ''}</p>
-                {currentWord.audio && <button onClick={(e) => { e.stopPropagation(); playAudio(currentWord.audio); }} className={`p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors ${playingAudio === currentWord.audio ? 'animate-pulse' : ''}`}><Volume2 className="w-5 h-5" /></button>}
+                {currentWord.audio && <button onClick={(e) => { e.stopPropagation(); playAudio(currentWord.audio); }} className={`p-3 bg-white/20 rounded-full hover:bg-white/30 transition-colors ${playingAudio === currentWord.audio ? 'animate-pulse' : ''}`} aria-label={playingAudio === currentWord.audio ? 'Pause pronunciation' : 'Play pronunciation'}><Volume2 className="w-5 h-5" /></button>}
                 <p className="text-xs opacity-60 mt-4">Click to reveal translation</p>
               </div>
               <div className="absolute inset-0 bg-white rounded-xl shadow-lg border-2 border-gray-200 flex flex-col items-center justify-center p-6" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>

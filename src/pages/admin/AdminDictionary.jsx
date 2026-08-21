@@ -61,7 +61,7 @@ const AdminDictionary = () => {
     <div className="min-h-screen bg-[#fafafa]">
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center space-x-4">
-          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
+          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
           <div><h1 className="text-2xl font-display font-bold text-[#564c38]">Dictionary</h1><p className="text-sm text-gray-600">Manage all dictionary words</p></div>
           <button onClick={() => navigate('/admin/dictionary/new')} className="ml-auto flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors"><Plus className="w-4 h-4 mr-2" /> New Word</button>
         </div>

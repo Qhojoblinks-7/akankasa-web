@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { Search, Download, Filter, BookOpen, Users, GraduationCap, FileText, ExternalLink, MessageSquare } from 'lucide-react';
-import { getDocuments, getForumPosts } from '../api';
+import { getDocuments, getForumPosts, downloadDocument } from '../api';
 
 const Research = () => {
   const [activeTab, setActiveTab] = useState('resources');
@@ -11,6 +11,8 @@ const Research = () => {
   const [resources, setResources] = useState([]);
   const [forumPosts, setForumPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [downloadingId, setDownloadingId] = useState(null);
+  const [downloadError, setDownloadError] = useState(null);
 
   const tabs = [
     { id: 'resources', label: 'Resource Library', icon: BookOpen },
@@ -55,6 +57,26 @@ const Research = () => {
     return matchesSearch && matchesLevel;
   });
 
+  const handleDownload = async (id) => {
+    setDownloadingId(id);
+    setDownloadError(null);
+    try {
+      const { blob, filename } = await downloadDocument(id);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setDownloadError(err.message || 'Download failed');
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
   const ResourceCard = ({ resource }) => (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
       <div className="flex justify-between items-start mb-4">
@@ -84,9 +106,13 @@ const Research = () => {
         </span>
       </div>
       <div className="flex items-center space-x-2">
-        <button className="flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors">
-          <Download className="w-4 h-4 mr-2" />
-          Download
+        <button 
+          onClick={() => handleDownload(resource.id)}
+          disabled={downloadingId === resource.id}
+          className="flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors disabled:opacity-70"
+        >
+          <Download className={`w-4 h-4 mr-2 ${downloadingId === resource.id ? 'animate-bounce' : ''}`} />
+          {downloadingId === resource.id ? 'Downloading...' : 'Download'}
         </button>
         <button className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
           <ExternalLink className="w-4 h-4 mr-2" />
@@ -218,8 +244,13 @@ const Research = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
+         {downloadError && (
+            <div className="px-6 py-3 mb-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+              {downloadError}
+            </div>
+          )}
+          <div className="bg-white rounded-lg shadow-lg">
+            <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900">
               {activeTab === 'resources' ? `Resources (${filteredResources.length})` : `Forum Posts (${forumPosts.length})`}
             </h2>

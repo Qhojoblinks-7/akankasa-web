@@ -2,8 +2,9 @@ import React from 'react';
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Volume2, RotateCcw, CheckCircle, X, RefreshCw, Star, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, Volume2, RotateCcw, CheckCircle, X, RefreshCw, Star, Eye, EyeOff, Download } from 'lucide-react';
 import { getVocabularyModule } from '../api';
+import useDownload from '../hooks/useDownload';
 
 const VocabularyModule = () => {
   const { moduleId } = useParams();
@@ -15,6 +16,7 @@ const VocabularyModule = () => {
   const [showTranslation, setShowTranslation] = useState(true);
   const [mastered, setMastered] = useState(new Set());
   const [playingAudio, setPlayingAudio] = useState(null);
+  const { exportVocab, loading: exporting, error: exportError } = useDownload();
 
   useEffect(() => {
     const load = async () => {
@@ -127,12 +129,20 @@ const VocabularyModule = () => {
               </div>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500 mb-1">Progress</div>
-              <div className="text-lg font-semibold text-gray-900">
-                {currentWordIndex + 1} / {module.words.length}
-              </div>
-            </div>
-          </div>
+               <div className="text-sm text-gray-500 mb-1">Progress</div>
+               <div className="text-lg font-semibold text-gray-900">
+                 {currentWordIndex + 1} / {module.words.length}
+               </div>
+             </div>
+             <button
+               onClick={() => exportVocab(moduleId)}
+               disabled={exporting}
+               className="ml-4 flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors disabled:opacity-70"
+             >
+               <Download className="w-4 h-4 mr-2" />
+               {exporting ? 'Exporting...' : 'Export List'}
+             </button>
+           </div>
         </div>
       </div>
 
@@ -263,11 +273,15 @@ const VocabularyModule = () => {
         {currentMode === 'flashcards' && (
           <div className="flex justify-center">
             <div className="w-full max-w-md">
-              <div 
-                className="bg-white rounded-lg shadow-lg p-8 text-center cursor-pointer transform transition-transform hover:scale-105"
-                onClick={() => setShowTranslation(!showTranslation)}
-                style={{ minHeight: '300px', backgroundColor: 'var(--color-background)' }}
-              >
+               <div 
+                 className="bg-white rounded-lg shadow-lg p-8 text-center cursor-pointer transform transition-transform hover:scale-105"
+                 onClick={() => setShowTranslation(!showTranslation)}
+                 style={{ minHeight: '300px', backgroundColor: 'var(--color-background)' }}
+                 role="button"
+                 tabIndex={0}
+                 onKeyDown={(e) => e.key === 'Enter' && setShowTranslation(!showTranslation)}
+                 aria-label={showTranslation ? 'Hide translation' : 'Show translation'}
+               >
                 <div className="flex justify-center mb-4">
                   <button className="text-gray-400 hover:text-gray-600">
                     {showTranslation ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}

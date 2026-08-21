@@ -43,7 +43,7 @@ const CultureArts = () => {
         <h1 className="text-3xl font-bold text-akan-red mb-8">Adinkra Symbols & Arts</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {arts.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg shadow-lg p-6">
+            <Link to={`/culture/${item.id}`} key={item.id} className="block bg-white rounded-lg shadow-lg p-6 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 border border-gray-100">
               <h2 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h2>
               <p className="text-gray-700 mb-2">{item.content || item.description}</p>
               {item.examples && (
@@ -58,7 +58,7 @@ const CultureArts = () => {
                   ))}
                 </div>
               )}
-            </div>
+            </Link>
           ))}
           {arts.length === 0 && (
             <p className="text-gray-600 col-span-full">No arts content available.</p>

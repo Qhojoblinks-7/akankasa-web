@@ -30,6 +30,7 @@ const REGIONS = [
 const emptyForm = () => ({
   id: null, title: '', description: '', content: '', category: 'traditions',
   region: '', timeline: '', significance: '', tags: '', image_url: '', is_published: false,
+  publish_at: '', unpublish_at: '',
 });
 
 const AdminArticles = () => {
@@ -66,6 +67,7 @@ const AdminArticles = () => {
       region: item.region || '', timeline: item.timeline || '',
       significance: item.significance || '', tags: item.tags ? item.tags.join(', ') : '',
       image_url: item.image_url || '', is_published: item.is_published ?? false,
+      publish_at: item.publish_at || '', unpublish_at: item.unpublish_at || '',
     } : emptyForm());
     setView('editor');
     setTimeout(() => editorRef.current?.setContent(item?.content || '', { preserveCaret: false }), 0);
@@ -128,7 +130,7 @@ const AdminArticles = () => {
           <header className="bg-white shadow-sm border-b border-gray-200">
             <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard">
                   <ArrowLeft className="w-5 h-5 text-gray-600" />
                 </button>
                 <div>
@@ -165,10 +167,10 @@ const AdminArticles = () => {
                           ? <span className="inline-flex items-center text-amber-700 font-medium"><Check className="w-3.5 h-3.5 mr-1" /> Published</span>
                           : <span className="text-gray-500">Draft</span>}
                       </td>
-                      <td className="px-6 py-4 text-right text-sm">
-                        <button onClick={() => openEditor(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3"><Edit className="w-4 h-4" /></button>
-                        <button onClick={() => handleDelete(item)} className="text-red-600 hover:text-red-800 transition-colors"><Trash2 className="w-4 h-4" /></button>
-                      </td>
+                       <td className="px-6 py-4 text-right text-sm">
+                         <button onClick={() => openEditor(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
+                         <button onClick={() => handleDelete(item)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
+                       </td>
                     </tr>
                   ))}
                 </tbody>
@@ -181,7 +183,7 @@ const AdminArticles = () => {
         <div className="flex-1 flex flex-col">
           <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 sticky top-0 z-30">
             <div className="flex items-center gap-4">
-              <button type="button" onClick={closeEditor} className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" title="Back">
+              <button type="button" onClick={closeEditor} className="p-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors" aria-label="Back to articles list" title="Back">
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div className="flex items-center gap-2">
@@ -283,6 +285,16 @@ const AdminArticles = () => {
                 <div className="flex items-center pt-1">
                   <input type="checkbox" id="is_published" checked={form.is_published} onChange={(e) => setForm({ ...form, is_published: e.target.checked })} className="h-4 w-4 text-[#564c38] border-gray-300 rounded" />
                   <label htmlFor="is_published" className="ml-2 text-sm text-gray-700">Published</label>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Publish at</label>
+                  <input type="datetime-local" value={form.publish_at} onChange={(e) => setForm({ ...form, publish_at: e.target.value })} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:border-[#564c38]" style={{ '--tw-ring-color': '#ca8a04' }} />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Unpublish at</label>
+                  <input type="datetime-local" value={form.unpublish_at} onChange={(e) => setForm({ ...form, unpublish_at: e.target.value })} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:border-[#564c38]" style={{ '--tw-ring-color': '#ca8a04' }} />
                 </div>
               </div>
 

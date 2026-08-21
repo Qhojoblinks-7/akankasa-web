@@ -3,9 +3,11 @@ import { Play, Headphones, Video, BookOpen } from 'lucide-react';
 
 const StoryCard = ({ story, onClick }) => {
   return (
-    <div 
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+    <button 
+      type="button"
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full text-left"
       onClick={() => onClick(story)}
+      aria-label={`${story.title} - ${story.description}`}
     >
       <div className="relative h-48">
         {story.thumbnail ? (
@@ -61,7 +63,7 @@ const StoryCard = ({ story, onClick }) => {
           <span>Narrated by {story.narrator}</span>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

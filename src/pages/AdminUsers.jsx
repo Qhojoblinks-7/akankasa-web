@@ -68,7 +68,9 @@ const AdminUsers = () => {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
+            <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard">
+              <ArrowLeft className="w-5 h-5 text-gray-600" />
+            </button>
             <div>
               <h1 className="text-2xl font-display font-bold text-[#564c38]">User Management</h1>
               <p className="text-sm text-gray-600">Manage user roles and access</p>
@@ -116,7 +118,7 @@ const AdminUsers = () => {
                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${user.is_active ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-700'}`}>{user.is_active ? 'Active' : 'Disabled'}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button onClick={() => toggleStatus(user.id, user.is_active)} className={`${user.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'} transition-colors`}>{user.is_active ? 'Disable' : 'Enable'}</button>
+                    <button onClick={() => toggleStatus(user.id, user.is_active)} className={`${user.is_active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'} transition-colors`} aria-label={user.is_active ? `Disable ${user.name}` : `Enable ${user.name}`}>{user.is_active ? 'Disable' : 'Enable'}</button>
                   </td>
                 </tr>
               ))}

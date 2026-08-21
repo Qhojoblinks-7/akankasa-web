@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Clock } from 'lucide-react';
 import { getEvents } from '../api';
+import ShareButtons from '../components/ShareButtons';
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -25,8 +26,13 @@ const EventsPage = () => {
 
   return (
     <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Events & Meetups</h1>
-      <p className="text-gray-600 mb-6">Discover and attend Akan cultural events</p>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold mb-2">Events & Meetups</h1>
+          <p className="text-gray-600">Discover and attend Akan cultural events</p>
+        </div>
+        <ShareButtons />
+      </div>
       {loading ? (
         <div className="text-center py-12 text-gray-500">Loading events...</div>
       ) : (

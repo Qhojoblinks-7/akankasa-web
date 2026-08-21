@@ -21,7 +21,9 @@ const AdminAlphabets = () => {
     pronunciation: '',
     example: '',
     audio_url: '',
-    is_published: true
+    is_published: true,
+    publish_at: '',
+    unpublish_at: ''
   });
 
   useEffect(() => {
@@ -49,7 +51,7 @@ const AdminAlphabets = () => {
 
   const openCreate = () => {
     setEditingId(null);
-    setForm({ letter: '', pronunciation: '', example: '', audio_url: '', is_published: true });
+    setForm({ letter: '', pronunciation: '', example: '', audio_url: '', is_published: true, publish_at: '', unpublish_at: '' });
     setModalOpen(true);
   };
 
@@ -60,7 +62,9 @@ const AdminAlphabets = () => {
       pronunciation: item.pronunciation || '',
       example: item.example || '',
       audio_url: item.audio_url || '',
-      is_published: item.is_published !== undefined ? item.is_published : true
+      is_published: item.is_published !== undefined ? item.is_published : true,
+      publish_at: item.publish_at || '',
+      unpublish_at: item.unpublish_at || ''
     });
     setModalOpen(true);
   };
@@ -68,7 +72,7 @@ const AdminAlphabets = () => {
   const closeModal = () => {
     setModalOpen(false);
     setEditingId(null);
-    setForm({ letter: '', pronunciation: '', example: '', audio_url: '', is_published: true });
+    setForm({ letter: '', pronunciation: '', example: '', audio_url: '', is_published: true, publish_at: '', unpublish_at: '' });
   };
 
   const handleChange = (e) => {
@@ -192,6 +196,16 @@ const AdminAlphabets = () => {
           <div className="flex items-center">
             <input type="checkbox" id="is_published" name="is_published" checked={form.is_published} onChange={handleChange} className="h-4 w-4 text-[#564c38] border-gray-300 rounded" />
             <label htmlFor="is_published" className="ml-2 text-sm text-gray-700">Published</label>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label htmlFor="publish_at" className="block text-sm font-medium text-gray-700 mb-1.5">Publish at</label>
+              <input id="publish_at" name="publish_at" type="datetime-local" value={form.publish_at} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+            </div>
+            <div>
+              <label htmlFor="unpublish_at" className="block text-sm font-medium text-gray-700 mb-1.5">Unpublish at</label>
+              <input id="unpublish_at" name="unpublish_at" type="datetime-local" value={form.unpublish_at} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+            </div>
           </div>
           <div className="flex items-center justify-between pt-4 border-t border-gray-200">
             <div>

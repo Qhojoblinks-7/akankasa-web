@@ -55,22 +55,22 @@ const Footer = () => {
               cultural education, and community engagement.
             </p>
             <div className="flex space-x-4">
-          <a href="#" className="transition-colors" style={{color: '#F1D799'}}
+          <a href="#" aria-label="Akan Kasa on Facebook" className="transition-colors" style={{color: '#F1D799'}}
             onMouseEnter={(e) => e.target.style.color = '#F1D799'}
             onMouseLeave={(e) => e.target.style.color = '#F1D799'}>
                 <Facebook className="w-5 h-5" />
               </a>
-          <a href="#" className="transition-colors" style={{color: '#F1D799'}}
+          <a href="#" aria-label="Akan Kasa on Twitter" className="transition-colors" style={{color: '#F1D799'}}
             onMouseEnter={(e) => e.target.style.color = '#F1D799'}
             onMouseLeave={(e) => e.target.style.color = '#F1D799'}>
                 <Twitter className="w-5 h-5" />
               </a>
-          <a href="#" className="transition-colors" style={{color: '#F1D799'}}
+          <a href="#" aria-label="Akan Kasa on Instagram" className="transition-colors" style={{color: '#F1D799'}}
             onMouseEnter={(e) => e.target.style.color = '#F1D799'}
             onMouseLeave={(e) => e.target.style.color = '#F1D799'}>
                 <Instagram className="w-5 h-5" />
               </a>
-          <a href="#" className="transition-colors" style={{color: '#F1D799'}}
+          <a href="#" aria-label="Akan Kasa on YouTube" className="transition-colors" style={{color: '#F1D799'}}
             onMouseEnter={(e) => e.target.style.color = '#F1D799'}
             onMouseLeave={(e) => e.target.style.color = '#F1D799'}>
                 <Youtube className="w-5 h-5" />

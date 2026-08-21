@@ -12,7 +12,7 @@ const AdminVocabulary = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [_loading, setLoading] = useState(true);
-  const [form, setForm] = useState({ title: '', description: '', is_published: true });
+  const [form, setForm] = useState({ title: '', description: '', is_published: true, publish_at: '', unpublish_at: '' });
   const [wordList, setWordList] = useState([]);
   const [newWord, setNewWord] = useState({ akan: '', english: '', pronunciation: '', audio: '' });
   const [error, setError] = useState('');
@@ -42,7 +42,7 @@ const AdminVocabulary = () => {
 
   const openCreate = () => {
     setEditingId(null);
-    setForm({ title: '', description: '', is_published: true });
+    setForm({ title: '', description: '', is_published: true, publish_at: '', unpublish_at: '' });
     setWordList([]);
     setNewWord({ akan: '', english: '', pronunciation: '', audio: '' });
     setModalOpen(true);
@@ -50,7 +50,7 @@ const AdminVocabulary = () => {
 
   const openEdit = (item) => {
     setEditingId(item.id);
-    setForm({ id: item.id, title: item.title || '', description: item.description || '', is_published: item.is_published !== undefined ? item.is_published : true });
+    setForm({ id: item.id, title: item.title || '', description: item.description || '', is_published: item.is_published !== undefined ? item.is_published : true, publish_at: item.publish_at || '', unpublish_at: item.unpublish_at || '' });
     setWordList(Array.isArray(item.words) ? item.words : []);
     setNewWord({ akan: '', english: '', pronunciation: '', audio: '' });
     setModalOpen(true);
@@ -59,7 +59,7 @@ const AdminVocabulary = () => {
   const closeModal = () => {
     setModalOpen(false);
     setEditingId(null);
-    setForm({ title: '', description: '', is_published: true });
+    setForm({ title: '', description: '', is_published: true, publish_at: '', unpublish_at: '' });
     setWordList([]);
     setNewWord({ akan: '', english: '', pronunciation: '', audio: '' });
   };
@@ -110,7 +110,7 @@ const AdminVocabulary = () => {
     <div className="min-h-screen bg-[#fafafa]">
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center space-x-4">
-          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
+          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
           <div><h1 className="text-2xl font-display font-bold text-[#564c38]">Vocabulary</h1><p className="text-sm text-gray-600">Create and update word lists for learners</p></div>
           <button onClick={openCreate} className="ml-auto flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors"><Plus className="w-4 h-4 mr-2" /> New Module</button>
         </div>
@@ -127,8 +127,8 @@ const AdminVocabulary = () => {
                   <td className="px-6 py-4 text-sm text-gray-600">{item.words?.length || 0} words</td>
                   <td className="px-6 py-4 text-sm">{item.is_published ? <span className="text-amber-700 font-medium">Published</span> : <span className="text-gray-500">Draft</span>}</td>
                   <td className="px-6 py-4 text-right text-sm">
-                    <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3"><Edit className="w-4 h-4" /></button>
-                    <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                    <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
+                    <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
                   </td>
                 </tr>
               ))}
@@ -149,6 +149,16 @@ const AdminVocabulary = () => {
             <div className="flex items-center">
               <input type="checkbox" id="pub" checked={form.is_published} onChange={e => setForm({...form, is_published: e.target.checked})} className="h-4 w-4 text-[#564c38] border-gray-300 rounded" />
               <label htmlFor="pub" className="ml-2 text-sm text-gray-700">Published</label>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Publish at</label>
+                <input type="datetime-local" value={form.publish_at} onChange={e => setForm({...form, publish_at: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Unpublish at</label>
+                <input type="datetime-local" value={form.unpublish_at} onChange={e => setForm({...form, unpublish_at: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+              </div>
             </div>
           </div>
           <div>

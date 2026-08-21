@@ -10,7 +10,7 @@ const AdminLegal = () => {
   const [items, setItems] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [form, setForm] = useState({ slug: '', title: '', content: '' });
+  const [form, setForm] = useState({ slug: '', title: '', content: '', publish_at: '', unpublish_at: '' });
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   useEffect(() => {
@@ -33,20 +33,20 @@ const AdminLegal = () => {
 
   const startCreate = () => {
     setEditingId(null);
-    setForm({ slug: '', title: '', content: '' });
+    setForm({ slug: '', title: '', content: '', publish_at: '', unpublish_at: '' });
     setShowForm(true);
   };
 
   const startEdit = (item) => {
     setEditingId(item.slug);
-    setForm({ slug: item.slug || '', title: item.title || '', content: item.content || '' });
+    setForm({ slug: item.slug || '', title: item.title || '', content: item.content || '', publish_at: item.publish_at || '', unpublish_at: item.unpublish_at || '' });
     setShowForm(true);
   };
 
   const resetForm = () => {
     setShowForm(false);
     setEditingId(null);
-    setForm({ slug: '', title: '', content: '' });
+    setForm({ slug: '', title: '', content: '', publish_at: '', unpublish_at: '' });
   };
 
   const handleSubmit = async (e) => {
@@ -84,7 +84,7 @@ const AdminLegal = () => {
     <div className="min-h-screen bg-[#fafafa]">
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center space-x-4">
-          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
+          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
           <div><h1 className="text-2xl font-display font-bold text-[#564c38]">Legal Pages</h1><p className="text-sm text-gray-600">Update privacy policy, terms, and other legal notices</p></div>
           {!showForm && <button onClick={startCreate} className="ml-auto flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors"><Plus className="w-4 h-4 mr-2" /> New Page</button>}
         </div>
@@ -121,6 +121,16 @@ const AdminLegal = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Page content</label>
               <RichTextEditor value={form.content} onChange={(html) => setForm({ ...form, content: html })} minHeight="300px" />
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Publish at</label>
+                <input type="datetime-local" value={form.publish_at} onChange={(e) => setForm({ ...form, publish_at: e.target.value })} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Unpublish at</label>
+                <input type="datetime-local" value={form.unpublish_at} onChange={(e) => setForm({ ...form, unpublish_at: e.target.value })} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+              </div>
+            </div>
             <div className="flex items-center space-x-3">
               <button type="submit" className="px-6 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors flex items-center"><Save className="w-4 h-4 mr-2" /> Save</button>
               <button type="button" onClick={resetForm} className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
@@ -141,10 +151,10 @@ const AdminLegal = () => {
                   <tr key={item.slug} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{item.slug}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">{item.title}</td>
-                    <td className="px-6 py-4 text-right text-sm">
-                      <button onClick={() => startEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3"><Edit className="w-4 h-4" /></button>
-                      <button onClick={() => handleDelete(item.slug)} className="text-red-600 hover:text-red-800 transition-colors"><Trash2 className="w-4 h-4" /></button>
-                    </td>
+                     <td className="px-6 py-4 text-right text-sm">
+                       <button onClick={() => startEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
+                       <button onClick={() => handleDelete(item.slug)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
+                     </td>
                   </tr>
                 ))}
               </tbody>
