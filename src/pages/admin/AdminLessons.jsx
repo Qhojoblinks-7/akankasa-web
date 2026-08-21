@@ -62,8 +62,7 @@ const AdminLessons = () => {
     setForm({ title: '', description: '', level: 'beginner', duration: '', overview: '', objectives: '', content: '', quiz: [], is_published: true });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       const payload = {
         ...form,
@@ -110,25 +109,68 @@ const AdminLessons = () => {
       </header>
       <main className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {showForm ? (
-          <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-display font-semibold text-[#564c38]">{editingId ? 'Update Lesson' : 'Add a New Lesson'}</h2>
-            <p className="text-sm text-gray-600 mb-4">Fill in the details below. Only the title is required.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div><label className="block text-sm font-medium text-gray-700 mb-2">Lesson title</label><input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} required /></div>
-              <div><label className="block text-sm font-medium text-gray-700 mb-2">Level</label><select value={form.level} onChange={e => setForm({...form, level: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></div>
-              <div><label className="block text-sm font-medium text-gray-700 mb-2">Estimated time</label><input value={form.duration} onChange={e => setForm({...form, duration: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} placeholder="e.g. 15 minutes" /></div>
-              <div className="flex items-center"><input type="checkbox" id="pub" checked={form.is_published} onChange={e => setForm({...form, is_published: e.target.checked})} className="h-4 w-4 text-[#564c38] border-gray-300 rounded" /><label htmlFor="pub" className="ml-2 text-sm text-gray-700">Published</label></div>
+            <p className="text-sm text-gray-600 mb-6">Fill in the details and build your quiz side by side.</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Lesson title</label>
+                    <input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Level</label>
+                    <select value={form.level} onChange={e => setForm({...form, level: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }}>
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Estimated time</label>
+                    <input value={form.duration} onChange={e => setForm({...form, duration: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} placeholder="e.g. 15 minutes" />
+                  </div>
+                  <div className="flex items-end pb-1">
+                    <label className="inline-flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={form.is_published} onChange={e => setForm({...form, is_published: e.target.checked})} className="h-4 w-4 text-[#564c38] border-gray-300 rounded" />
+                      <span className="text-sm text-gray-700">Published</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Short description</label>
+                  <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Overview</label>
+                  <textarea value={form.overview} onChange={e => setForm({...form, overview: e.target.value})} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Learning goals <span className="text-gray-400">(one per line)</span></label>
+                  <textarea value={form.objectives} onChange={e => setForm({...form, objectives: e.target.value})} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Lesson content <span className="text-gray-400">(one section per line)</span></label>
+                  <textarea value={form.content} onChange={e => setForm({...form, content: e.target.value})} rows={5} className="w-full border border-gray-300 rounded-lg px-4 py-2 font-mono text-sm bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+                </div>
+              </div>
+
+              <div className="lg:border-l lg:pl-8 border-gray-200">
+                <div className="lg:sticky lg:top-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Quiz</label>
+                  <QuizBuilder value={form.quiz} onChange={(quiz) => setForm({...form, quiz})} />
+                </div>
+              </div>
             </div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-2">Short description</label><textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-2">Overview</label><textarea value={form.overview} onChange={e => setForm({...form, overview: e.target.value})} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-2">Learning goals <span className="text-gray-400">(one per line)</span></label><textarea value={form.objectives} onChange={e => setForm({...form, objectives: e.target.value})} rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-2">Lesson content <span className="text-gray-400">(one section per line)</span></label><textarea value={form.content} onChange={e => setForm({...form, content: e.target.value})} rows={6} className="w-full border border-gray-300 rounded-lg px-4 py-2 font-mono text-sm bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-2">Quiz</label><QuizBuilder value={form.quiz} onChange={(quiz) => setForm({...form, quiz})} /></div>
-            <div className="flex items-center space-x-3">
-              <button type="submit" className="px-6 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors flex items-center"><Save className="w-4 h-4 mr-2" /> Save</button>
+
+            <div className="flex items-center space-x-3 mt-8 pt-6 border-t border-gray-200">
+              <button type="button" onClick={handleSubmit} className="px-6 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors flex items-center"><Save className="w-4 h-4 mr-2" /> Save</button>
               <button type="button" onClick={resetForm} className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
             </div>
-          </form>
+          </div>
         ) : (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">

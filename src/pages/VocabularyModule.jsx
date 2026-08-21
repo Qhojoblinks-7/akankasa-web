@@ -20,6 +20,11 @@ const VocabularyModule = () => {
     const load = async () => {
       setLoading(true);
       setError(null);
+      if (!moduleId) {
+        setModule(null);
+        setLoading(false);
+        return;
+      }
       try {
         const foundModule = await getVocabularyModule(moduleId);
         setModule(foundModule);

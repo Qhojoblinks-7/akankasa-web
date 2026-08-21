@@ -16,7 +16,7 @@ const CultureDetailPage = () => {
       setLoading(true);
       try {
         const [article, list] = await Promise.all([
-          getCultureArticle(id),
+          id ? getCultureArticle(id) : Promise.resolve(null),
           getCultureArticles(),
         ]);
         setContent(article);

@@ -16,6 +16,10 @@ const CommunityRegisterEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!eventId) {
+      setError('Missing event ID');
+      return;
+    }
     try {
       await registerForEvent(eventId, formData);
       setSubmitted(true);

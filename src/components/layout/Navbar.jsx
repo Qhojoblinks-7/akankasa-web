@@ -79,7 +79,7 @@ const Navbar = () => {
               <select
                 value={currentLanguage}
                 onChange={(e) => setCurrentLanguage(e.target.value)}
-                className="rounded-lg px-3 py-1 text-sm appearance-none focus:outline-none focus:ring-2"
+                className="rounded-lg pl-3 pr-8 py-1 text-sm appearance-none focus:outline-none focus:ring-2"
                 style={{
                   backgroundColor: 'rgba(0, 0, 0, 0.04)',
                   color: '#000',
@@ -89,7 +89,7 @@ const Navbar = () => {
                 <option value="en" style={{color: '#1C1C1C'}}>English</option>
                 <option value="tw" style={{color: '#1C1C1C'}}>Twi</option>
               </select>
-              <Globe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black pointer-events-none" />
+              <Globe className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-black/60 pointer-events-none" />
             </div>
 
             {/* Mobile menu button */}

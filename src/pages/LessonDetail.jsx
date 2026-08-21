@@ -15,6 +15,10 @@ const LessonDetail = () => {
   useEffect(() => {
     let mounted = true;
     const fetchLesson = async () => {
+      if (!id) {
+        if (mounted) setLoading(false);
+        return;
+      }
       try {
         const data = await getLesson(id);
         if (mounted) setLesson(data);

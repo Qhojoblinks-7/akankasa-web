@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Edit, Trash2, Search, RefreshCw } from 'lucide-react';
-import { adminGet, adminDelete } from '../../api';
+import { Plus, Edit, Trash2, Search, RefreshCw, Save } from 'lucide-react';
+import { adminGet, adminPost, adminPut, adminDelete } from '../../api';
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog';
+import Modal from '../../components/ui/Modal';
+import MediaField from '../../components/media/MediaField';
 
 const AdminAlphabets = () => {
   const navigate = useNavigate();
@@ -11,6 +13,16 @@ const AdminAlphabets = () => {
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    letter: '',
+    pronunciation: '',
+    example: '',
+    audio_url: '',
+    is_published: true
+  });
 
   useEffect(() => {
     const token = localStorage.getItem('akankasa:admin_token');
@@ -32,6 +44,53 @@ const AdminAlphabets = () => {
       setItems([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openCreate = () => {
+    setEditingId(null);
+    setForm({ letter: '', pronunciation: '', example: '', audio_url: '', is_published: true });
+    setModalOpen(true);
+  };
+
+  const openEdit = (item) => {
+    setEditingId(item.id);
+    setForm({
+      letter: item.letter || '',
+      pronunciation: item.pronunciation || '',
+      example: item.example || '',
+      audio_url: item.audio_url || '',
+      is_published: item.is_published !== undefined ? item.is_published : true
+    });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditingId(null);
+    setForm({ letter: '', pronunciation: '', example: '', audio_url: '', is_published: true });
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+  };
+
+  const handleSubmit = async () => {
+    setSaving(true);
+    setError('');
+    try {
+      if (editingId) {
+        await adminPut(`/api/admin/alphabets/${editingId}`, form);
+      } else {
+        await adminPost('/api/admin/alphabets', form);
+      }
+      closeModal();
+      load();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -62,9 +121,11 @@ const AdminAlphabets = () => {
     <div className="min-h-screen bg-[#fafafa]">
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center space-x-4">
-          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors"><ArrowLeft className="w-5 h-5 text-gray-600" /></button>
+          <button onClick={() => navigate('/admin/dashboard')} className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Back to dashboard">
+            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+          </button>
           <div><h1 className="text-2xl font-display font-bold text-[#564c38]">Alphabet</h1><p className="text-sm text-gray-600">Manage Akan letters and pronunciation</p></div>
-          <button onClick={() => navigate('/admin/alphabets/new')} className="ml-auto flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors"><Plus className="w-4 h-4 mr-2" /> New Letter</button>
+          <button onClick={openCreate} className="ml-auto flex items-center px-4 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors"><Plus className="w-4 h-4 mr-2" /> New Letter</button>
         </div>
       </header>
       <main className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -100,7 +161,7 @@ const AdminAlphabets = () => {
                 <p className="text-sm text-gray-500 mb-4">{entry.example || ''}</p>
                 {entry.audio_url && <p className="text-xs text-gray-400 mb-4">Audio: {entry.audio_url}</p>}
                 <div className="flex items-center space-x-2">
-                  <button onClick={() => navigate(`/admin/alphabets/${entry.id}`)} className="flex items-center px-3 py-1.5 text-sm text-amber-700 hover:text-amber-800 border border-amber-200 rounded-lg hover:bg-amber-50 transition-colors"><Edit className="w-4 h-4 mr-1" /> Edit</button>
+                  <button onClick={() => openEdit(entry)} className="flex items-center px-3 py-1.5 text-sm text-amber-700 hover:text-amber-800 border border-amber-200 rounded-lg hover:bg-amber-50 transition-colors"><Edit className="w-4 h-4 mr-1" /> Edit</button>
                   <button onClick={() => handleDelete(entry.id)} className="flex items-center px-3 py-1.5 text-sm text-red-700 hover:text-red-800 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"><Trash2 className="w-4 h-4 mr-1" /> Delete</button>
                 </div>
               </div>
@@ -109,6 +170,47 @@ const AdminAlphabets = () => {
           </div>
         )}
       </main>
+
+      <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Edit Letter' : 'Add a New Letter'}>
+        <div className="space-y-5">
+          {error && <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">{error}</div>}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              <label htmlFor="letter" className="block text-sm font-medium text-gray-700 mb-1.5">Letter <span className="text-red-500">*</span></label>
+              <input id="letter" name="letter" type="text" value={form.letter} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+            </div>
+            <div>
+              <label htmlFor="pronunciation" className="block text-sm font-medium text-gray-700 mb-1.5">Pronunciation <span className="text-red-500">*</span></label>
+              <input id="pronunciation" name="pronunciation" type="text" value={form.pronunciation} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="example" className="block text-sm font-medium text-gray-700 mb-1.5">Example word</label>
+            <input id="example" name="example" type="text" value={form.example} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+          </div>
+          <MediaField label="Audio file" value={form.audio_url} onChange={(url) => setForm({ ...form, audio_url: url })} accept="audio/*" hint="Pronunciation of this letter" />
+          <div className="flex items-center">
+            <input type="checkbox" id="is_published" name="is_published" checked={form.is_published} onChange={handleChange} className="h-4 w-4 text-[#564c38] border-gray-300 rounded" />
+            <label htmlFor="is_published" className="ml-2 text-sm text-gray-700">Published</label>
+          </div>
+          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+            <div>
+              {editingId && (
+                <button type="button" onClick={() => { closeModal(); handleDelete(editingId); }} className="px-4 py-2 text-sm border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors flex items-center">
+                  <Trash2 className="w-4 h-4 mr-1.5" /> Delete
+                </button>
+              )}
+            </div>
+            <div className="flex items-center space-x-3">
+              <button type="button" onClick={closeModal} className="px-5 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm">Cancel</button>
+              <button type="button" onClick={handleSubmit} disabled={saving} className="px-5 py-2 bg-[#564c38] text-white rounded-lg hover:bg-[#695e46] transition-colors flex items-center text-sm disabled:opacity-50">
+                <Save className="w-4 h-4 mr-1.5" /> {saving ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
       <ConfirmationDialog
         open={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
@@ -123,4 +225,3 @@ const AdminAlphabets = () => {
 };
 
 export default AdminAlphabets;
-

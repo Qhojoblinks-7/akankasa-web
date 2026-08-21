@@ -8,7 +8,7 @@ import { adminGet, adminPost, adminPut, adminDelete } from '../api';
 const AdminDictionaryEntry = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const isNew = id === 'new';
+  const isNew = !id || id === 'new';
   const [form, setForm] = useState({
     primary_akan: '',
     english_translation: '',

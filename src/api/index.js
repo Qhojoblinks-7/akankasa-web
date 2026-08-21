@@ -184,6 +184,7 @@ export const getForumPosts = async ({ category, q, page, limit } = {}) => {
 };
 
 export const getForumPost = async (id) => {
+  if (!id) return null;
   if (!API_BASE) {
     const posts = communityData?.forumPosts || [];
     return posts.find((p) => p.id === id) || null;
@@ -257,6 +258,7 @@ export const createEvent = async (eventData) => {
 };
 
 export const registerForEvent = async (eventId, data) => {
+  if (!eventId) throw new Error('Event ID is required');
   const token = localStorage.getItem('akankasa:auth_token');
   const res = await fetch(`/api/events/${eventId}/register`, {
     method: 'POST',
@@ -305,6 +307,7 @@ export const getCultureArticles = async ({ category, q, page, limit } = {}) => {
 };
 
 export const getCultureArticle = async (id) => {
+  if (!id) return null;
   if (!API_BASE) return null;
   return callApi(`/api/culture/${id}`);
 };
@@ -336,6 +339,7 @@ export const getLessons = async () => {
 };
 
 export const getLesson = async (id) => {
+  if (!id) return null;
   if (!API_BASE) {
     const lessons = lessonsData || [];
     return lessons.find((l) => String(l.id) === String(id)) || null;
@@ -350,6 +354,7 @@ export const getVocabularyModules = async () => {
 };
 
 export const getVocabularyModule = async (id) => {
+  if (!id) return null;
   if (!API_BASE) {
     const modules = vocabularyModules || [];
     return modules.find((m) => String(m.id) === String(id)) || null;
@@ -371,6 +376,7 @@ export const getDocuments = async ({ category, level, q, page, limit } = {}) => 
 };
 
 export const getDocument = async (id) => {
+  if (!id) return null;
   if (!API_BASE) return null;
   return callApi(`/api/documents/${id}`);
 };
@@ -388,6 +394,7 @@ export const getFestivals = async () => {
 };
 
 export const getFestival = async (id) => {
+  if (!id) return null;
   if (!API_BASE) return null;
   return callApi(`/api/festivals/${id}`);
 };
@@ -504,6 +511,7 @@ export const adminDelete = async (path) => {
 const STORAGE_KEY_DRAFTS = 'akankasa:drafts';
 
 export const getEditorDocument = async (id) => {
+  if (!id) return null;
   if (!API_BASE) {
     const content = localStorage.getItem(`akankasa:draft:${id}:content`);
     if (content !== null) return { id, content };
@@ -620,6 +628,7 @@ export const mediaApi = {
   },
 
   async updateAlt(id, altText) {
+    if (!id) return { id, alt_text: altText };
     if (!API_BASE) return { id, alt_text: altText };
     return callApi(`/api/media/${id}`, {
       method: 'PUT',
@@ -629,6 +638,7 @@ export const mediaApi = {
   },
 
   async remove(id) {
+    if (!id) return { success: true, id };
     if (!API_BASE) {
       const stored = JSON.parse(localStorage.getItem('akankasa:local_media') || '[]');
       localStorage.setItem('akankasa:local_media', JSON.stringify(stored.filter((m) => String(m.id) !== String(id))));

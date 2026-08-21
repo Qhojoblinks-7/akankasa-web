@@ -13,7 +13,7 @@ const AdminAlphabetEntry = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const isNew = !id;
+  const isNew = !id || id === 'new';
 
   const [form, setForm] = useState({
     letter: '',

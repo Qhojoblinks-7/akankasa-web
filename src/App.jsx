@@ -70,7 +70,6 @@ import AdminEvents from './pages/admin/AdminEvents';
 import AdminLegal from './pages/admin/AdminLegal';
 import AdminHomepage from './pages/admin/AdminHomepage';
 import AdminAlphabets from './pages/admin/AdminAlphabets';
-import AdminAlphabetEntry from './pages/admin/AdminAlphabetEntry';
 import AdminModerationQueue from './pages/AdminModerationQueue';
 import AdminForumModeration from './pages/AdminForumModeration';
 import AdminSuggestions from './pages/AdminSuggestions';
@@ -166,7 +165,6 @@ function App() {
                 <Route path="/admin/legal" element={<AdminLegal />} />
                 <Route path="/admin/homepage" element={<AdminHomepage />} />
                 <Route path="/admin/alphabets" element={<AdminAlphabets />} />
-                <Route path="/admin/alphabets/:id" element={<AdminAlphabetEntry />} />
                 <Route path="/admin/moderation" element={<AdminModerationQueue />} />
                 <Route path="/admin/forum" element={<AdminForumModeration />} />
                 <Route path="/admin/suggestions" element={<AdminSuggestions />} />
