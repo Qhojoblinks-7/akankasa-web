@@ -3,11 +3,13 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Volume2, RotateCcw, CheckCircle, X, RefreshCw, Star, Eye, EyeOff } from 'lucide-react';
-import { vocabularyModules } from '../data/mockData';
+import { getVocabularyModule } from '../api';
 
 const VocabularyModule = () => {
   const { moduleId } = useParams();
   const [module, setModule] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentMode, setCurrentMode] = useState('study'); // study, flashcards, quiz
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [showTranslation, setShowTranslation] = useState(true);
@@ -15,8 +17,19 @@ const VocabularyModule = () => {
   const [playingAudio, setPlayingAudio] = useState(null);
 
   useEffect(() => {
-    const foundModule = vocabularyModules.find(m => m.id === moduleId);
-    setModule(foundModule);
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const foundModule = await getVocabularyModule(moduleId);
+        setModule(foundModule);
+      } catch (err) {
+        setError(err.message || 'Failed to load module');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
   }, [moduleId]);
 
   const playAudio = (audioSrc) => {
@@ -47,6 +60,31 @@ const VocabularyModule = () => {
       setShowTranslation(currentMode === 'study');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-gray-200 border-t-green-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading module...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Error</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <Link to="/learn" className="text-blue-600 hover:text-blue-700">
+            Return to Learning Hub
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (!module) {
     return (

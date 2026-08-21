@@ -1,9 +1,43 @@
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { userProfiles } from '../data/mockData';
+import { getProfiles } from '../api';
 
 const UserProfile = () => {
   const { id } = useParams();
-  const user = userProfiles.find(u => String(u.id) === String(id));
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const profiles = await getProfiles();
+        const found = (profiles || []).find(u => String(u.id) === String(id));
+        setUser(found);
+      } catch (err) {
+        setError(err.message || 'Failed to load profile');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-akan-red rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-2xl text-red-600">Error: {error}</div>
+    );
+  }
+
   if (!user) {
     return <div className="min-h-screen flex items-center justify-center text-2xl">User not found</div>;
   }

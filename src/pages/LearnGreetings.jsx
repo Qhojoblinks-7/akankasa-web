@@ -1,19 +1,54 @@
-import { greetingsData } from '../data/mockData';
 import { Play } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getGreetings } from '../api';
 
 const LearnGreetings = () => {
+  const [greetings, setGreetings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [playingAudio, setPlayingAudio] = useState(null);
   const playAudio = (audioSrc) => {
     setPlayingAudio(audioSrc);
     setTimeout(() => setPlayingAudio(null), 1000);
   };
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await getGreetings();
+        setGreetings(data || []);
+      } catch (err) {
+        setError(err.message || 'Failed to load greetings');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
+        <p className="text-red-600">Error: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-akan-red mb-8">Essential Akan Greetings</h1>
         <div className="space-y-6">
-          {greetingsData.map((greeting) => (
+          {greetings.map((greeting) => (
             <div key={greeting.id} className="bg-white rounded-lg shadow-lg p-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>

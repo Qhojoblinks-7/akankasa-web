@@ -22,6 +22,7 @@ const translations = {
     dictionary: 'Dictionary',
     research: 'Research',
     community: 'Community',
+    contribute: 'Contribute',
     
     // Homepage
     welcomeTitle: 'Akwaaba to Akan Culture',
@@ -90,6 +91,7 @@ const translations = {
     dictionary: 'Nsɛmfua',
     research: 'Nhwehwɛmu',
     community: 'Mpɔtam',
+    contribute: 'De ɛwɔn',
     
     // Homepage
     welcomeTitle: 'Akwaaba Akan Amammere mu',

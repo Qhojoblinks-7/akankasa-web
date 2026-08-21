@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, BookOpen, Users, Home, Book, Lightbulb } from 'lucide-react';
+import { Menu, X, Globe, BookOpen, Users, Home, Book, Lightbulb, Edit } from 'lucide-react';
 import featureFlags from '../../config/featureFlags';
 import { useLanguage } from '../../contexts/LanguageContext';
 
@@ -18,6 +18,7 @@ const Navbar = () => {
     { path: '/culture', label: t('culture'), icon: Users },
     { path: '/dictionary', label: t('dictionary'), icon: Book },
     { path: '/community', label: t('community'), icon: Lightbulb },
+    { path: '/contribute', label: t('contribute'), icon: Edit },
     // include research link only when the feature flag is enabled
     ...(featureFlags.showResearch ? [{ path: '/research', label: t('research'), icon: Lightbulb }] : []),
   ];  

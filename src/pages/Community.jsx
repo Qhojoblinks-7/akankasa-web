@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp, X } from 'lucide-react';
-import { communityData, userProfiles, forumData } from '../data/mockData';
+import { getForumPosts, getEvents, getProfiles, createForumPost, createForumComment } from '../api';
 import ProfileViewModal from '../components/ProfileViewModal';
 import CreateEventButton from '../components/CreateEventButton';
 import EventCreationModal from '../components/EventCreationModal';
@@ -23,10 +22,37 @@ const Community = () => {
     content: '',
     category: 'Language Learning'
   });
-  const [events, setEvents] = useState(communityData.events || []);
+  const [events, setEvents] = useState([]);
+  const [forumPosts, setForumPosts] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [registerModalEvent, setRegisterModalEvent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
   const [toast, setToast] = useState(null);
+  
+  useEffect(() => {
+    let mounted = true;
+    const fetchData = async () => {
+      try {
+        const [posts, evts, profs] = await Promise.all([
+          getForumPosts({ category: selectedCategory === 'all' ? undefined : selectedCategory }),
+          getEvents(),
+          getProfiles(),
+        ]);
+        if (mounted) {
+          setForumPosts(posts.results || posts);
+          setEvents(Array.isArray(evts) ? evts : []);
+          setMembers(Array.isArray(profs) ? profs : []);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    fetchData();
+    return () => { mounted = false; };
+  }, [selectedCategory]);
   
   // Use useCallback to memoize navigate function usage
   const handleJoinDiscussion = useCallback((postId) => {
@@ -43,21 +69,25 @@ const Community = () => {
   const categories = ['all', 'Language Learning', 'Cultural Events', 'Research', 'General Discussion'];
 
   const filteredForumPosts = selectedCategory === 'all' 
-    ? forumData 
-    : forumData.filter(post => post.category === selectedCategory);
+    ? forumPosts 
+    : forumPosts.filter(post => post.category === selectedCategory);
 
   const handleNewPostClick = () => {
     setShowNewPostModal(true);
   };
 
-  const handleCreatePost = () => {
-    // In a real app, this would send data to a backend
-    console.log('Creating new post:', newPostData);
-    // Reset form and close modal
-    setNewPostData({ title: '', content: '', category: 'Language Learning' });
-    setShowNewPostModal(false);
-    // Show success message
-    alert('Post created successfully!');
+  const handleCreatePost = async () => {
+    try {
+      await createForumPost(newPostData);
+      setNewPostData({ title: '', content: '', category: 'Language Learning' });
+      setShowNewPostModal(false);
+      setToast('Post created successfully!');
+      setTimeout(() => setToast(null), 3000);
+      const posts = await getForumPosts({ category: selectedCategory === 'all' ? undefined : selectedCategory });
+      setForumPosts(posts.results || posts);
+    } catch (err) {
+      alert('Failed to create post: ' + err.message);
+    }
   };
 
   const handlePostInputChange = (e) => {
@@ -496,7 +526,7 @@ const Community = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {userProfiles.map((member) => (
+              {members.map((member) => (
                 <MemberCard key={member.id} member={member} />
               ))}
             </div>

@@ -59,12 +59,12 @@ const FeatureSection = () => {
             const Icon = feature.icon;
             return (
               <div key={feature.name} className="relative pl-12 sm:pl-16">
-                <dt className="text-md font-semibold text-white">
-                  <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-600">
-                    <Icon className="h-6 w-6 text-white" aria-hidden="true" />
-                  </div>
-                  {feature.name}
-                </dt>
+                 <dt className="text-md font-semibold text-white">
+                   <div className="absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-lg bg-[#f59e0b]">
+                     <Icon className="h-6 w-6 text-white" aria-hidden="true" />
+                   </div>
+                   {feature.name}
+                 </dt>
                 <dd className="mt-2 text-base text-gray-200">
                   {feature.description}
                 </dd>

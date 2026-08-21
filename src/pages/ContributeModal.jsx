@@ -1,8 +1,10 @@
 // src/components/ContributeModal.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { X } from 'lucide-react';
+import CollaborativeEditor from '../components/editor/CollaborativeEditor';
 
 const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
+  const editorRef = useRef(null);
   const [formData, setFormData] = useState({
     section: 'traditions',
     title: '',
@@ -43,13 +45,15 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
       instruments: '',
       tags: ''
     });
+    setTimeout(() => editorRef.current?.setContent('', { preserveCaret: false }), 0);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const newContent = {
       ...formData,
+      content: editorRef.current?.getContent() || formData.content,
       id: Date.now().toString(),
       tags: formData.tags ? formData.tags.split(',').map(tag => tag.trim()) : [],
       instruments: formData.instruments ? formData.instruments.split(',').map(inst => inst.trim()) : [],
@@ -125,15 +129,13 @@ const ContributeModal = ({ isOpen, onClose, onSubmit }) => {
             </div>
             <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700">Full Content</label>
-              <textarea
-                id="content"
-                name="content"
-                rows="6"
-                value={formData.content}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-              ></textarea>
+              <CollaborativeEditor
+                ref={editorRef}
+                defaultValue={formData.content}
+                placeholder="Write the full content here..."
+                height={320}
+                showStats
+              />
             </div>
             <div>
               <label htmlFor="region" className="block text-sm font-medium text-gray-700">Region (Optional)</label>

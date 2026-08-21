@@ -1,7 +1,42 @@
-import { cultureData } from '../data/mockData';
+import { useState, useEffect } from 'react';
+import { getCultureArticles } from '../api';
 
 const CultureArts = () => {
-  const arts = cultureData.arts || [];
+  const [arts, setArts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await getCultureArticles({ category: 'arts' });
+        setArts(data || []);
+      } catch (err) {
+        setError(err.message || 'Failed to load arts');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-akan-red rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center text-akan-red">
+        Error: {error}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
@@ -10,7 +45,7 @@ const CultureArts = () => {
           {arts.map((item) => (
             <div key={item.id} className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h2>
-              <p className="text-gray-700 mb-2">{item.content}</p>
+              <p className="text-gray-700 mb-2">{item.content || item.description}</p>
               {item.examples && (
                 <div className="mt-4">
                   <h3 className="font-semibold mb-2">Examples:</h3>
@@ -25,6 +60,9 @@ const CultureArts = () => {
               )}
             </div>
           ))}
+          {arts.length === 0 && (
+            <p className="text-gray-600 col-span-full">No arts content available.</p>
+          )}
         </div>
       </div>
     </div>

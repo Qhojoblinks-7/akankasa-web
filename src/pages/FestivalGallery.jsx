@@ -1,6 +1,5 @@
 import React from 'react';
 import FestivalGallery from '../components/FestivalGallery';
-import { culturalData } from '../data/mockData';
 
 const FestivalGalleryPage = () => {
   return (
@@ -10,7 +9,7 @@ const FestivalGalleryPage = () => {
         <p className="text-xl opacity-90 max-w-3xl">
           Explore vibrant cultural celebrations through stunning photography from across Ghana
         </p>
-        <FestivalGallery data={culturalData} />
+        <FestivalGallery />
       </div>
     </div>
   );

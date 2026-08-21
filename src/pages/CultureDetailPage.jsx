@@ -1,14 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Clock, Tag } from 'lucide-react';
-import { cultureHighlights } from '../data/mockData';
+import { getCultureArticle, getCultureArticles } from '../api';
 
 const CultureDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  const content = cultureHighlights.find(item => item.id === parseInt(id));
-  
+  const [content, setContent] = useState(null);
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const [article, list] = await Promise.all([
+          getCultureArticle(id),
+          getCultureArticles(),
+        ]);
+        setContent(article);
+        setArticles(list || []);
+      } catch (err) {
+        setError(err.message || 'Failed to load content');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-red-600">Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => navigate('/culture')}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Back to Culture
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (!content) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -126,7 +172,7 @@ const CultureDetailPage = () => {
         <div className="mt-12">
           <h2 className="text-2xl font-bold mb-6">Related Content</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {cultureHighlights
+            {articles
               .filter(item => item.id !== content.id && item.category === content.category)
               .slice(0, 2)
               .map(related => (

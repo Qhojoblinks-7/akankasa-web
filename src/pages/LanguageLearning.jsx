@@ -1,16 +1,45 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Volume2, Book, Users, Star, Clock, ArrowRight, CheckCircle } from 'lucide-react';
-import { alphabetData, greetingsData, vocabularyModules, lessonsData } from '../data/mockData';
+import { getAlphabet, getGreetings, getVocabularyModules, getLessons } from '../api';
 
 const LanguageLearning = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [playingAudio, setPlayingAudio] = useState(null);
+  const [alphabet, setAlphabet] = useState([]);
+  const [greetings, setGreetings] = useState([]);
+  const [vocabulary, setVocabulary] = useState([]);
+  const [lessons, setLessons] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchData = async () => {
+      try {
+        const [alpha, greet, vocab, less] = await Promise.all([
+          getAlphabet(),
+          getGreetings(),
+          getVocabularyModules(),
+          getLessons(),
+        ]);
+        if (mounted) {
+          setAlphabet(Array.isArray(alpha) ? alpha : []);
+          setGreetings(Array.isArray(greet) ? greet : []);
+          setVocabulary(Array.isArray(vocab) ? vocab : []);
+          setLessons(Array.isArray(less) ? less : []);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    fetchData();
+    return () => { mounted = false; };
+  }, []);
 
   const playAudio = (audioSrc) => {
-    // Simulate audio playing
     setPlayingAudio(audioSrc);
     setTimeout(() => setPlayingAudio(null), 1000);
   };
@@ -96,6 +125,10 @@ const LanguageLearning = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {loading ? (
+          <div className="text-center py-12 text-gray-500">Loading...</div>
+        ) : (
+          <>
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className="space-y-12">
@@ -103,8 +136,8 @@ const LanguageLearning = () => {
             <section>
               <h2 className="text-3xl font-bold text-gray-900 mb-8">Choose Your Learning Path</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {learningPaths.map((path, index) => (
-                  <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {learningPaths.map((path, index) => (
+                  <div key={index} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border border-gray-100">
                     <div className="h-32 relative" style={{backgroundColor: path.color}}>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <h3 className="text-white text-xl font-bold text-center">{path.title}</h3>
@@ -130,7 +163,7 @@ const LanguageLearning = () => {
                           path.title === "Heritage Speaker" ? "/learn/heritage" :
                           "/learn/academic"
                         }
-                        className="w-full text-white py-3 rounded-lg transition-colors text-center block"
+                        className="w-full text-white py-3 rounded-xl transition-all duration-200 text-center block hover:shadow-lg hover:-translate-y-0.5"
                         style={{backgroundColor: '#564c38'}}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#f59e0b'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
@@ -156,7 +189,7 @@ const LanguageLearning = () => {
                   <button
                     key={index}
                     onClick={() => setActiveTab(item.link.replace('#', ''))}
-                    className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow text-center group"
+                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 text-center group border border-gray-100"
                   >
                     <div className="text-4xl mb-4">{item.icon}</div>
                     <h3 className="font-semibold text-gray-900 mb-2 group-hover:transition-colors" 
@@ -175,19 +208,19 @@ const LanguageLearning = () => {
         {activeTab === 'alphabet' && (
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Akan Alphabet & Pronunciation</h2>
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
               <p className="text-lg text-gray-700 mb-6">
                 The Akan alphabet consists of 22 letters. Click on each letter to hear its pronunciation and see an example word.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {alphabetData.map((letter, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                {alphabet.map((letter, index) => (
+                   <div key={index} className="border border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition-colors">
                     <div className="text-center">
                       <div className="text-4xl font-bold mb-2" style={{color: '#564c38'}}>{letter.letter}</div>
                       <div className="text-sm text-gray-600 mb-2">{letter.pronunciation}</div>
                       <button
                         onClick={() => playAudio(letter.audio)}
-                        className="flex items-center justify-center w-full py-2 px-3 rounded-lg transition-colors"
+                         className="flex items-center justify-center w-full py-2 px-3 rounded-xl transition-all duration-200"
                         style={{backgroundColor: '#f1d799', color: '#564c38'}}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#c2ae81'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = '#f1d799'}
@@ -209,8 +242,8 @@ const LanguageLearning = () => {
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Essential Akan Greetings</h2>
             <div className="space-y-6">
-              {greetingsData.map((greeting) => (
-                <div key={greeting.id} className="bg-white rounded-lg shadow-lg p-6">
+               {greetings.map((greeting) => (
+                 <div key={greeting.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-6 border border-gray-100">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                     <div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-2">{greeting.akan}</h3>
@@ -221,7 +254,7 @@ const LanguageLearning = () => {
                     <div className="text-center">
                       <button
                         onClick={() => playAudio(greeting.audio)}
-                        className="text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center mx-auto"
+                         className="text-white px-6 py-3 rounded-xl transition-all duration-200 flex items-center justify-center mx-auto hover:shadow-lg"
                         style={{backgroundColor: '#564c38'}}
                         onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
                         onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
@@ -242,16 +275,16 @@ const LanguageLearning = () => {
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Vocabulary Modules</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {vocabularyModules.map((module) => (
-                <div key={module.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+               {vocabulary.map((module) => (
+                 <div key={module.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border border-gray-100">
                   <div className="p-6 text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
                     <h3 className="text-xl font-bold mb-2">{module.title}</h3>
                     <p style={{color: '#f1d799'}}>{module.description}</p>
-                    <p className="text-sm mt-2" style={{color: '#c2ae81'}}>{module.words.length} words</p>
+                    <p className="text-sm mt-2" style={{color: '#c2ae81'}}>{module.words?.length || 0} words</p>
                   </div>
                   <div className="p-6">
                     <div className="space-y-3 mb-6">
-                      {module.words.slice(0, 3).map((word, index) => (
+                      {(module.words || []).slice(0, 3).map((word, index) => (
                         <div key={index} className="flex justify-between items-center">
                           <div>
                             <span className="font-medium text-gray-900">{word.akan}</span>
@@ -268,13 +301,13 @@ const LanguageLearning = () => {
                           </button>
                         </div>
                       ))}
-                      {module.words.length > 3 && (
-                        <p className="text-sm text-gray-500">+{module.words.length - 3} more words</p>
+                      {(module.words?.length || 0) > 3 && (
+                        <p className="text-sm text-gray-500">+{(module.words?.length || 0) - 3} more words</p>
                       )}
                     </div>
                     <Link
                       to={`/learn/vocabulary/${module.id}`}
-                      className="w-full text-white py-3 rounded-lg transition-colors flex items-center justify-center"
+                       className="w-full text-white py-3 rounded-xl transition-all duration-200 flex items-center justify-center hover:shadow-lg hover:-translate-y-0.5"
                       style={{backgroundColor: '#564c38'}}
                       onMouseEnter={(e) => e.target.style.backgroundColor = '#f59e0b'}
                       onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
@@ -294,8 +327,8 @@ const LanguageLearning = () => {
           <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Structured Lessons</h2>
             <div className="space-y-6">
-              {lessonsData.map((lesson) => (
-                <div key={lesson.id} className="bg-white rounded-lg shadow-lg p-6">
+               {lessons.map((lesson) => (
+                 <div key={lesson.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-6 border border-gray-100">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{lesson.title}</h3>
@@ -310,7 +343,7 @@ const LanguageLearning = () => {
                     </div>
                     <Link
                       to={`/learn/lesson/${lesson.id}`}
-                      className="text-white px-6 py-3 rounded-lg transition-colors flex items-center"
+                       className="text-white px-6 py-3 rounded-xl transition-all duration-200 flex items-center hover:shadow-lg"
                       style={{backgroundColor: '#564c38'}}
                       onMouseEnter={(e) => e.target.style.backgroundColor = '#695e46'}
                       onMouseLeave={(e) => e.target.style.backgroundColor = '#564c38'}
@@ -322,7 +355,7 @@ const LanguageLearning = () => {
                   <div className="border-t border-gray-200 pt-4">
                     <h4 className="font-semibold text-gray-900 mb-2">Learning Objectives:</h4>
                     <ul className="space-y-1">
-                      {lesson.content.objectives.map((objective, index) => (
+                      {(lesson.objectives || []).map((objective, index) => (
                         <li key={index} className="flex items-center text-gray-600">
                           <CheckCircle className="w-4 h-4 mr-2" style={{color: '#f1d799'}} />
                           {objective}
@@ -334,6 +367,8 @@ const LanguageLearning = () => {
               ))}
             </div>
           </div>
+        )}
+          </>
         )}
       </div>
     </div>

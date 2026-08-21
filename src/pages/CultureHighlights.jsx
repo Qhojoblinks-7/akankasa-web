@@ -1,44 +1,65 @@
 // src/components/CultureHighlights.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, X,Users, Music, Palette, BookOpen, Play, Image, ChevronRight, Filter } from 'lucide-react';
-import { culturalData } from '../data/mockData';
+import { getCultureArticles, submitCultureArticle } from '../api';
 import ContributeModal from './ContributeModal';
 
 const CultureHighlights = () => {
-  const [activeSection, setActiveSection] = useState('traditions');
-  const [selectedRegion, setSelectedRegion] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null); // New state to hold the selected item
+  const [activeSection, setActiveSection] = useState('traditions');
+  const [selectedRegion, setSelectedRegion] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const sections = [
-    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
-    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#695e46' },
-//     { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#77705c' },
-//     { id: 'music', label: 'Music & Dance', icon: Music, color: '#c2ae81' }
-  ];
+  const sections = [
+    { id: 'traditions', label: 'Traditions & Customs', icon: Users, color: '#564c38' },
+    { id: 'history', label: 'History & Heritage', icon: BookOpen, color: '#695e46' },
+    { id: 'arts', label: 'Arts & Crafts', icon: Palette, color: '#77705c' },
+    { id: 'music', label: 'Music & Dance', icon: Music, color: '#c2ae81' }
+  ];
 
-  const regions = ['all', 'Ashanti Region', 'Eastern Region', 'Central Region', 'Western Region'];
+  const regions = ['all', 'Ashanti Region', 'Eastern Region', 'Central Region', 'Western Region'];
 
-  const getCurrentSectionData = () => {
-    return culturalData[activeSection] || [];
-  };
+  useEffect(() => {
+    let mounted = true;
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const data = await getCultureArticles({ category: activeSection, q: searchTerm || undefined, limit: 50 });
+        const results = Array.isArray(data) ? data : (data.results || []);
+        if (mounted) setItems(results);
+      } catch (err) {
+        console.error(err);
+        if (mounted) setItems([]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    fetchData();
+    return () => { mounted = false; };
+  }, [activeSection, searchTerm]);
 
-  const filteredContent = getCurrentSectionData().filter(item => {
-    const matchesSearch = !searchTerm ||
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredContent = items.filter(item => {
+    const matchesRegion = selectedRegion === 'all' || item.region === selectedRegion;
+    return matchesRegion;
+  });
 
-    const matchesRegion = selectedRegion === 'all' ||
-      item.region === selectedRegion;
-
-    return matchesSearch && matchesRegion;
-  });
-
-  const handleContributeSubmit = (newContent) => {
-    console.log('New content submitted:', newContent);
-    alert('Thank you for your contribution! We will review it shortly.');
-  };
+  const handleContributeSubmit = async (newContent) => {
+    try {
+      await submitCultureArticle({
+        ...newContent,
+        category: activeSection,
+        author_name: newContent.author_name || 'Anonymous',
+        author_email: newContent.author_email || '',
+      });
+      alert('Thank you for your contribution! We will review it shortly.');
+      setIsModalOpen(false);
+    } catch (err) {
+      alert('Submission failed: ' + err.message);
+    }
+  };
 
   const handleLearnMore = (item) => {
     setSelectedItem(item);
@@ -317,28 +338,30 @@ const CultureHighlights = () => {
               </p>
             </div>
           </div>
-          {/* Content Grid */}
-          {filteredContent.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-12 h-12 text-gray-400" />
-              </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No content found</h3>
-              <p className="text-gray-600">
-                Try adjusting your search terms or filters to find what you're looking for.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredContent.map((item) => (
-                <CultureCard
-                  key={item.id}
-                  item={item}
-                  sectionType={activeSection}
-                />
-              ))}
-            </div>
-          )}
+          {/* Content Grid */}
+          {loading ? (
+            <div className="text-center py-12 text-gray-500">Loading...</div>
+          ) : filteredContent.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-12 h-12 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No content found</h3>
+              <p className="text-gray-600">
+                Try adjusting your search terms or filters to find what you're looking for.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredContent.map((item) => (
+                <CultureCard
+                  key={item.id}
+                  item={item}
+                  sectionType={activeSection}
+                />
+              ))}
+            </div>
+          )}
         </div>
         {/* Cultural Map Section (commented out) */}
         {/* Multimedia Gallery */}
