@@ -43,7 +43,7 @@ const UserProfile = () => {
   }
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-xl mx-auto px-4 bg-white rounded-lg shadow-lg p-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 bg-white rounded-lg shadow-lg p-8">
         <div className="flex flex-col items-center mb-6">
           <div className="w-24 h-24 bg-gradient-to-r from-akan-gold to-akan-red rounded-full flex items-center justify-center text-white text-3xl font-bold mb-4">
             {user.name.split(' ').map(n => n[0]).join('')}

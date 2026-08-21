@@ -37,7 +37,7 @@ const Footer = () => {
       {/* Decorative Adinkra Pattern Border */}
   <div className="h-2" style={{background: '#F1D799'}}></div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo and Mission */}
           <div className="lg:col-span-1">

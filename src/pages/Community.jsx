@@ -353,7 +353,7 @@ const Community = () => {
       
       {/* Header */}
       <div  style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}} className="text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Community Hub</h1>
           <p className="text-xl opacity-90 max-w-3xl">
             Connect with fellow learners, share knowledge, attend events, and be part of the Akan cultural community
@@ -363,7 +363,7 @@ const Community = () => {
 
       {/* Community Stats */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-900">1,247</div>
@@ -387,7 +387,7 @@ const Community = () => {
 
       {/* Navigation Tabs */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8 overflow-x-auto">
             {tabs.map((tab) => {
               const Icon = tab.icon;
@@ -410,7 +410,7 @@ const Community = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Forums Tab */}
         {activeTab === 'forums' && (
           <div>

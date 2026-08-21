@@ -8,7 +8,7 @@ const ArticleLayout = ({ article, sectionConfig, onBack }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
-        <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center mb-4">
             <button onClick={onBack} className="flex items-center text-white/80 hover:text-white mr-4">
               ← Back
@@ -49,7 +49,7 @@ const ArticleLayout = ({ article, sectionConfig, onBack }) => {
         </div>
       </div>
 
-      <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
           <div className="prose max-w-none text-gray-700 leading-relaxed">
             {article.content.split('\n').map((paragraph, idx) => (

@@ -37,7 +37,7 @@ const EventCreation = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow mt-8">
+    <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto p-6 bg-white rounded shadow mt-8">
       <h1 className="text-2xl font-bold mb-4">Create New Event</h1>
       {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">{error}</div>}
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">

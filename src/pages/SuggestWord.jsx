@@ -35,7 +35,7 @@ const SuggestWord = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
           <div className="px-6 py-6 border-b border-gray-200" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
             <div className="flex items-center space-x-3">

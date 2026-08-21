@@ -26,7 +26,7 @@ const Phrasebook = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
-        <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="flex items-center mb-4">
             <Link to="/learn" className="flex items-center text-white/80 hover:text-white mr-4"><ArrowLeft className="w-5 h-5 mr-2" />Back to Learning</Link>
           </div>
@@ -35,7 +35,7 @@ const Phrasebook = () => {
         </div>
       </div>
 
-      <div className="w-full sm:w-4/5 md:w-3/4 lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <div className="flex space-x-2">
             {['all', 'general', 'morning', 'afternoon', 'evening'].map(cat => (

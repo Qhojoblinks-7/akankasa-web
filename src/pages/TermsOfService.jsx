@@ -8,7 +8,7 @@ const TermsOfService = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
   <div className="px-4 py-6" style={{backgroundColor: 'var(--color-primary)'}}>
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto">
           <Link 
             to="/" 
             className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors text-white mb-4"
@@ -25,7 +25,7 @@ const TermsOfService = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 py-8">
         {/* Last Updated */}
         <div className="bg-white rounded-lg p-6 mb-8 border-l-4" style={{borderColor: '#8B0000'}}>
           <p className="text-sm text-gray-600">

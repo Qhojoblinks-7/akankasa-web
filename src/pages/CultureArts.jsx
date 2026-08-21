@@ -39,7 +39,7 @@ const CultureArts = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4">
         <h1 className="text-3xl font-bold text-akan-red mb-8">Adinkra Symbols & Arts</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {arts.map((item) => (

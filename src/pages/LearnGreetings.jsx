@@ -45,7 +45,7 @@ const LearnGreetings = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-3xl mx-auto px-4">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4">
         <h1 className="text-3xl font-bold text-akan-red mb-8">Essential Akan Greetings</h1>
         <div className="space-y-6">
           {greetings.map((greeting) => (

@@ -22,7 +22,7 @@ const CommunityJoin = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded shadow mt-8">
+    <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto p-6 bg-white rounded shadow mt-8">
       <h1 className="text-2xl font-bold mb-4">Join the Community</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

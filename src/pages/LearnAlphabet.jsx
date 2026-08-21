@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const LearnAlphabet = () => (
-  <div className="max-w-4xl mx-auto p-6">
+  <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto p-6">
     <h1 className="text-3xl font-bold mb-4 text-gray-900">Akan Alphabet</h1>
     <p className="mb-4 text-gray-600">A guide to the Akan alphabet and pronunciation basics.</p>
     <Link 

@@ -44,7 +44,7 @@ const CultureDrumming = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-gradient-to-r from-red-700 to-red-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="flex items-center mb-4">
             <Music className="w-10 h-10 mr-4" />
             <h1 className="text-4xl font-bold">Traditional Drumming</h1>
@@ -57,7 +57,7 @@ const CultureDrumming = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {/* Search */}
@@ -173,7 +173,7 @@ const CultureDrumming = () => {
       )}
       
       {/* Back to Culture Link */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 pb-8">
         <Link 
           to="/culture" 
           className="inline-flex items-center text-red-700 hover:text-red-800 font-medium"

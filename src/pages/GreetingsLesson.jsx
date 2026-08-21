@@ -102,7 +102,7 @@ const GreetingsLesson = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="sticky top-0 z-10 px-4 py-4" style={{backgroundColor: '#f1d799'}}>
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto flex items-center justify-between">
           <Link 
             to="/learn" 
             className="flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors"
@@ -128,7 +128,7 @@ const GreetingsLesson = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 py-8">
         {/* Lesson Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4" style={{color: '#564c38'}}>

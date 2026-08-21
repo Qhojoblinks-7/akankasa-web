@@ -24,7 +24,7 @@ const EventsPage = () => {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Events & Meetups</h1>
       <p className="text-gray-600 mb-6">Discover and attend Akan cultural events</p>
       {loading ? (

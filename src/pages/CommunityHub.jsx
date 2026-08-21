@@ -119,7 +119,7 @@ const CommunityHub = () => {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <div className="max-w-7xl mx-auto flex">
+      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto flex">
         {/* Left Sidebar */}
         <aside className="w-64 h-screen sticky top-0 border-r border-gray-800 hidden md:flex flex-col justify-between p-4">
           <div>
