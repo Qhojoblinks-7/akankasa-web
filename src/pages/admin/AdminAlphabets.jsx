@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, Search, RefreshCw, Save } from 'lucide-react';
+import { Plus, Edit, Trash2, Search, RefreshCw, Save, History } from 'lucide-react';
 import { adminGet, adminPost, adminPut, adminDelete } from '../../api';
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog';
 import Modal from '../../components/ui/Modal';
 import MediaField from '../../components/media/MediaField';
+import VersionHistory from '../../components/admin/VersionHistory';
 
 const AdminAlphabets = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const AdminAlphabets = () => {
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [selectedLetterId, setSelectedLetterId] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -165,12 +168,18 @@ const AdminAlphabets = () => {
                 <p className="text-sm text-gray-500 mb-4">{entry.example || ''}</p>
                 {entry.audio_url && <p className="text-xs text-gray-400 mb-4">Audio: {entry.audio_url}</p>}
                 <div className="flex items-center space-x-2">
+                  <button onClick={() => { setSelectedLetterId(entry.id); setShowHistory(true); }} className="flex items-center px-3 py-1.5 text-sm text-blue-700 hover:text-blue-800 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"><History className="w-4 h-4 mr-1" /> History</button>
                   <button onClick={() => openEdit(entry)} className="flex items-center px-3 py-1.5 text-sm text-amber-700 hover:text-amber-800 border border-amber-200 rounded-lg hover:bg-amber-50 transition-colors"><Edit className="w-4 h-4 mr-1" /> Edit</button>
                   <button onClick={() => handleDelete(entry.id)} className="flex items-center px-3 py-1.5 text-sm text-red-700 hover:text-red-800 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"><Trash2 className="w-4 h-4 mr-1" /> Delete</button>
                 </div>
               </div>
             ))}
             {filtered.length === 0 && !error && <div className="col-span-full p-8 text-center text-gray-500">No letters found.</div>}
+          </div>
+        )}
+        {showHistory && (
+          <div className="mt-8">
+            <VersionHistory tableName="alphabets" recordId={selectedLetterId} />
           </div>
         )}
       </main>

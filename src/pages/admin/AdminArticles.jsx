@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, Plus, Save, Trash2, Edit, Eye, FileText, Clock, Tag, Check,
+  ArrowLeft, Plus, Save, Trash2, Edit, Eye, FileText, Clock, Tag, Check, History,
 } from 'lucide-react';
 import CollaborativeEditor from '../../components/editor/CollaborativeEditor';
 import MediaField from '../../components/media/MediaField';
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog';
+import VersionHistory from '../../components/admin/VersionHistory';
 import { adminGet, adminPost, adminPut, adminDelete } from '../../api';
 
 const CATEGORIES = [
@@ -44,6 +45,8 @@ const AdminArticles = () => {
   const [status, setStatus] = useState('idle');
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [error, setError] = useState('');
+  const [selectedArticleId, setSelectedArticleId] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('akankasa:admin_token');
@@ -167,16 +170,22 @@ const AdminArticles = () => {
                           ? <span className="inline-flex items-center text-amber-700 font-medium"><Check className="w-3.5 h-3.5 mr-1" /> Published</span>
                           : <span className="text-gray-500">Draft</span>}
                       </td>
-                       <td className="px-6 py-4 text-right text-sm">
-                         <button onClick={() => openEditor(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
-                         <button onClick={() => handleDelete(item)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
-                       </td>
+                        <td className="px-6 py-4 text-right text-sm">
+                          <button onClick={() => { setSelectedArticleId(item.id); setShowHistory(true); }} className="text-blue-600 hover:text-blue-800 transition-colors mr-3" aria-label={`Version history for ${item.title}`}><History className="w-4 h-4" /></button>
+                          <button onClick={() => openEditor(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
+                          <button onClick={() => handleDelete(item)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
+                        </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               {items.length === 0 && <div className="p-8 text-center text-gray-500">No articles yet.</div>}
             </div>
+            {showHistory && (
+              <div className="mt-8">
+                <VersionHistory tableName="culture_articles" recordId={selectedArticleId} />
+              </div>
+            )}
           </main>
         </div>
       ) : (

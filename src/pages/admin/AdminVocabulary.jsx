@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Save, Trash2, Edit } from 'lucide-react';
+import { ArrowLeft, Plus, Save, Trash2, Edit, History } from 'lucide-react';
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog';
 import Modal from '../../components/ui/Modal';
 import MediaField from '../../components/media/MediaField';
+import VersionHistory from '../../components/admin/VersionHistory';
 import { adminGet, adminPost, adminPut, adminDelete } from '../../api';
 
 const AdminVocabulary = () => {
@@ -17,6 +18,8 @@ const AdminVocabulary = () => {
   const [newWord, setNewWord] = useState({ akan: '', english: '', pronunciation: '', audio: '' });
   const [error, setError] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [selectedModuleId, setSelectedModuleId] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('akankasa:admin_token');
@@ -127,6 +130,7 @@ const AdminVocabulary = () => {
                   <td className="px-6 py-4 text-sm text-gray-600">{item.words?.length || 0} words</td>
                   <td className="px-6 py-4 text-sm">{item.is_published ? <span className="text-amber-700 font-medium">Published</span> : <span className="text-gray-500">Draft</span>}</td>
                   <td className="px-6 py-4 text-right text-sm">
+                    <button onClick={() => { setSelectedModuleId(item.id); setShowHistory(true); }} className="text-blue-600 hover:text-blue-800 transition-colors mr-3" aria-label={`Version history for ${item.title}`}><History className="w-4 h-4" /></button>
                     <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
                     <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
                   </td>
@@ -136,6 +140,11 @@ const AdminVocabulary = () => {
           </table>
           {items.length === 0 && <div className="p-8 text-center text-gray-500">No vocabulary modules yet.</div>}
         </div>
+        {showHistory && (
+          <div className="mt-8">
+            <VersionHistory tableName="vocabulary_modules" recordId={selectedModuleId} />
+          </div>
+        )}
       </main>
 
       <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Update Module' : 'Add a New Word List'} size="xl">

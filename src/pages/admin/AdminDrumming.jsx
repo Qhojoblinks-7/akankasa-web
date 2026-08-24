@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Save, Trash2, Edit } from 'lucide-react';
+import { ArrowLeft, Plus, Save, Trash2, Edit, History } from 'lucide-react';
 import MediaField from '../../components/media/MediaField';
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog';
 import Modal from '../../components/ui/Modal';
+import VersionHistory from '../../components/admin/VersionHistory';
 import { getAdminDrumming, saveDrumming, deleteDrumming } from '../../api';
 
 const AdminDrumming = () => {
@@ -13,10 +14,12 @@ const AdminDrumming = () => {
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [selectedDrummingId, setSelectedDrummingId] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
   const [form, setForm] = useState({
     title: '', description: '', thumbnail: '', instrument: '', difficulty: 'Beginner',
     bpm: '', type: 'video', video_url: '', audio_url: '', patternNotation: '',
-    transcript: '', instructor: '', duration: '', region: '', is_published: true
+    transcript: '', instructor: '', duration: '', region: '', is_published: true, publish_at: '', unpublish_at: ''
   });
 
   useEffect(() => {
@@ -31,7 +34,7 @@ const AdminDrumming = () => {
 
   const openCreate = () => {
     setEditingId(null);
-    setForm({ title: '', description: '', thumbnail: '', instrument: '', difficulty: 'Beginner', bpm: '', type: 'video', video_url: '', audio_url: '', patternNotation: '', transcript: '', instructor: '', duration: '', region: '', is_published: true });
+    setForm({ title: '', description: '', thumbnail: '', instrument: '', difficulty: 'Beginner', bpm: '', type: 'video', video_url: '', audio_url: '', patternNotation: '', transcript: '', instructor: '', duration: '', region: '', is_published: true, publish_at: '', unpublish_at: '' });
     setModalOpen(true);
   };
 
@@ -43,7 +46,8 @@ const AdminDrumming = () => {
       bpm: item.bpm || '', type: item.type || 'video', video_url: item.videoUrl || '',
       audio_url: item.audioUrl || '', patternNotation: item.patternNotation || '',
       transcript: item.transcript || '', instructor: item.instructor || '',
-      duration: item.duration || '', region: item.region || '', is_published: item.is_published !== undefined ? item.is_published : true
+      duration: item.duration || '', region: item.region || '', is_published: item.is_published !== undefined ? item.is_published : true,
+      publish_at: item.publish_at || '', unpublish_at: item.unpublish_at || ''
     });
     setModalOpen(true);
   };
@@ -51,7 +55,7 @@ const AdminDrumming = () => {
   const closeModal = () => {
     setModalOpen(false);
     setEditingId(null);
-    setForm({ title: '', description: '', thumbnail: '', instrument: '', difficulty: 'Beginner', bpm: '', type: 'video', video_url: '', audio_url: '', patternNotation: '', transcript: '', instructor: '', duration: '', region: '', is_published: true });
+    setForm({ title: '', description: '', thumbnail: '', instrument: '', difficulty: 'Beginner', bpm: '', type: 'video', video_url: '', audio_url: '', patternNotation: '', transcript: '', instructor: '', duration: '', region: '', is_published: true, publish_at: '', unpublish_at: '' });
   };
 
   const handleSubmit = async () => {
@@ -108,16 +112,22 @@ const AdminDrumming = () => {
                   <td className="px-6 py-4 text-sm">
                     {item.status === 'pending' ? <span className="text-amber-600 font-medium">Pending</span> : item.status === 'rejected' ? <span className="text-red-600">Rejected</span> : <span className="text-green-700 font-medium">Published</span>}
                   </td>
-                   <td className="px-6 py-4 text-right text-sm">
-                     <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
-                     <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
-                   </td>
+                    <td className="px-6 py-4 text-right text-sm">
+                      <button onClick={() => { setSelectedDrummingId(item.id); setShowHistory(true); }} className="text-blue-600 hover:text-blue-800 transition-colors mr-3" aria-label={`Version history for ${item.title}`}><History className="w-4 h-4" /></button>
+                      <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
+                      <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
+                    </td>
                 </tr>
               ))}
             </tbody>
           </table>
           {items.length === 0 && <div className="p-8 text-center text-gray-500">No drumming lessons yet.</div>}
         </div>
+        {showHistory && (
+          <div className="mt-8">
+            <VersionHistory tableName="drumming" recordId={selectedDrummingId} />
+          </div>
+        )}
       </main>
 
       <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Edit Drumming Lesson' : 'Add a New Drumming Lesson'} size="lg">
@@ -172,6 +182,16 @@ const AdminDrumming = () => {
           <div className="flex items-center">
             <input type="checkbox" id="pub" checked={form.is_published} onChange={e => setForm({...form, is_published: e.target.checked})} className="h-4 w-4 text-[#564c38] border-gray-300 rounded" />
             <label htmlFor="pub" className="ml-2 text-sm text-gray-700">Published</label>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Publish at</label>
+              <input type="datetime-local" value={form.publish_at} onChange={e => setForm({...form, publish_at: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Unpublish at</label>
+              <input type="datetime-local" value={form.unpublish_at} onChange={e => setForm({...form, unpublish_at: e.target.value})} className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:border-transparent transition-shadow" style={{ '--tw-ring-color': '#564c38' }} />
+            </div>
           </div>
           <div className="flex items-center justify-between pt-4 border-t border-gray-200">
             <div>

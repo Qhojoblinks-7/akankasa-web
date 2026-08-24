@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Save, Trash2, Edit } from 'lucide-react';
+import { ArrowLeft, Plus, Save, Trash2, Edit, History } from 'lucide-react';
 import ConfirmationDialog from '../../components/ui/ConfirmationDialog';
 import Modal from '../../components/ui/Modal';
+import VersionHistory from '../../components/admin/VersionHistory';
 import { adminGet, adminPost, adminPut, adminDelete } from '../../api';
 
 const AdminEvents = () => {
@@ -12,6 +13,8 @@ const AdminEvents = () => {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({ title: '', description: '', event_date: '', event_time: '', location: '', event_type: 'online', max_participants: '', status: 'upcoming', publish_at: '', unpublish_at: '' });
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [selectedEventId, setSelectedEventId] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('akankasa:admin_token');
@@ -100,16 +103,22 @@ const AdminEvents = () => {
                   <td className="px-6 py-4 text-sm text-gray-600">{item.event_date}</td>
                   <td className="px-6 py-4 text-sm text-gray-600">{item.location || '-'}</td>
                   <td className="px-6 py-4 text-sm capitalize">{item.status}</td>
-                   <td className="px-6 py-4 text-right text-sm">
-                     <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
-                     <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
-                   </td>
+                    <td className="px-6 py-4 text-right text-sm">
+                      <button onClick={() => { setSelectedEventId(item.id); setShowHistory(true); }} className="text-blue-600 hover:text-blue-800 transition-colors mr-3" aria-label={`Version history for ${item.title}`}><History className="w-4 h-4" /></button>
+                      <button onClick={() => openEdit(item)} className="text-amber-600 hover:text-amber-800 transition-colors mr-3" aria-label={`Edit ${item.title}`}><Edit className="w-4 h-4" /></button>
+                      <button onClick={() => handleDelete(item.id)} className="text-red-600 hover:text-red-800 transition-colors" aria-label={`Delete ${item.title}`}><Trash2 className="w-4 h-4" /></button>
+                    </td>
                 </tr>
               ))}
             </tbody>
           </table>
           {items.length === 0 && <div className="p-8 text-center text-gray-500">No events yet.</div>}
         </div>
+        {showHistory && (
+          <div className="mt-8">
+            <VersionHistory tableName="events" recordId={selectedEventId} />
+          </div>
+        )}
       </main>
 
       <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Update Event' : 'Add a New Event'}>

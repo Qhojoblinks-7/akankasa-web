@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Clock, Tag, Share2, Heart, MessageCircle, BookOpen } from 'lucide-react';
 import { getCultureArticle, getCultureArticles } from '../api';
 import ShareButton from '../components/ShareButton';
+import SEO from '../components/SEO';
 
 const categoryColors = {
   traditions: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-200' },
@@ -86,7 +87,22 @@ const CultureDetailPage = () => {
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <SEO
+        title={content.title}
+        description={content.excerpt || content.subtitle || content.description}
+        canonical={`https://akankasa.com/culture/${content.id}`}
+        ogImage={content.image}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": content.title,
+          "description": content.excerpt || content.subtitle || content.description,
+          "image": content.image,
+          "url": `https://akankasa.com/culture/${content.id}`
+        }}
+      />
+      <div className="min-h-screen bg-white">
       {/* Hero Header with Image */}
       {content.image && (
         <div className="relative h-[50vh] min-h-[400px] max-h-[600px]">
@@ -471,7 +487,8 @@ const CultureDetailPage = () => {
         </div>
       )}
     </div>
-  );
+  </>
+);
 };
 
 export default CultureDetailPage;
