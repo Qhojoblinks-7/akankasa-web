@@ -16,6 +16,36 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
+const BOT_REGEX = /googlebot|bingbot|yandex|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator|crawler|spider/i;
+const PRERENDER_TOKEN = process.env.PRERENDER_TOKEN || '';
+const PRERENDER_HOST = process.env.PRERENDER_HOST || 'service.prerender.io';
+
+app.use((req, res, next) => {
+  if (!PRERENDER_TOKEN) return next();
+  const userAgent = req.headers['user-agent'] || '';
+  if (!BOT_REGEX.test(userAgent)) return next();
+  const prerenderUrl = `https://${PRERENDER_HOST}${req.protocol}://${req.get('host')}${req.originalUrl}`;
+  fetch(prerenderUrl, {
+    headers: {
+      'User-Agent': userAgent,
+      'X-Prerender-Token': PRERENDER_TOKEN,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Pre-render failed: ${response.status}`);
+      return response.text();
+    })
+    .then((html) => {
+      res.set('Content-Type', 'text/html');
+      res.set('X-Prerender-Cache', 'HIT');
+      res.send(html);
+    })
+    .catch((err) => {
+      console.error('Prerender error:', err.message);
+      next();
+    });
+});
+
 const requireAuth = (req, res, next) => {
   const raw = req.headers.authorization;
   if (!raw) return res.status(401).json({ error: 'Authentication required' });

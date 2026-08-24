@@ -3,8 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "description": "Akan Kasa ne Amammere — Backend Express API",
   "scripts": {
     "dev": "node server.js",
+    "start": "node server.js",
     "db:init": "node database.js"
   },
   "dependencies": {
