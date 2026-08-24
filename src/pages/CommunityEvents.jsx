@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { getEvents } from '../api';
-import ShareButtons from '../components/ShareButtons';
+import CommunityLayout from '../components/CommunityLayout';
 
 const CommunityEvents = () => {
   const [events, setEvents] = useState([]);
@@ -24,41 +24,31 @@ const CommunityEvents = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-akan-red">Community Events</h1>
-          <ShareButtons />
-        </div>
+    <CommunityLayout>
+      <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800 px-4 py-3">
+        <h2 className="text-xl font-bold">Events & Meetups</h2>
+      </header>
+      <div className="p-4">
         {loading ? (
-          <div className="text-center py-12 text-gray-500">Loading events...</div>
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-4 border-gray-700 border-t-yellow-500 rounded-full animate-spin"></div>
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {events.map(event => (
-              <div key={event.id} className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">{event.title}</h2>
-                <p className="text-gray-700 mb-2">{event.description}</p>
-                <div className="flex items-center text-sm text-gray-600 mb-1">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  {new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                </div>
-                <div className="flex items-center text-sm text-gray-600 mb-1">
-                  <Clock className="w-4 h-4 mr-2" />
-                  {event.time}
-                </div>
-                <div className="flex items-center text-sm text-gray-600 mb-1">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  {event.location}
-                </div>
-                <div className="mt-2 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full inline-block">
-                  {event.type}
+              <div key={event.id} className="border-2 border-yellow-500/30 bg-gray-900/80 p-4 hover:border-yellow-500 transition-colors">
+                <h3 className="font-bold text-white text-sm mb-2 truncate">{event.title}</h3>
+                <p className="text-yellow-500 text-xs mb-2 font-medium line-clamp-2">{event.description}</p>
+                <div className="flex flex-col space-y-1 text-xs">
+                  <span className="text-white font-semibold">{new Date(event.date).toLocaleDateString()}</span>
+                  <span className="text-yellow-400 truncate">{event.location}</span>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </CommunityLayout>
   );
 };
 

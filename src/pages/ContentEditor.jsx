@@ -9,6 +9,7 @@ import Toast from '../components/Toast';
 import ConfirmationDialog from '../components/ui/ConfirmationDialog';
 import { submitCultureArticle } from '../api';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../hooks/useAuth';
 
 const CATEGORIES = [
   { value: 'traditions', label: 'Traditions & Customs', icon: Users },
@@ -43,6 +44,7 @@ function saveDraftsList(list) {
 
 const ContentEditor = () => {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const editorRef = useRef(null);
@@ -54,9 +56,9 @@ const ContentEditor = () => {
   const [category, setCategory] = useState('traditions');
   const [region, setRegion] = useState('');
   const [description, setDescription] = useState('');
-   const [tags, setTags] = useState('');
-   const [author, setAuthor] = useState('');
-   const [authorEmail, setAuthorEmail] = useState('');
+  const [tags, setTags] = useState('');
+  const [author, setAuthor] = useState(user?.name || '');
+  const [authorEmail, setAuthorEmail] = useState(user?.email || '');
    const [status, setStatus] = useState('idle');
    const [sidebarOpen, setSidebarOpen] = useState(true);
    const [previewOpen, setPreviewOpen] = useState(false);

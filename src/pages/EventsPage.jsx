@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, Clock } from 'lucide-react';
 import { getEvents } from '../api';
-import ShareButtons from '../components/ShareButtons';
+import CommunityLayout from '../components/CommunityLayout';
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
@@ -25,33 +25,34 @@ const EventsPage = () => {
   }, []);
 
   return (
-    <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold mb-2">Events & Meetups</h1>
-          <p className="text-gray-600">Discover and attend Akan cultural events</p>
-        </div>
-        <ShareButtons />
-      </div>
-      {loading ? (
-        <div className="text-center py-12 text-gray-500">Loading events...</div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {events.map(event => (
-            <div key={event.id} className="bg-white rounded-lg shadow p-4">
-              <h3 className="font-semibold mb-2">{event.title}</h3>
-              <p className="text-sm text-gray-600 mb-2">{event.description}</p>
-              <div className="text-sm text-gray-500 mb-4">
-                <div className="flex items-center"><Calendar className="w-4 h-4 mr-2" />{event.date}</div>
-                <div className="flex items-center"><Clock className="w-4 h-4 mr-2" />{event.time}</div>
-                <div className="flex items-center"><MapPin className="w-4 h-4 mr-2" />{event.location}</div>
+    <CommunityLayout>
+      <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800 px-4 py-3">
+        <h2 className="text-xl font-bold">Events & Meetups</h2>
+      </header>
+      <div className="p-4">
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-4 border-gray-700 border-t-yellow-500 rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {events.map(event => (
+              <div key={event.id} className="border-2 border-yellow-500/30 bg-gray-900/80 p-4 hover:border-yellow-500 transition-colors">
+                <h3 className="font-bold text-white text-sm mb-2 truncate">{event.title}</h3>
+                <p className="text-yellow-500 text-xs mb-2 font-medium line-clamp-2">{event.description}</p>
+                <div className="flex flex-col space-y-1 text-xs">
+                  <span className="text-white font-semibold">{new Date(event.date).toLocaleDateString()}</span>
+                  <span className="text-yellow-400 truncate">{event.location}</span>
+                </div>
+                <Link to={`/community/events/${event.id}/register`} className="inline-block mt-3 bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold hover:bg-yellow-600 transition-colors">
+                  Register
+                </Link>
               </div>
-              <Link to={`/community/events/${event.id}/register`} className="inline-block bg-blue-600 text-white px-4 py-2 rounded">Register</Link>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </CommunityLayout>
   );
 };
 

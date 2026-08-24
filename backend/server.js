@@ -6,7 +6,6 @@ import { initDatabase, getDb } from './database.js';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { mkdirSync, unlinkSync } from 'fs';
-import { setupCollab } from './collab.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,6 +15,24 @@ const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
+
+const requireAuth = (req, res, next) => {
+  const raw = req.headers.authorization;
+  if (!raw) return res.status(401).json({ error: 'Authentication required' });
+  try {
+    const decoded = Buffer.from(raw, 'base64').toString('utf8');
+    const userId = decoded.split(':')[0];
+    const db = getDb();
+    db.get('SELECT id, name, email, role FROM users WHERE id = ? AND is_active = 1', [userId], (err, user) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!user) return res.status(401).json({ error: 'Invalid or expired token' });
+      req.user = user;
+      next();
+    });
+  } catch {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+};
 
 const uploadDir = join(__dirname, 'uploads');
 
@@ -281,21 +298,6 @@ const init = async () => {
     res.json({ favorites: req.body.favorites || [] });
   });
 
-  app.post('/api/auth/login', async (req, res) => {
-    const { email, password } = req.body;
-    const db = getDb();
-    db.get('SELECT * FROM admin_users WHERE email = ?', [email], async (err, user) => {
-      if (err) return res.status(500).json({ error: err.message });
-      if (!user) return res.status(401).json({ error: 'Invalid credentials' });
-
-      const valid = await bcrypt.compare(password, user.password_hash);
-      if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
-
-      const token = Buffer.from(`${user.id}:${Date.now()}`).toString('base64');
-      res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
-    });
-  });
-
   app.post('/api/uploads', upload.single('file'), (req, res) => {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     const db = getDb();
@@ -529,20 +531,6 @@ const init = async () => {
     });
   });
 
-  app.post('/api/auth/register', async (req, res) => {
-    const { name, email, password } = req.body;
-    const db = getDb();
-    const hash = await bcrypt.hash(password, 10);
-    db.run(
-      'INSERT INTO admin_users (name, email, password_hash) VALUES (?, ?, ?)',
-      [name, email, hash],
-      function(err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json({ id: this.lastID, name, email });
-      }
-    );
-  });
-
   app.get('/api/progress', (req, res) => {
     const raw = req.headers.authorization;
     res.json({
@@ -616,12 +604,11 @@ const init = async () => {
     });
   });
 
-  app.post('/api/culture', (req, res) => {
+  app.post('/api/culture', requireAuth, (req, res) => {
     const { title, description, content, category, region, timeline, significance, examples, instruments, tags, author_name, author_email } = req.body;
     const db = getDb();
     db.run(
-      `INSERT INTO culture_articles (title, description, content, category, region, timeline, significance, examples, instruments, tags, author_name, author_email, status, is_published)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 0)`,
+      `INSERT INTO culture_articles (title, description, content, category, region, timeline, significance, examples, instruments, tags, author_name, author_email, status, is_published, author_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 0, ?)`,
       [
         title,
         description || '',
@@ -633,8 +620,9 @@ const init = async () => {
         examples ? (Array.isArray(examples) ? examples.map(ex => ex.symbol || ex).join(',') : String(examples)) : '',
         instruments ? (Array.isArray(instruments) ? instruments.join(',') : String(instruments)) : '',
         tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '',
-        author_name || '',
-        author_email || ''
+        author_name || req.user.name || '',
+        author_email || req.user.email || '',
+        req.user.id
       ],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
@@ -771,12 +759,12 @@ const init = async () => {
     });
   });
 
-  app.post('/api/forum/posts', (req, res) => {
+  app.post('/api/forum/posts', requireAuth, (req, res) => {
     const { title, content, category, author_name, author_email } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO forum_posts (title, content, category, author_name, author_email, status) VALUES (?, ?, ?, ?, ?, ?)',
-      [title, content, category, author_name || '', author_email || '', 'pending'],
+      'INSERT INTO forum_posts (title, content, category, author_name, author_email, status, author_user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [title, content, category, author_name || req.user.name || '', author_email || req.user.email || '', 'pending', req.user.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ id: this.lastID, title, content, category, author_name, author_email, status: 'pending' });
@@ -784,12 +772,12 @@ const init = async () => {
     );
   });
 
-  app.post('/api/forum/posts/:id/comments', (req, res) => {
+  app.post('/api/forum/posts/:id/comments', requireAuth, (req, res) => {
     const { content, author_name, author_email } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO forum_comments (post_id, content, author_name, author_email, status) VALUES (?, ?, ?, ?, ?)',
-      [req.params.id, content, author_name || '', author_email || '', 'pending'],
+      'INSERT INTO forum_comments (post_id, content, author_name, author_email, status, author_user_id) VALUES (?, ?, ?, ?, ?, ?)',
+      [req.params.id, content, author_name || req.user.name || '', author_email || req.user.email || '', 'pending', req.user.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ id: this.lastID, post_id: req.params.id, content, author_name, author_email, status: 'pending' });
@@ -805,12 +793,12 @@ const init = async () => {
     });
   });
 
-  app.post('/api/events', (req, res) => {
+  app.post('/api/events', requireAuth, (req, res) => {
     const { title, description, event_date, event_time, location, event_type, max_participants } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO events (title, description, event_date, event_time, location, event_type, max_participants, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [title, description || '', event_date, event_time || '', location || '', event_type || 'online', max_participants || null, 'upcoming'],
+      'INSERT INTO events (title, description, event_date, event_time, location, event_type, max_participants, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', event_date, event_time || '', location || '', event_type || 'online', max_participants || null, 'upcoming', req.user.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ id: this.lastID, title, description, event_date, event_time, location, event_type, max_participants, status: 'upcoming' });
@@ -818,7 +806,7 @@ const init = async () => {
     );
   });
 
-  app.post('/api/events/:id/register', (req, res) => {
+  app.post('/api/events/:id/register', requireAuth, (req, res) => {
     const { name, email, tickets } = req.body;
     const db = getDb();
     db.get('SELECT * FROM events WHERE id = ?', [req.params.id], (err, event) => {
@@ -918,12 +906,12 @@ const init = async () => {
     });
   });
 
-  app.post('/api/proposals', (req, res) => {
+  app.post('/api/proposals', requireAuth, (req, res) => {
     const { title, description, proposer_name, proposer_email } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO project_proposals (title, description, proposer_name, proposer_email, status) VALUES (?, ?, ?, ?, ?)',
-      [title, description || '', proposer_name || '', proposer_email || '', 'pending'],
+      'INSERT INTO project_proposals (title, description, proposer_name, proposer_email, status, proposer_user_id) VALUES (?, ?, ?, ?, ?, ?)',
+      [title, description || '', proposer_name || req.user.name || '', proposer_email || req.user.email || '', 'pending', req.user.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ id: this.lastID, title, description, proposer_name, proposer_email, status: 'pending' });
@@ -1573,7 +1561,9 @@ const init = async () => {
         'INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, ?)',
         [name, email, hash, 'user'],
         function(err) {
-          if (err) return res.status(500).json({ error: err.message });
+          if (err) {
+            return res.status(500).json({ error: err.message });
+          }
           res.status(201).json({ id: this.lastID, name, email, role: 'user' });
         }
       );
@@ -1730,12 +1720,12 @@ const init = async () => {
     });
   });
 
-  app.post('/api/dictionary/suggest', (req, res) => {
+  app.post('/api/dictionary/suggest', requireAuth, (req, res) => {
     const { primary_akan, english_translation, part_of_speech, etymology, notes, author_name, author_email } = req.body;
     const db = getDb();
     db.run(
-      'INSERT INTO dictionary_suggestions (primary_akan, english_translation, part_of_speech, etymology, notes, author_name, author_email, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [primary_akan, english_translation, part_of_speech || '', etymology || '', notes || '', author_name || '', author_email || '', 'pending'],
+      'INSERT INTO dictionary_suggestions (primary_akan, english_translation, part_of_speech, etymology, notes, author_name, author_email, status, author_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [primary_akan, english_translation, part_of_speech || '', etymology || '', notes || '', author_name || req.user.name || '', author_email || req.user.email || '', 'pending', req.user.id],
       function(err) {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ id: this.lastID, status: 'pending' });
@@ -1795,33 +1785,409 @@ const init = async () => {
      });
    });
 
-   app.post('/api/editor-documents', (req, res) => {
-     const { id, title, content, category, region, tags, author } = req.body;
-     const docId = id || `d_${Date.now().toString(36)}${Math.round(Math.random() * 1e9).toString(36)}`;
-     const db = getDb();
-     db.run(
-       'INSERT INTO editor_documents (id, title, content, category, region, tags, author) VALUES (?, ?, ?, ?, ?, ?, ?)',
-       [docId, title || '', content || '', category || 'general', region || '', tags || '', author || ''],
-       function (err) {
-         if (err) return res.status(500).json({ error: err.message });
-         res.status(201).json({ id: docId });
-       }
-     );
-   });
+    app.post('/api/editor-documents', requireAuth, (req, res) => {
+      const { id, title, content, category, region, tags, author } = req.body;
+      const docId = id || `d_${Date.now().toString(36)}${Math.round(Math.random() * 1e9).toString(36)}`;
+      const db = getDb();
+      db.run(
+        'INSERT INTO editor_documents (id, title, content, category, region, tags, author, author_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [docId, title || '', content || '', category || 'general', region || '', tags || '', author || req.user.name || '', req.user.id],
+        function (err) {
+          if (err) return res.status(500).json({ error: err.message });
+          res.status(201).json({ id: docId });
+        }
+      );
+    });
 
-   app.put('/api/editor-documents/:id', (req, res) => {
-     const { title, content, category, region, tags, author } = req.body;
-     const db = getDb();
-     db.run(
-       'UPDATE editor_documents SET title = ?, content = ?, category = ?, region = ?, tags = ?, author = ?, version = COALESCE(version, 0) + 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-       [title || '', content || '', category || 'general', region || '', tags || '', author || '', req.params.id],
-       function (err) {
-         if (err) return res.status(500).json({ error: err.message });
-         if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
-         res.json({ id: req.params.id });
-       }
-     );
-   });
+    app.put('/api/editor-documents/:id', requireAuth, (req, res) => {
+      const { title, content, category, region, tags, author } = req.body;
+      const db = getDb();
+      db.run(
+        'UPDATE editor_documents SET title = ?, content = ?, category = ?, region = ?, tags = ?, author = ?, version = COALESCE(version, 0) + 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+        [title || '', content || '', category || 'general', region || '', tags || '', author || req.user.name || '', req.params.id],
+        function (err) {
+          if (err) return res.status(500).json({ error: err.message });
+          if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+          res.json({ id: req.params.id });
+        }
+      );
+    });
+
+  // ==================== FOLK STORIES ====================
+  app.get('/api/folk-stories', (req, res) => {
+    const db = getDb();
+    db.all("SELECT * FROM folk_stories WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now')) ORDER BY created_at DESC", (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/folk-stories/:id', (req, res) => {
+    const db = getDb();
+    db.get("SELECT * FROM folk_stories WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now'))", [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.get('/api/admin/folk-stories', (req, res) => {
+    const db = getDb();
+    db.all('SELECT * FROM folk_stories ORDER BY created_at DESC', (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/admin/folk-stories/:id', (req, res) => {
+    const db = getDb();
+    db.get('SELECT * FROM folk_stories WHERE id = ?', [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.post('/api/admin/folk-stories', (req, res) => {
+    const { title, description, thumbnail, category, language, duration, type, audio_url, video_url, transcript, narrator, region, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'INSERT INTO folk_stories (title, description, thumbnail, category, language, duration, type, audio_url, video_url, transcript, narrator, region, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', thumbnail || '', category || '', language || 'Twi', duration || '', type || 'audio', audio_url || '', video_url || '', transcript || '', narrator || '', region || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: this.lastID, title, description, thumbnail, category, language, duration, type, audio_url, video_url, transcript, narrator, region, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.put('/api/admin/folk-stories/:id', (req, res) => {
+    const { title, description, thumbnail, category, language, duration, type, audio_url, video_url, transcript, narrator, region, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'UPDATE folk_stories SET title = ?, description = ?, thumbnail = ?, category = ?, language = ?, duration = ?, type = ?, audio_url = ?, video_url = ?, transcript = ?, narrator = ?, region = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', thumbnail || '', category || '', language || 'Twi', duration || '', type || 'audio', audio_url || '', video_url || '', transcript || '', narrator || '', region || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+        res.json({ id: req.params.id, title, description, thumbnail, category, language, duration, type, audio_url, video_url, transcript, narrator, region, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.delete('/api/admin/folk-stories/:id', (req, res) => {
+    const db = getDb();
+    db.run('DELETE FROM folk_stories WHERE id = ?', [req.params.id], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+      res.status(204).send();
+    });
+  });
+
+  // ==================== DRUMMING ====================
+  app.get('/api/drumming', (req, res) => {
+    const db = getDb();
+    db.all("SELECT * FROM drumming WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now')) ORDER BY created_at DESC", (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/drumming/:id', (req, res) => {
+    const db = getDb();
+    db.get("SELECT * FROM drumming WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now'))", [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.get('/api/admin/drumming', (req, res) => {
+    const db = getDb();
+    db.all('SELECT * FROM drumming ORDER BY created_at DESC', (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/admin/drumming/:id', (req, res) => {
+    const db = getDb();
+    db.get('SELECT * FROM drumming WHERE id = ?', [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.post('/api/admin/drumming', (req, res) => {
+    const { title, description, thumbnail, instrument, difficulty, bpm, type, video_url, audio_url, pattern_notation, transcript, instructor, duration, region, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'INSERT INTO drumming (title, description, thumbnail, instrument, difficulty, bpm, type, video_url, audio_url, pattern_notation, transcript, instructor, duration, region, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', thumbnail || '', instrument || '', difficulty || 'Beginner', bpm || null, type || 'video', video_url || '', audio_url || '', pattern_notation || '', transcript || '', instructor || '', duration || '', region || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: this.lastID, title, description, thumbnail, instrument, difficulty, bpm, type, video_url, audio_url, pattern_notation, transcript, instructor, duration, region, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.put('/api/admin/drumming/:id', (req, res) => {
+    const { title, description, thumbnail, instrument, difficulty, bpm, type, video_url, audio_url, pattern_notation, transcript, instructor, duration, region, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'UPDATE drumming SET title = ?, description = ?, thumbnail = ?, instrument = ?, difficulty = ?, bpm = ?, type = ?, video_url = ?, audio_url = ?, pattern_notation = ?, transcript = ?, instructor = ?, duration = ?, region = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', thumbnail || '', instrument || '', difficulty || 'Beginner', bpm || null, type || 'video', video_url || '', audio_url || '', pattern_notation || '', transcript || '', instructor || '', duration || '', region || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+        res.json({ id: req.params.id, title, description, thumbnail, instrument, difficulty, bpm, type, video_url, audio_url, pattern_notation, transcript, instructor, duration, region, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.delete('/api/admin/drumming/:id', (req, res) => {
+    const db = getDb();
+    db.run('DELETE FROM drumming WHERE id = ?', [req.params.id], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+      res.status(204).send();
+    });
+  });
+
+  // ==================== FESTIVAL PHOTOS ====================
+  app.get('/api/festival-photos', (req, res) => {
+    const db = getDb();
+    db.all("SELECT * FROM festival_photos WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now')) ORDER BY created_at DESC", (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/festival-photos/:id', (req, res) => {
+    const db = getDb();
+    db.get("SELECT * FROM festival_photos WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now'))", [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.get('/api/admin/festival-photos', (req, res) => {
+    const db = getDb();
+    db.all('SELECT * FROM festival_photos ORDER BY created_at DESC', (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/admin/festival-photos/:id', (req, res) => {
+    const db = getDb();
+    db.get('SELECT * FROM festival_photos WHERE id = ?', [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.post('/api/admin/festival-photos', (req, res) => {
+    const { title, description, image_url, category, location, event_date, photographer, tags, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'INSERT INTO festival_photos (title, description, image_url, category, location, event_date, photographer, tags, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', image_url || '', category || 'festival', location || '', event_date || '', photographer || '', tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '', is_published ? 1 : 0, publish_at || null, unpublish_at || null],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: this.lastID, title, description, image_url, category, location, event_date, photographer, tags, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.put('/api/admin/festival-photos/:id', (req, res) => {
+    const { title, description, image_url, category, location, event_date, photographer, tags, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'UPDATE festival_photos SET title = ?, description = ?, image_url = ?, category = ?, location = ?, event_date = ?, photographer = ?, tags = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', image_url || '', category || 'festival', location || '', event_date || '', photographer || '', tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '', is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+        res.json({ id: req.params.id, title, description, image_url, category, location, event_date, photographer, tags, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.delete('/api/admin/festival-photos/:id', (req, res) => {
+    const db = getDb();
+    db.run('DELETE FROM festival_photos WHERE id = ?', [req.params.id], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+      res.status(204).send();
+    });
+  });
+
+  // ==================== RESEARCH PAPERS ====================
+  app.get('/api/research-papers', (req, res) => {
+    const db = getDb();
+    db.all("SELECT * FROM research_papers WHERE is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now')) ORDER BY created_at DESC", (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/research-papers/:id', (req, res) => {
+    const db = getDb();
+    db.get("SELECT * FROM research_papers WHERE id = ? AND is_published = 1 AND (publish_at IS NULL OR publish_at <= datetime('now')) AND (unpublish_at IS NULL OR unpublish_at > datetime('now'))", [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.get('/api/admin/research-papers', (req, res) => {
+    const db = getDb();
+    db.all('SELECT * FROM research_papers ORDER BY created_at DESC', (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/admin/research-papers/:id', (req, res) => {
+    const db = getDb();
+    db.get('SELECT * FROM research_papers WHERE id = ?', [req.params.id], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+      res.json(row);
+    });
+  });
+
+  app.post('/api/admin/research-papers', (req, res) => {
+    const { title, description, thumbnail, author, institution, category, language, type, pdf_url, audio_url, video_url, abstract, publication_date, pages, keywords, doi, citation, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'INSERT INTO research_papers (title, description, thumbnail, author, institution, category, language, type, pdf_url, audio_url, video_url, abstract, publication_date, pages, keywords, doi, citation, is_published, publish_at, unpublish_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [title, description || '', thumbnail || '', author || '', institution || '', category || '', language || 'English', type || 'pdf', pdf_url || '', audio_url || '', video_url || '', abstract || '', publication_date || '', pages || null, keywords ? (Array.isArray(keywords) ? keywords.join(',') : String(keywords)) : '', doi || '', citation || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: this.lastID, title, description, thumbnail, author, institution, category, language, type, pdf_url, audio_url, video_url, abstract, publication_date, pages, keywords, doi, citation, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.put('/api/admin/research-papers/:id', (req, res) => {
+    const { title, description, thumbnail, author, institution, category, language, type, pdf_url, audio_url, video_url, abstract, publication_date, pages, keywords, doi, citation, is_published, publish_at, unpublish_at } = req.body;
+    const db = getDb();
+    db.run(
+      'UPDATE research_papers SET title = ?, description = ?, thumbnail = ?, author = ?, institution = ?, category = ?, language = ?, type = ?, pdf_url = ?, audio_url = ?, video_url = ?, abstract = ?, publication_date = ?, pages = ?, keywords = ?, doi = ?, citation = ?, is_published = ?, publish_at = ?, unpublish_at = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title, description || '', thumbnail || '', author || '', institution || '', category || '', language || 'English', type || 'pdf', pdf_url || '', audio_url || '', video_url || '', abstract || '', publication_date || '', pages || null, keywords ? (Array.isArray(keywords) ? keywords.join(',') : String(keywords)) : '', doi || '', citation || '', is_published ? 1 : 0, publish_at || null, unpublish_at || null, req.params.id],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+        res.json({ id: req.params.id, title, description, thumbnail, author, institution, category, language, type, pdf_url, audio_url, video_url, abstract, publication_date, pages, keywords, doi, citation, is_published, publish_at, unpublish_at });
+      }
+    );
+  });
+
+  app.delete('/api/admin/research-papers/:id', (req, res) => {
+    const db = getDb();
+    db.run('DELETE FROM research_papers WHERE id = ?', [req.params.id], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+      res.status(204).send();
+    });
+  });
+
+  // ==================== CONTRIBUTIONS ====================
+  app.get('/api/admin/contributions/:type', (req, res) => {
+    const db = getDb();
+    db.all('SELECT * FROM contributions WHERE content_type = ? AND status = ? ORDER BY created_at DESC', [req.params.type, 'pending'], (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    });
+  });
+
+  app.get('/api/contributions/my', requireAuth, (req, res) => {
+    const db = getDb();
+    db.all('SELECT * FROM contributions WHERE author_user_id = ? ORDER BY created_at DESC', [req.user.id], (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ contributions: rows });
+    });
+  });
+
+  app.post('/api/contributions/:type', requireAuth, (req, res) => {
+    const { title, description, content, category, region, tags, media_url, audio_url, video_url, thumbnail, author_name, author_email } = req.body;
+    const db = getDb();
+    db.run(
+      'INSERT INTO contributions (content_type, title, description, content, category, region, tags, media_url, audio_url, video_url, thumbnail, author_name, author_email, status, author_user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [req.params.type, title, description || '', content || '', category || '', region || '', tags ? (Array.isArray(tags) ? tags.join(',') : String(tags)) : '', media_url || '', audio_url || '', video_url || '', thumbnail || '', author_name || req.user.name || '', author_email || req.user.email || '', 'pending', req.user.id],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.status(201).json({ id: this.lastID, content_type: req.params.type, title, description, content, category, region, tags, media_url, audio_url, video_url, thumbnail, author_name, author_email, status: 'pending', author_user_id: req.user.id });
+      }
+    );
+  });
+
+  app.post('/api/admin/contributions/:type/:id/approve', (req, res) => {
+    const db = getDb();
+    db.get('SELECT * FROM contributions WHERE id = ? AND content_type = ?', [req.params.id, req.params.type], (err, row) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!row) return res.status(404).json({ error: 'Not found' });
+
+      // Move to appropriate table based on type
+      const tableMap = {
+        'folk-stories': 'folk_stories',
+        'drumming': 'drumming',
+        'festival-photos': 'festival_photos',
+        'research-papers': 'research_papers',
+      };
+      const targetTable = tableMap[req.params.type];
+      if (!targetTable) return res.status(400).json({ error: 'Invalid content type' });
+
+      const insertData = {
+        title: row.title,
+        description: row.description,
+        category: row.category,
+        region: row.region,
+        tags: row.tags,
+        is_published: 1,
+        status: 'approved',
+      };
+
+      // Add type-specific fields
+      if (req.params.type === 'folk-stories') {
+        Object.assign(insertData, { thumbnail: row.thumbnail, audio_url: row.audio_url, video_url: row.video_url, transcript: row.content, narrator: row.author_name });
+      } else if (req.params.type === 'drumming') {
+        Object.assign(insertData, { thumbnail: row.thumbnail, video_url: row.video_url, audio_url: row.audio_url, transcript: row.content, instructor: row.author_name });
+      } else if (req.params.type === 'festival-photos') {
+        Object.assign(insertData, { image_url: row.media_url, photographer: row.author_name });
+      } else if (req.params.type === 'research-papers') {
+        Object.assign(insertData, { pdf_url: row.media_url, abstract: row.description, author: row.author_name });
+      }
+
+      const columns = Object.keys(insertData).join(', ');
+      const placeholders = Object.keys(insertData).map(() => '?').join(', ');
+      const values = Object.values(insertData);
+
+      db.run(`INSERT INTO ${targetTable} (${columns}) VALUES (${placeholders})`, values, function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        // Update contribution status
+        db.run('UPDATE contributions SET status = ?, reviewed_at = CURRENT_TIMESTAMP WHERE id = ?', ['approved', req.params.id], (err) => {
+          if (err) console.error(err);
+        });
+        res.json({ id: this.lastID, message: 'Approved and published' });
+      });
+    });
+  });
+
+  app.post('/api/admin/contributions/:type/:id/reject', (req, res) => {
+    const db = getDb();
+    const { admin_notes } = req.body;
+    db.run('UPDATE contributions SET status = ?, admin_notes = ?, reviewed_at = CURRENT_TIMESTAMP WHERE id = ? AND content_type = ?', ['rejected', admin_notes || '', req.params.id, req.params.type], function(err) {
+      if (err) return res.status(500).json({ error: err.message });
+      if (this.changes === 0) return res.status(404).json({ error: 'Not found' });
+      res.json({ message: 'Rejected' });
+    });
+  });
 
   const server = app.listen(PORT, () => {
     console.log(`AkanKasa backend running on http://localhost:${PORT}`);

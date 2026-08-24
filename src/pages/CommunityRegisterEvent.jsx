@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getEvents, registerForEvent } from '../api';
+import { registerForEvent } from '../api';
+import CommunityLayout from '../components/CommunityLayout';
 
 const CommunityRegisterEvent = () => {
   const { eventId } = useParams();
@@ -30,34 +31,44 @@ const CommunityRegisterEvent = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 flex flex-col items-center">
-        <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <h1 className="text-3xl font-bold text-green-600 mb-6">Registration Successful!</h1>
-          <p className="text-gray-600 mb-4">Thank you for registering, {formData.name}.</p>
-          <button onClick={() => navigate('/community/events')} className="text-blue-600 hover:underline">Back to Events</button>
+      <CommunityLayout showComposer={false} onToggleComposer={() => {}}>
+        <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800 px-4 py-3">
+          <h2 className="text-xl font-bold">Event Registration</h2>
+        </header>
+        <div className="p-4">
+          <div className="max-w-lg mx-auto bg-gray-900 border border-gray-700 rounded-lg p-8 text-center">
+            <h1 className="text-3xl font-bold text-green-500 mb-6">Registration Successful!</h1>
+            <p className="text-gray-400 mb-4">Thank you for registering, {formData.name}.</p>
+            <button onClick={() => navigate('/community/events')} className="text-yellow-500 hover:underline">Back to Events</button>
+          </div>
         </div>
-      </div>
+      </CommunityLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 flex flex-col items-center">
-      <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-akan-red mb-6">Register for Event</h1>
-        {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded">{error}</div>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-1 font-semibold">Your Name</label>
-            <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
-          </div>
-          <div>
-            <label className="block mb-1 font-semibold">Email</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full border rounded px-3 py-2" required />
-          </div>
-          <button type="submit" className="bg-akan-red text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors w-full">Register</button>
-        </form>
+    <CommunityLayout showComposer={false} onToggleComposer={() => {}}>
+      <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800 px-4 py-3">
+        <h2 className="text-xl font-bold">Register for Event</h2>
+      </header>
+      <div className="p-4">
+        <div className="max-w-lg mx-auto bg-gray-900 border border-gray-700 rounded-lg p-8">
+          <h1 className="text-3xl font-bold text-white mb-6">Register for Event</h1>
+          {error && <div className="mb-4 p-3 bg-red-900/30 border border-red-700 text-red-400 rounded">{error}</div>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Your Name</label>
+              <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full border border-gray-700 rounded-lg px-3 py-2 bg-gray-800 text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full border border-gray-700 rounded-lg px-3 py-2 bg-gray-800 text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent" required />
+            </div>
+            <button type="submit" className="w-full bg-yellow-500 text-black px-6 py-2 rounded-lg font-bold hover:bg-yellow-600 transition-colors">Register</button>
+          </form>
+        </div>
       </div>
-    </div>
+    </CommunityLayout>
   );
 };
 

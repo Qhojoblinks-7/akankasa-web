@@ -1,12 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { createForumPost } from '../api';
 
 const ResearchNewDiscussion = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({ title: '', content: '', category: 'Research', author_name: '', author_email: '' });
+
+  useEffect(() => {
+    if (!loading && user) {
+      setFormData(prev => ({ ...prev, author_name: user.name || prev.author_name, author_email: user.email || prev.author_email }));
+    }
+  }, [user, loading]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#564c38]"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    navigate('/login', { state: { from: '/research/new-discussion' } });
+    return null;
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,7 +37,7 @@ const ResearchNewDiscussion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createForumPost(formData);
+      await createForumPost({ ...formData, author_name: user.name || formData.author_name, author_email: user.email || formData.author_email });
       setSubmitted(true);
     } catch (err) {
       setError(err.message || 'Failed to start discussion');

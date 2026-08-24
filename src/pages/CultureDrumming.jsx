@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Music, Play, Clock, MapPin, User } from 'lucide-react';
-import drummingLessons from '../data/drumming';
+import { getDrumming } from '../api';
 import LessonCard from '../components/drumming/LessonCard';
 import LessonPlayer from '../components/drumming/LessonPlayer';
 
 const CultureDrumming = () => {
+  const [lessons, setLessons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedInstrument, setSelectedInstrument] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
@@ -13,22 +15,37 @@ const CultureDrumming = () => {
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Get unique instruments and difficulties for filter options
-  const instruments = ['all', ...new Set(drummingLessons.map(lesson => lesson.instrument))];
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await getDrumming();
+        if (mounted) setLessons(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, []);
+
+  const instruments = ['all', ...new Set(lessons.map(lesson => lesson.instrument).filter(Boolean))];
   const difficulties = ['all', 'Beginner', 'Intermediate', 'Advanced'];
   const types = ['all', 'video', 'audio'];
 
-  // Filter lessons based on search and filters
-  const filteredLessons = drummingLessons.filter(lesson => {
-    const matchesSearch = !searchTerm || 
+  const filteredLessons = lessons.filter(lesson => {
+    const matchesSearch = !searchTerm ||
       lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lesson.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lesson.instructor.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      (lesson.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (lesson.instructor || '').toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesInstrument = selectedInstrument === 'all' || lesson.instrument === selectedInstrument;
     const matchesDifficulty = selectedDifficulty === 'all' || lesson.difficulty === selectedDifficulty;
     const matchesType = selectedType === 'all' || lesson.type === selectedType;
-    
+
     return matchesSearch && matchesInstrument && matchesDifficulty && matchesType;
   });
 
@@ -143,7 +160,12 @@ const CultureDrumming = () => {
         </div>
         
         {/* Lessons Grid */}
-        {filteredLessons.length === 0 ? (
+        {loading ? (
+          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
+            <div className="w-8 h-8 border-4 border-gray-700 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading lessons...</p>
+          </div>
+        ) : filteredLessons.length === 0 ? (
           <div className="bg-white rounded-lg shadow-lg p-12 text-center">
             <Music className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">No lessons found</h3>

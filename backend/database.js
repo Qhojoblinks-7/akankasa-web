@@ -20,6 +20,29 @@ const runSql = (db, sql) => {
   });
 };
 
+const safeAddColumn = async (db, table, column, type) => {
+  try {
+    await runSql(db, `ALTER TABLE ${table} ADD COLUMN ${column} ${type}`);
+  } catch (err) {
+    // Column already exists, ignore
+    if (!err.message.includes('duplicate column name')) {
+      throw err;
+    }
+  }
+};
+
+const safeCreateIndex = async (db, sql) => {
+  try {
+    await runSql(db, sql);
+  } catch (err) {
+    // Index references missing column, skip
+    if (err.message.includes('no such column')) {
+      return;
+    }
+    throw err;
+  }
+};
+
 export const initDatabase = async () => {
   const db = getDb();
 
@@ -90,19 +113,22 @@ export const initDatabase = async () => {
       tags TEXT,
       author_name TEXT,
       author_email TEXT,
+      author_user_id INTEGER,
       status TEXT DEFAULT 'pending',
       is_published INTEGER DEFAULT 0,
       publish_at TEXT,
       unpublish_at TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
+  await safeAddColumn(db, 'culture_articles', 'author_user_id', 'INTEGER');
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_category ON culture_articles(category)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_status ON culture_articles(status)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_published ON culture_articles(is_published)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_publish_at ON culture_articles(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_culture_unpublish_at ON culture_articles(unpublish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_culture_publish_at ON culture_articles(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_culture_unpublish_at ON culture_articles(unpublish_at)`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS documents (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -124,10 +150,10 @@ export const initDatabase = async () => {
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_category ON documents(category)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_level ON documents(level)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_published ON documents(is_published)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_publish_at ON documents(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_document_unpublish_at ON documents(unpublish_at)`);
-  await runSql(db, `ALTER TABLE documents ADD COLUMN publish_at TEXT`);
-  await runSql(db, `ALTER TABLE documents ADD COLUMN unpublish_at TEXT`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_document_publish_at ON documents(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_document_unpublish_at ON documents(unpublish_at)`);
+  await safeAddColumn(db, 'documents', 'publish_at', 'TEXT');
+  await safeAddColumn(db, 'documents', 'unpublish_at', 'TEXT');
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS forum_posts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -136,15 +162,19 @@ export const initDatabase = async () => {
       category TEXT NOT NULL,
       author_name TEXT,
       author_email TEXT,
+      author_user_id INTEGER,
       status TEXT DEFAULT 'approved',
       is_pinned INTEGER DEFAULT 0,
       views INTEGER DEFAULT 0,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
+  await safeAddColumn(db, 'forum_posts', 'author_user_id', 'INTEGER');
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_forum_category ON forum_posts(category)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_forum_status ON forum_posts(status)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_forum_author ON forum_posts(author_user_id)`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS forum_comments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -152,13 +182,17 @@ export const initDatabase = async () => {
       content TEXT NOT NULL,
       author_name TEXT,
       author_email TEXT,
+      author_user_id INTEGER,
       status TEXT DEFAULT 'approved',
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE
+      FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE,
+      FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
+  await safeAddColumn(db, 'forum_comments', 'author_user_id', 'INTEGER');
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_comment_post ON forum_comments(post_id)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_comment_author ON forum_comments(author_user_id)`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS events (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -172,16 +206,19 @@ export const initDatabase = async () => {
       status TEXT DEFAULT 'upcoming',
       publish_at TEXT,
       unpublish_at TEXT,
+      created_by INTEGER,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
+  await safeAddColumn(db, 'events', 'created_by', 'INTEGER');
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_date ON events(event_date)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_status ON events(status)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_publish_at ON events(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_event_unpublish_at ON events(unpublish_at)`);
-  await runSql(db, `ALTER TABLE events ADD COLUMN publish_at TEXT`);
-  await runSql(db, `ALTER TABLE events ADD COLUMN unpublish_at TEXT`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_event_publish_at ON events(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_event_unpublish_at ON events(unpublish_at)`);
+  await safeAddColumn(db, 'events', 'publish_at', 'TEXT');
+  await safeAddColumn(db, 'events', 'unpublish_at', 'TEXT');
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS lessons (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -202,10 +239,10 @@ export const initDatabase = async () => {
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_level ON lessons(level)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_published ON lessons(is_published)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_publish_at ON lessons(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_lesson_unpublish_at ON lessons(unpublish_at)`);
-  await runSql(db, `ALTER TABLE lessons ADD COLUMN publish_at TEXT`);
-  await runSql(db, `ALTER TABLE lessons ADD COLUMN unpublish_at TEXT`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_lesson_publish_at ON lessons(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_lesson_unpublish_at ON lessons(unpublish_at)`);
+  await safeAddColumn(db, 'lessons', 'publish_at', 'TEXT');
+  await safeAddColumn(db, 'lessons', 'unpublish_at', 'TEXT');
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS vocabulary_modules (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -220,10 +257,10 @@ export const initDatabase = async () => {
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_vocab_published ON vocabulary_modules(is_published)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_vocab_publish_at ON vocabulary_modules(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_vocab_unpublish_at ON vocabulary_modules(unpublish_at)`);
-  await runSql(db, `ALTER TABLE vocabulary_modules ADD COLUMN publish_at TEXT`);
-  await runSql(db, `ALTER TABLE vocabulary_modules ADD COLUMN unpublish_at TEXT`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_vocab_publish_at ON vocabulary_modules(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_vocab_unpublish_at ON vocabulary_modules(unpublish_at)`);
+  await safeAddColumn(db, 'vocabulary_modules', 'publish_at', 'TEXT');
+  await safeAddColumn(db, 'vocabulary_modules', 'unpublish_at', 'TEXT');
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS greetings (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -241,10 +278,10 @@ export const initDatabase = async () => {
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_greeting_time ON greetings(time_of_day)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_greeting_publish_at ON greetings(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_greeting_unpublish_at ON greetings(unpublish_at)`);
-  await runSql(db, `ALTER TABLE greetings ADD COLUMN publish_at TEXT`);
-  await runSql(db, `ALTER TABLE greetings ADD COLUMN unpublish_at TEXT`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_greeting_publish_at ON greetings(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_greeting_unpublish_at ON greetings(unpublish_at)`);
+  await safeAddColumn(db, 'greetings', 'publish_at', 'TEXT');
+  await safeAddColumn(db, 'greetings', 'unpublish_at', 'TEXT');
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS legal_pages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -277,11 +314,14 @@ export const initDatabase = async () => {
       description TEXT,
       proposer_name TEXT,
       proposer_email TEXT,
+      proposer_user_id INTEGER,
       status TEXT DEFAULT 'pending',
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (proposer_user_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
+  await safeAddColumn(db, 'project_proposals', 'proposer_user_id', 'INTEGER');
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_proposal_status ON project_proposals(status)`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS homepage_content (
@@ -302,10 +342,10 @@ export const initDatabase = async () => {
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_homepage_section ON homepage_content(section)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_homepage_publish_at ON homepage_content(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_homepage_unpublish_at ON homepage_content(unpublish_at)`);
-  await runSql(db, `ALTER TABLE homepage_content ADD COLUMN publish_at TEXT`);
-  await runSql(db, `ALTER TABLE homepage_content ADD COLUMN unpublish_at TEXT`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_homepage_publish_at ON homepage_content(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_homepage_unpublish_at ON homepage_content(unpublish_at)`);
+  await safeAddColumn(db, 'homepage_content', 'publish_at', 'TEXT');
+  await safeAddColumn(db, 'homepage_content', 'unpublish_at', 'TEXT');
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS festivals (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -339,10 +379,10 @@ export const initDatabase = async () => {
     )
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_letter ON alphabets(letter)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_publish_at ON alphabets(publish_at)`);
-  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_unpublish_at ON alphabets(unpublish_at)`);
-  await runSql(db, `ALTER TABLE alphabets ADD COLUMN publish_at TEXT`);
-  await runSql(db, `ALTER TABLE alphabets ADD COLUMN unpublish_at TEXT`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_publish_at ON alphabets(publish_at)`);
+  await safeCreateIndex(db, `CREATE INDEX IF NOT EXISTS idx_alphabet_unpublish_at ON alphabets(unpublish_at)`);
+  await safeAddColumn(db, 'alphabets', 'publish_at', 'TEXT');
+  await safeAddColumn(db, 'alphabets', 'unpublish_at', 'TEXT');
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -366,12 +406,15 @@ export const initDatabase = async () => {
       notes TEXT,
       author_name TEXT,
       author_email TEXT,
+      author_user_id INTEGER,
       status TEXT DEFAULT 'pending',
       admin_notes TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
+  await safeAddColumn(db, 'dictionary_suggestions', 'author_user_id', 'INTEGER');
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_suggestion_status ON dictionary_suggestions(status)`);
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS content_versions (
@@ -394,12 +437,16 @@ export const initDatabase = async () => {
       region TEXT,
       tags TEXT,
       author TEXT,
+      author_user_id INTEGER,
       version INTEGER DEFAULT 0,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE SET NULL
     )
   `);
+  await safeAddColumn(db, 'editor_documents', 'author_user_id', 'INTEGER');
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_editor_documents_updated ON editor_documents(updated_at)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_editor_documents_author ON editor_documents(author_user_id)`);
 
   await runSql(db, `
     CREATE TABLE IF NOT EXISTS media_library (
@@ -420,6 +467,149 @@ export const initDatabase = async () => {
   `);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_media_library_type ON media_library(media_type)`);
   await runSql(db, `CREATE INDEX IF NOT EXISTS idx_media_library_created ON media_library(created_at)`);
+
+  // --- Folk Stories ---
+  await runSql(db, `
+    CREATE TABLE IF NOT EXISTS folk_stories (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      thumbnail TEXT,
+      category TEXT,
+      language TEXT DEFAULT 'Twi',
+      duration TEXT,
+      type TEXT DEFAULT 'audio',
+      audio_url TEXT,
+      video_url TEXT,
+      transcript TEXT,
+      narrator TEXT,
+      region TEXT,
+      is_published INTEGER DEFAULT 1,
+      status TEXT DEFAULT 'approved',
+      publish_at TEXT,
+      unpublish_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_folk_story_category ON folk_stories(category)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_folk_story_published ON folk_stories(is_published)`);
+
+  // --- Drumming ---
+  await runSql(db, `
+    CREATE TABLE IF NOT EXISTS drumming (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      thumbnail TEXT,
+      instrument TEXT,
+      difficulty TEXT DEFAULT 'Beginner',
+      bpm INTEGER,
+      type TEXT DEFAULT 'video',
+      video_url TEXT,
+      audio_url TEXT,
+      pattern_notation TEXT,
+      transcript TEXT,
+      instructor TEXT,
+      duration TEXT,
+      region TEXT,
+      is_published INTEGER DEFAULT 1,
+      status TEXT DEFAULT 'approved',
+      publish_at TEXT,
+      unpublish_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_drumming_instrument ON drumming(instrument)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_drumming_published ON drumming(is_published)`);
+
+  // --- Festival Photos ---
+  await runSql(db, `
+    CREATE TABLE IF NOT EXISTS festival_photos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      image_url TEXT,
+      category TEXT DEFAULT 'festival',
+      location TEXT,
+      event_date TEXT,
+      photographer TEXT,
+      tags TEXT,
+      is_published INTEGER DEFAULT 1,
+      status TEXT DEFAULT 'approved',
+      publish_at TEXT,
+      unpublish_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_festival_photo_category ON festival_photos(category)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_festival_photo_published ON festival_photos(is_published)`);
+
+  // --- Research Papers ---
+  await runSql(db, `
+    CREATE TABLE IF NOT EXISTS research_papers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      thumbnail TEXT,
+      author TEXT,
+      institution TEXT,
+      category TEXT,
+      language TEXT DEFAULT 'English',
+      type TEXT DEFAULT 'pdf',
+      pdf_url TEXT,
+      audio_url TEXT,
+      video_url TEXT,
+      abstract TEXT,
+      publication_date TEXT,
+      pages INTEGER,
+      keywords TEXT,
+      doi TEXT,
+      citation TEXT,
+      is_published INTEGER DEFAULT 1,
+      status TEXT DEFAULT 'approved',
+      publish_at TEXT,
+      unpublish_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_research_category ON research_papers(category)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_research_published ON research_papers(is_published)`);
+
+  // --- Contributions (public submissions) ---
+  await runSql(db, `
+    CREATE TABLE IF NOT EXISTS contributions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      content_type TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      content TEXT,
+      category TEXT,
+      region TEXT,
+      tags TEXT,
+      media_url TEXT,
+      audio_url TEXT,
+      video_url TEXT,
+      thumbnail TEXT,
+      author_name TEXT,
+      author_email TEXT,
+      author_user_id INTEGER,
+      status TEXT DEFAULT 'pending',
+      admin_notes TEXT,
+      reviewed_by TEXT,
+      reviewed_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (author_user_id) REFERENCES users(id) ON DELETE SET NULL
+    )
+  `);
+  await safeAddColumn(db, 'contributions', 'author_user_id', 'INTEGER');
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_contribution_type ON contributions(content_type)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_contribution_status ON contributions(status)`);
+  await runSql(db, `CREATE INDEX IF NOT EXISTS idx_contribution_author ON contributions(author_user_id)`);
 
   return db;
 };

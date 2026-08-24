@@ -4,6 +4,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { UserProgressProvider } from './contexts/UserProgressContext';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import SkipLink from './components/SkipLink';
@@ -87,116 +89,119 @@ import AdminUsers from './pages/AdminUsers';
 function App() {
   return (
     <LanguageProvider>
-      <UserProgressProvider>
-        <Router>
-          <div className="min-h-screen bg-gray-50">
-            <SkipLink />
-            <Navbar />
-            <main id="main-content" className="flex-1">
-              <Routes>
-                <Route path="/" element={<Homepage />} />
-                <Route path="/learn" element={<LanguageLearning />} />
-                <Route path="/learn/beginner" element={<CompleteBeginnerPath />} />
-                <Route path="/learn/heritage" element={<HeritageSpeakerPath />} />
-                <Route path="/learn/academic" element={<AcademicLearnerPath />} />
-                <Route path="/learn/lesson/:id" element={<LessonDetail />} />
-                <Route path="/learn/vocabulary/:moduleId" element={<VocabularyModule />} />
-                <Route path="/learn/greetings" element={<GreetingsLesson />} />
-                <Route path="/culture" element={<CultureHighlights />} />
-                <Route path="/dictionary" element={<Dictionary />} />
-                {featureFlags.showResearch && <Route path="/research" element={<Research />} />}
-                <Route path="/community" element={<Community />} />
-                <Route path="/community/events" element={<EventsPage />} />
-                <Route path="/community/events/:eventId/register" element={<EventRegistration />} />
-                <Route path="/community/events/new" element={<EventCreation />} />
-                {featureFlags.showAdvancedCulturePages && (
-                  <>
-                    <Route path="/culture/traditions" element={<CultureTraditions />} />
-                    <Route path="/culture/history" element={<CultureHistory />} />
-                    <Route path="/culture/arts" element={<CultureArts />} />
-                    <Route path="/culture/music" element={<CultureMusic />} />
-                    <Route path="/culture/folklore" element={<CultureFolklore />} />
-                    <Route path="/culture/drumming" element={<CultureDrumming />} />
-                    <Route path="/culture/folk-stories" element={<CultureFolkStories />} />
-                    <Route path="/culture/research-papers" element={<CultureResearchPapers />} />
-                    <Route path="/festival-photos" element={<FestivalPhotosPage />} />
-                  </>
-                )}
-                <Route path="/learn/alphabet" element={<LearnAlphabet />} />
-                <Route path="/learn/greetings" element={<LearnGreetingsIndex />} />
-                <Route path="/learn/vocabulary" element={<LearnVocabularyIndex />} />
-                <Route path="/research/beginner" element={<ResearchBeginner />} />
-                <Route path="/community/discussion" element={<CommunityHub />} />
-                <Route path="/community/discussion/:id" element={<CommunityHub />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/terms" element={<TermsOfService />} />
-                <Route path="/terms-of-service" element={<TermsOfService />} />
-                <Route path="/accessibility" element={<Accessibility />} />
-                
-                {/* Auth & user pages */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/phrasebook" element={<Phrasebook />} />
-                <Route path="/adinkra-symbols" element={<AdinkraSymbols />} />
-                <Route path="/suggest-word" element={<SuggestWord />} />
-                <Route path="/culture/:id" element={<CultureDetailPage />} />
-                <Route path="/progress" element={<UserProgressPage />} />
-                
-                {/* New routes for unconnected pages */}
-                <Route path="/profile/:id" element={<UserProfile />} />
-                <Route path="/profile" element={<MyProfile />} />
-                <Route path="/contribute" element={<Contribute />} />
-                <Route path="/contribute-content" element={<PublicContributions />} />
-                <Route path="/community/join" element={<CommunityJoin />} />
-                <Route path="/community/new-post" element={<CommunityNewPost />} />
-                <Route path="/community/events/list" element={<CommunityEvents />} />
-                <Route path="/community/events/register/:eventId" element={<CommunityRegisterEvent />} />
-                <Route path="/festival-gallery" element={<FestivalGallery />} />
-                
-                {/* Research routes (conditionally shown based on feature flag) */}
-                {featureFlags.showResearch && (
-                  <>
-                    <Route path="/research/new-discussion" element={<ResearchNewDiscussion />} />
-                    <Route path="/research/propose-project" element={<ResearchProposeProject />} />
-                  </>
-                )}
-                
-                {/* Admin routes */}
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/dictionary" element={<AdminDictionary />} />
-                <Route path="/admin/dictionary/new" element={<AdminDictionaryEntry />} />
-                <Route path="/admin/dictionary/:id" element={<AdminDictionaryEntry />} />
-                <Route path="/admin/lessons" element={<AdminLessons />} />
-                <Route path="/admin/vocabulary" element={<AdminVocabulary />} />
-                <Route path="/admin/greetings" element={<AdminGreetings />} />
-                <Route path="/admin/articles" element={<AdminArticles />} />
-                <Route path="/admin/documents" element={<AdminDocuments />} />
-                <Route path="/admin/media" element={<AdminMediaLibrary />} />
-                <Route path="/admin/events" element={<AdminEvents />} />
-                <Route path="/admin/legal" element={<AdminLegal />} />
-                <Route path="/admin/homepage" element={<AdminHomepage />} />
-                <Route path="/admin/alphabets" element={<AdminAlphabets />} />
-                <Route path="/admin/folk-stories" element={<AdminFolkStories />} />
-                <Route path="/admin/drumming" element={<AdminDrumming />} />
-                <Route path="/admin/festival-photos" element={<AdminFestivalPhotos />} />
-                <Route path="/admin/research-papers" element={<AdminResearchPapers />} />
-                <Route path="/admin/approval-queue" element={<AdminApprovalQueue />} />
-                <Route path="/admin/moderation" element={<AdminModerationQueue />} />
-                <Route path="/admin/forum" element={<AdminForumModeration />} />
-                <Route path="/admin/suggestions" element={<AdminSuggestions />} />
-                <Route path="/admin/users" element={<AdminUsers />} />
-                
-                {/* Alternative routes for consistency */}
-                <Route path="/privacy-alt" element={<Privacy />} />
-                <Route path="/terms-alt" element={<Terms />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
-      </UserProgressProvider>
+      <AuthProvider>
+        <UserProgressProvider>
+          <Router>
+            <div className="min-h-screen bg-gray-50">
+              <SkipLink />
+              <Navbar />
+              <main id="main-content" className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Homepage />} />
+                  <Route path="/learn" element={<LanguageLearning />} />
+                  <Route path="/learn/beginner" element={<CompleteBeginnerPath />} />
+                  <Route path="/learn/heritage" element={<HeritageSpeakerPath />} />
+                  <Route path="/learn/academic" element={<AcademicLearnerPath />} />
+                  <Route path="/learn/lesson/:id" element={<LessonDetail />} />
+                  <Route path="/learn/vocabulary/:moduleId" element={<VocabularyModule />} />
+                  <Route path="/learn/greetings" element={<GreetingsLesson />} />
+                  <Route path="/culture" element={<CultureHighlights />} />
+                  <Route path="/dictionary" element={<Dictionary />} />
+                  {featureFlags.showResearch && <Route path="/research" element={<Research />} />}
+                  <Route path="/community" element={<Community />} />
+                  <Route path="/community/members" element={<Community initialTab="members" />} />
+                  <Route path="/community/events" element={<EventsPage />} />
+                  <Route path="/community/events/:eventId/register" element={<EventRegistration />} />
+                  <Route path="/community/events/new" element={<ProtectedRoute><EventCreation /></ProtectedRoute>} />
+                  {featureFlags.showAdvancedCulturePages && (
+                    <>
+                      <Route path="/culture/traditions" element={<CultureTraditions />} />
+                      <Route path="/culture/history" element={<CultureHistory />} />
+                      <Route path="/culture/arts" element={<CultureArts />} />
+                      <Route path="/culture/music" element={<CultureMusic />} />
+                      <Route path="/culture/folklore" element={<CultureFolklore />} />
+                      <Route path="/culture/drumming" element={<CultureDrumming />} />
+                      <Route path="/culture/folk-stories" element={<CultureFolkStories />} />
+                      <Route path="/culture/research-papers" element={<CultureResearchPapers />} />
+                      <Route path="/festival-photos" element={<FestivalPhotosPage />} />
+                    </>
+                  )}
+                  <Route path="/learn/alphabet" element={<LearnAlphabet />} />
+                  <Route path="/learn/greetings" element={<LearnGreetingsIndex />} />
+                  <Route path="/learn/vocabulary" element={<LearnVocabularyIndex />} />
+                  <Route path="/research/beginner" element={<ResearchBeginner />} />
+                  <Route path="/community/discussion" element={<CommunityHub />} />
+                  <Route path="/community/discussion/:id" element={<CommunityHub />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms" element={<TermsOfService />} />
+                  <Route path="/terms-of-service" element={<TermsOfService />} />
+                  <Route path="/accessibility" element={<Accessibility />} />
+                  
+                  {/* Auth & user pages */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/phrasebook" element={<Phrasebook />} />
+                  <Route path="/adinkra-symbols" element={<AdinkraSymbols />} />
+                  <Route path="/suggest-word" element={<SuggestWord />} />
+                  <Route path="/culture/:id" element={<CultureDetailPage />} />
+                  <Route path="/progress" element={<UserProgressPage />} />
+                  
+                  {/* New routes for unconnected pages */}
+                  <Route path="/profile/:id" element={<UserProfile />} />
+                  <Route path="/profile" element={<MyProfile />} />
+                  <Route path="/contribute" element={<ProtectedRoute><Contribute /></ProtectedRoute>} />
+                  <Route path="/contribute-content" element={<ProtectedRoute><PublicContributions /></ProtectedRoute>} />
+                  <Route path="/community/join" element={<CommunityJoin />} />
+                  <Route path="/community/new-post" element={<ProtectedRoute><CommunityNewPost /></ProtectedRoute>} />
+                  <Route path="/community/events/list" element={<CommunityEvents />} />
+                  <Route path="/community/events/register/:eventId" element={<CommunityRegisterEvent />} />
+                  <Route path="/festival-gallery" element={<FestivalGallery />} />
+                  
+                  {/* Research routes (conditionally shown based on feature flag) */}
+                  {featureFlags.showResearch && (
+                    <>
+                      <Route path="/research/new-discussion" element={<ProtectedRoute><ResearchNewDiscussion /></ProtectedRoute>} />
+                      <Route path="/research/propose-project" element={<ProtectedRoute><ResearchProposeProject /></ProtectedRoute>} />
+                    </>
+                  )}
+                  
+                  {/* Admin routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/dictionary" element={<AdminDictionary />} />
+                  <Route path="/admin/dictionary/new" element={<AdminDictionaryEntry />} />
+                  <Route path="/admin/dictionary/:id" element={<AdminDictionaryEntry />} />
+                  <Route path="/admin/lessons" element={<AdminLessons />} />
+                  <Route path="/admin/vocabulary" element={<AdminVocabulary />} />
+                  <Route path="/admin/greetings" element={<AdminGreetings />} />
+                  <Route path="/admin/articles" element={<AdminArticles />} />
+                  <Route path="/admin/documents" element={<AdminDocuments />} />
+                  <Route path="/admin/media" element={<AdminMediaLibrary />} />
+                  <Route path="/admin/events" element={<AdminEvents />} />
+                  <Route path="/admin/legal" element={<AdminLegal />} />
+                  <Route path="/admin/homepage" element={<AdminHomepage />} />
+                  <Route path="/admin/alphabets" element={<AdminAlphabets />} />
+                  <Route path="/admin/folk-stories" element={<AdminFolkStories />} />
+                  <Route path="/admin/drumming" element={<AdminDrumming />} />
+                  <Route path="/admin/festival-photos" element={<AdminFestivalPhotos />} />
+                  <Route path="/admin/research-papers" element={<AdminResearchPapers />} />
+                  <Route path="/admin/approval-queue" element={<AdminApprovalQueue />} />
+                  <Route path="/admin/moderation" element={<AdminModerationQueue />} />
+                  <Route path="/admin/forum" element={<AdminForumModeration />} />
+                  <Route path="/admin/suggestions" element={<AdminSuggestions />} />
+                  <Route path="/admin/users" element={<AdminUsers />} />
+                  
+                  {/* Alternative routes for consistency */}
+                  <Route path="/privacy-alt" element={<Privacy />} />
+                  <Route path="/terms-alt" element={<Terms />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </UserProgressProvider>
+      </AuthProvider>
     </LanguageProvider>
   );
 }

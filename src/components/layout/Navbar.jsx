@@ -2,26 +2,32 @@ import React from 'react';
 
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Globe, BookOpen, Users, Home, Book, Lightbulb, Edit } from 'lucide-react';
+import { Menu, X, Globe, BookOpen, Users, Home, Book, Lightbulb, Edit, LogIn, UserPlus, LogOut, User } from 'lucide-react';
 import featureFlags from '../../config/featureFlags';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuth } from '../../hooks/useAuth';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { currentLanguage, setCurrentLanguage, t } = useLanguage();
+  const { user, logout } = useAuth();
 
-  const navigationItems = [
+  const publicNavigationItems = [
     { path: '/', label: t('home'), icon: Home },
     { path: '/learn', label: t('learnAkan'), icon: BookOpen },
-    // culture main page kept but subpages hidden by flags
     { path: '/culture', label: t('culture'), icon: Users },
     { path: '/dictionary', label: t('dictionary'), icon: Book },
     { path: '/community', label: t('community'), icon: Lightbulb },
-    { path: '/contribute', label: t('contribute'), icon: Edit },
-    // include research link only when the feature flag is enabled
     ...(featureFlags.showResearch ? [{ path: '/research', label: t('research'), icon: Lightbulb }] : []),
-  ];  
+  ];
+
+  const authenticatedNavigationItems = [
+    ...publicNavigationItems,
+    { path: '/contribute', label: t('contribute'), icon: Edit },
+  ];
+
+  const navigationItems = user ? authenticatedNavigationItems : publicNavigationItems;
 
   const isActive = (path) => {
     if (path === '/') {
@@ -71,6 +77,29 @@ const Navbar = () => {
                 </Link>
               );
             })}
+            {user ? (
+              <div className="flex items-center space-x-2 ml-2">
+                <Link to="/profile" className="px-4 py-2 rounded-lg text-sm font-medium text-black hover:bg-black/5 flex items-center space-x-2">
+                  <User className="w-4 h-4" />
+                  <span>{user.name}</span>
+                </Link>
+                <button onClick={logout} className="px-4 py-2 rounded-lg text-sm font-medium text-black hover:bg-black/5 flex items-center space-x-2">
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2 ml-2">
+                <Link to="/login" className="px-4 py-2 rounded-lg text-sm font-medium text-black hover:bg-black/5 flex items-center space-x-2">
+                  <LogIn className="w-4 h-4" />
+                  <span>Login</span>
+                </Link>
+                <Link to="/register" className="px-4 py-2 rounded-lg text-sm font-medium bg-[#564c38] text-white hover:bg-[#695e46] flex items-center space-x-2">
+                  <UserPlus className="w-4 h-4" />
+                  <span>Register</span>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Language Selector & Mobile Menu Button */}
@@ -135,6 +164,29 @@ const Navbar = () => {
                   </Link>
                 );
               })}
+              {user ? (
+                <>
+                  <Link to="/profile" onClick={() => setIsMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-black hover:bg-black/5 flex items-center space-x-3">
+                    <User className="w-5 h-5" />
+                    <span>{user.name}</span>
+                  </Link>
+                  <button onClick={() => { logout(); setIsMenuOpen(false); }} className="px-4 py-3 rounded-lg text-sm font-medium text-black hover:bg-black/5 flex items-center space-x-3">
+                    <LogOut className="w-5 h-5" />
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setIsMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium text-black hover:bg-black/5 flex items-center space-x-3">
+                    <LogIn className="w-5 h-5" />
+                    <span>Login</span>
+                  </Link>
+                  <Link to="/register" onClick={() => setIsMenuOpen(false)} className="px-4 py-3 rounded-lg text-sm font-medium bg-[#564c38] text-white hover:bg-[#695e46] flex items-center space-x-3">
+                    <UserPlus className="w-5 h-5" />
+                    <span>Register</span>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}

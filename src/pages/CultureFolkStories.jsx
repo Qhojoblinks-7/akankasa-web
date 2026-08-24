@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, BookOpen, Headphones, Video } from 'lucide-react';
-import folkStories from '../data/folkStories';
+import { getFolkStories } from '../api';
 import StoryCard from '../components/folk/StoryCard';
 import StoryPlayer from '../components/folk/StoryPlayer';
 
 const CultureFolkStories = () => {
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLanguage, setSelectedLanguage] = useState('all');
@@ -13,16 +15,31 @@ const CultureFolkStories = () => {
   const [selectedStory, setSelectedStory] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Get unique categories and languages for filter options
-  const categories = ['all', ...new Set(folkStories.map(story => story.category))];
-  const languages = ['all', ...new Set(folkStories.map(story => story.language))];
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await getFolkStories();
+        if (mounted) setStories(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, []);
+
+  const categories = ['all', ...new Set(stories.map(story => story.category).filter(Boolean))];
+  const languages = ['all', ...new Set(stories.map(story => story.language).filter(Boolean))];
   const types = ['all', 'audio', 'video'];
 
-  // Filter stories based on search and filters
-  const filteredStories = folkStories.filter(story => {
+  const filteredStories = stories.filter(story => {
     const matchesSearch = !searchTerm || 
       story.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      story.description.toLowerCase().includes(searchTerm.toLowerCase());
+      (story.description || '').toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCategory = selectedCategory === 'all' || story.category === selectedCategory;
     const matchesLanguage = selectedLanguage === 'all' || story.language === selectedLanguage;
@@ -142,7 +159,12 @@ const CultureFolkStories = () => {
         </div>
         
         {/* Stories Grid */}
-        {filteredStories.length === 0 ? (
+        {loading ? (
+          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
+            <div className="w-8 h-8 border-4 border-gray-700 border-t-amber-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading stories...</p>
+          </div>
+        ) : filteredStories.length === 0 ? (
           <div className="bg-white rounded-lg shadow-lg p-12 text-center">
             <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-medium text-gray-900 mb-2">No stories found</h3>

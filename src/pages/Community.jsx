@@ -1,22 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, Filter, TrendingUp, X, MessageCircle, Heart, Share2 } from 'lucide-react';
-import { getForumPosts, getEvents, getProfiles, createForumPost, createForumComment } from '../api';
-import ProfileViewModal from '../components/ProfileViewModal';
-import CreateEventButton from '../components/CreateEventButton';
-import EventCreationModal from '../components/EventCreationModal';
-import RegisterEventModal from '../components/RegisterEventModal';
+import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, X, MessageCircle, Heart, Repeat2, Share, Image, Smile, BarChart2, MoreHorizontal } from 'lucide-react';
+import { getForumPosts, getEvents, getProfiles, createForumPost } from '../api';
+import CommunityLayout from '../components/CommunityLayout';
 import Toast from '../components/Toast';
 
-
-const Community = () => {
+const Community = ({ initialTab = 'forums' }) => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('forums');
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showNewPostModal, setShowNewPostModal] = useState(false);
-  const [showEventModal, setShowEventModal] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [selectedMember, setSelectedMember] = useState(null);
   const [newPostData, setNewPostData] = useState({
     title: '',
     content: '',
@@ -26,10 +19,9 @@ const Community = () => {
   const [forumPosts, setForumPosts] = useState([]);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [registerModalEvent, setRegisterModalEvent] = useState(null);
-  const [registrations, setRegistrations] = useState([]);
   const [toast, setToast] = useState(null);
-  
+  const [showComposer, setShowComposer] = useState(false);
+
   useEffect(() => {
     let mounted = true;
     const fetchData = async () => {
@@ -53,28 +45,10 @@ const Community = () => {
     fetchData();
     return () => { mounted = false; };
   }, [selectedCategory]);
-  
-  // Use useCallback to memoize navigate function usage
+
   const handleJoinDiscussion = useCallback((postId) => {
     navigate(`/community/discussion/${postId}`);
   }, [navigate]);
-
-  const tabs = [
-    { id: 'forums', label: 'Discussion Forums', icon: MessageSquare },
-    { id: 'events', label: 'Events & Meetups', icon: Calendar },
-    { id: 'members', label: 'Community Members', icon: Users },
-    { id: 'achievements', label: 'Achievements', icon: Star }
-  ];
-
-  const categories = ['all', 'Language Learning', 'Cultural Events', 'Research', 'General Discussion'];
-
-  const filteredForumPosts = selectedCategory === 'all' 
-    ? forumPosts 
-    : forumPosts.filter(post => post.category === selectedCategory);
-
-  const handleNewPostClick = () => {
-    setShowNewPostModal(true);
-  };
 
   const handleCreatePost = async () => {
     try {
@@ -103,517 +77,360 @@ const Community = () => {
     setNewPostData({ title: '', content: '', category: 'Language Learning' });
   };
 
-  const NewPostModal = () => {
-    if (!showNewPostModal) return null;
-    
+  const categories = ['all', 'Language Learning', 'Cultural Events', 'Research', 'General Discussion'];
+
+  const filteredForumPosts = selectedCategory === 'all'
+    ? forumPosts
+    : forumPosts.filter(post => post.category === selectedCategory);
+
+  const tabs = [
+    { id: 'forums', label: 'Discussion Forums', icon: MessageSquare },
+    { id: 'events', label: 'Events & Meetups', icon: Calendar },
+    { id: 'members', label: 'Community Members', icon: Users },
+    { id: 'achievements', label: 'Achievements', icon: Star },
+  ];
+
+  const ForumPostCard = ({ post }) => {
+    const [liked, setLiked] = useState(false);
+    const [reposted, setReposted] = useState(false);
+    const [shared, setShared] = useState(false);
+
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md">
-          <h3 className="text-xl font-bold mb-4">Create New Post</h3>
-          
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={newPostData.title}
-              onChange={handlePostInputChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              placeholder="Enter post title"
-            />
+      <article className="border-b border-gray-800 p-4 hover:bg-gray-900/50 transition-colors">
+        <div className="flex space-x-4">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-black font-bold flex-shrink-0">
+            {(post.author || 'A').charAt(0).toUpperCase()}
           </div>
-          
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-            <select
-              name="category"
-              value={newPostData.category}
-              onChange={handlePostInputChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-            >
-              <option value="Language Learning">Language Learning</option>
-              <option value="Cultural Events">Cultural Events</option>
-              <option value="Research">Research</option>
-              <option value="General Discussion">General Discussion</option>
-            </select>
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-            <textarea
-              name="content"
-              value={newPostData.content}
-              onChange={handlePostInputChange}
-              rows="4"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-              placeholder="Write your post content here..."
-            />
-          </div>
-          
-          <div className="flex justify-end space-x-3">
-            <button
-              onClick={handleCloseModal}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleCreatePost}
-              className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
-            >
-              Create Post
-            </button>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-1 min-w-0">
+                <span className="font-bold text-white truncate">{post.author || 'Anonymous'}</span>
+                <span className="text-gray-500 text-sm truncate">@{post.author ? post.author.toLowerCase().replace(/\s/g, '') : 'user'}</span>
+                <span className="text-gray-500 text-sm">·</span>
+                <span className="text-gray-500 text-sm">{post.created_at ? new Date(post.created_at).toLocaleDateString() : post.lastActivity || ''}</span>
+              </div>
+              <button className="text-gray-500 hover:text-white p-1 rounded-full hover:bg-gray-800 transition-colors">
+                <MoreHorizontal className="w-4 h-4" />
+              </button>
+            </div>
+            <h3 className="font-semibold text-white mt-1 mb-1">{post.title}</h3>
+            <p className="text-gray-300 text-sm line-clamp-3">{post.content}</p>
+            {post?.tags && post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {post.tags.map((tag, index) => (
+                  <span key={index} className="text-yellow-500 text-sm hover:underline cursor-pointer">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
+            <div className="flex items-center justify-between mt-3 max-w-md">
+              <button 
+                className="flex items-center space-x-2 text-gray-500 hover:text-yellow-500 group transition-colors"
+                onClick={() => handleJoinDiscussion(post.id)}
+              >
+                <div className="p-2 rounded-full group-hover:bg-yellow-500/10 transition-colors">
+                  <MessageCircle className="w-4 h-4" />
+                </div>
+                <span className="text-sm">{post.replies || 0}</span>
+              </button>
+              <button 
+                className={`flex items-center space-x-2 group transition-colors ${reposted ? 'text-green-500' : 'text-gray-500 hover:text-green-500'}`}
+                onClick={() => setReposted(!reposted)}
+              >
+                <div className={`p-2 rounded-full transition-colors ${reposted ? 'bg-green-500/10' : 'group-hover:bg-green-500/10'}`}>
+                  <Repeat2 className="w-4 h-4" />
+                </div>
+              </button>
+              <button 
+                className={`flex items-center space-x-2 group transition-colors ${liked ? 'text-pink-500' : 'text-gray-500 hover:text-pink-500'}`}
+                onClick={() => setLiked(!liked)}
+              >
+                <div className={`p-2 rounded-full transition-colors ${liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'}`}>
+                  <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
+                </div>
+              </button>
+              <button 
+                className={`flex items-center space-x-2 group transition-colors ${shared ? 'text-yellow-500' : 'text-gray-500 hover:text-yellow-500'}`}
+                onClick={() => setShared(!shared)}
+              >
+                <div className={`p-2 rounded-full transition-colors ${shared ? 'bg-yellow-500/10' : 'group-hover:bg-yellow-500/10'}`}>
+                  <Share className="w-4 h-4" />
+                </div>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </article>
     );
   };
 
-  const ForumPostCard = ({ post }) => (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-      <div className="flex items-start space-x-4">
-        <div className="w-10 h-10 rounded-full bg-[#564c38] flex items-center justify-center text-white font-medium flex-shrink-0">
-          {(post.author || 'A').charAt(0).toUpperCase()}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between mb-2">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
-              <p className="text-sm text-gray-500">
-                by {post.author} · {post.created_at ? new Date(post.created_at).toLocaleDateString() : post.lastActivity}
-              </p>
-            </div>
-            <span className="px-2 py-1 rounded-full text-xs font-medium ml-4 flex-shrink-0" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
-              {post.category}
-            </span>
-          </div>
-          <p className="text-gray-700 mb-3 line-clamp-2">{post.content}</p>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {post?.tags?.map((tag, index) => (
-              <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs hover:bg-gray-200 transition-colors cursor-pointer">
-                #{tag}
-              </span>
-            ))}
-          </div>
-          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-            <div className="flex items-center space-x-4">
-              <button 
-                className="flex items-center space-x-1.5 text-sm text-gray-600 hover:text-[#564c38] transition-colors"
-                onClick={() => handleJoinDiscussion(post.id)}
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>{post.replies || 0} replies</span>
-              </button>
-              <button className="flex items-center space-x-1.5 text-sm text-gray-600 hover:text-pink-500 transition-colors">
-                <Heart className="w-4 h-4" />
-              </button>
-              <button className="flex items-center space-x-1.5 text-sm text-gray-600 hover:text-green-500 transition-colors">
-                <Share2 className="w-4 h-4" />
-              </button>
-            </div>
-            <button className="text-sm text-gray-600 hover:text-[#564c38] transition-colors font-medium" onClick={() => handleJoinDiscussion(post.id)}>
-              Join Discussion →
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const EventCard = ({ event, onRegisterClick }) => (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-      <div className={`h-32 ${
-        event.type === 'workshop' ? 'bg-gradient-to-r from-yellow-500 to-yellow-600' :
-        event.type === 'exhibition' ? 'bg-gradient-to-r from-purple-500 to-purple-600' :
-        'bg-gradient-to-r from-[#564C38] to-[#564C38]'
-      }`}>
-        <div className="p-6 h-full flex items-center">
-          <div className="text-white">
-            <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-            <p className="text-sm opacity-90">{event.type.charAt(0).toUpperCase() + event.type.slice(1)}</p>
-          </div>
-        </div>
-      </div>
-      
-      <div className="p-6">
-        <p className="text-gray-700 mb-4">{event.description}</p>
-        
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center text-sm text-gray-600">
-            <Calendar className="w-4 h-4 mr-2" />
-            {new Date(event.date).toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </div>
-          <div className="flex items-center text-sm text-gray-600">
-            <Clock className="w-4 h-4 mr-2" />
-            {event.time}
-          </div>
-          <div className="flex items-center text-sm text-gray-600">
-            <MapPin className="w-4 h-4 mr-2" />
-            {event.location}
-          </div>
-        </div>
-        
-        <button 
-          className="w-full bg-[#564C38] text-white py-2 rounded-lg hover:bg-yellow-700 transition-colors"
-          onClick={() => onRegisterClick && onRegisterClick(event)}
-        >
-          Register Now
-        </button>
+  const EventCard = ({ event }) => (
+    <div className="border-2 border-yellow-500/30 bg-gray-900/80 p-4 hover:border-yellow-500 transition-colors">
+      <h3 className="font-bold text-white text-sm mb-2 truncate">{event.title}</h3>
+      <p className="text-yellow-500 text-xs mb-2 font-medium line-clamp-2">{event.description}</p>
+      <div className="flex flex-col space-y-1 text-xs">
+        <span className="text-white font-semibold">{new Date(event.date).toLocaleDateString()}</span>
+        <span className="text-yellow-400 truncate">{event.location}</span>
       </div>
     </div>
   );
 
   const MemberCard = ({ member }) => (
-    <div className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
-      <div className="w-20 h-20 bg-gradient-to-r from-akan-gold to-akan-red rounded-full mx-auto mb-4 flex items-center justify-center">
-        <span className="text-white text-2xl font-bold">
-          {member.name.split(' ').map(n => n[0]).join('')}
-        </span>
+    <div className="border-b border-gray-800 p-4 hover:bg-gray-900/50 transition-colors flex flex-col items-center text-center">
+      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-black font-bold flex-shrink-0 mb-2">
+        {member.name?.charAt(0).toUpperCase()}
       </div>
-      
-      <h3 className="font-semibold text-gray-900 mb-1">{member.name}</h3>
-      <p className="text-sm text-gray-600 mb-2">{member.role}</p>
-      <p className="text-xs text-gray-500 mb-4">{member.location}</p>
-      
-      <div className="flex justify-center space-x-4 text-sm text-gray-600 mb-4">
-        <div className="text-center">
-          <div className="font-semibold text-gray-900">{member.contributions}</div>
-          <div className="text-xs">Contributions</div>
-        </div>
-        <div className="text-center">
-          <div className="font-semibold text-gray-900">
-            {new Date(member.joined).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-          </div>
-          <div className="text-xs">Joined</div>
-        </div>
+      <div className="min-w-0">
+        <h3 className="font-bold text-white truncate text-sm">{member.name}</h3>
+        <p className="text-gray-500 text-xs truncate">{member.role}</p>
       </div>
-      
-      <div className="flex flex-wrap justify-center gap-1 mb-4">
-        {member.specialties.map((specialty, index) => (
-          <span key={index} className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs">
-            {specialty}
-          </span>
-        ))}
-      </div>
-      
-      <button 
-        className="text-yellow-600 hover:text-yellow-700 font-medium text-sm"
-        onClick={() => {
-          setSelectedMember(member);
-          setShowProfileModal(true);
-        }}
-      >
-        View Profile
-      </button>
     </div>
   );
 
-  // Registration modal handlers
-  const handleOpenRegisterModal = (event) => {
-    setRegisterModalEvent(event);
-  };
+  const AchievementCard = ({ achievement }) => (
+    <div className={`border-2 ${achievement.color} p-3 rounded-lg text-center hover:scale-105 transition-transform`}>
+      <div className="text-2xl mb-2">{achievement.icon}</div>
+      <p className="font-bold text-white text-xs truncate mb-1">{achievement.title}</p>
+      <p className="text-gray-400 text-xs truncate">{achievement.description}</p>
+      <span className={`inline-block mt-2 px-2 py-0.5 rounded-full text-xs font-bold border ${
+        achievement.rarity === 'Gold' ? 'border-yellow-400 text-yellow-400' :
+        achievement.rarity === 'Silver' ? 'border-gray-400 text-gray-300' :
+        'border-yellow-600 text-yellow-500'
+      }`}>
+        {achievement.rarity}
+      </span>
+    </div>
+  );
 
-  const handleCloseRegisterModal = () => {
-    setRegisterModalEvent(null);
-  };
-
-  const handleRegister = (registration) => {
-    setRegistrations(prev => [registration, ...prev]);
-    setToast('Registration successful!');
-    setTimeout(() => setToast(null), 3000);
-  };
+  const achievements = [
+    { title: 'Getting Started', description: 'Completed 5 lessons', icon: '📚', rarity: 'Bronze', color: 'border-yellow-600 bg-yellow-900/20' },
+    { title: 'Dedicated Learner', description: 'Completed 10 lessons', icon: '🎓', rarity: 'Silver', color: 'border-gray-400 bg-gray-800/40' },
+    { title: 'Word Collector', description: 'Saved 10 words', icon: '📝', rarity: 'Bronze', color: 'border-yellow-600 bg-yellow-900/20' },
+    { title: 'Vocabulary Master', description: 'Saved 50 words', icon: '📖', rarity: 'Gold', color: 'border-yellow-400 bg-yellow-900/30' },
+    { title: 'Hour of Power', description: 'Studied for 1 hour', icon: '⏱️', rarity: 'Silver', color: 'border-gray-400 bg-gray-800/40' },
+    { title: 'Week Warrior', description: '7-day study streak', icon: '🔥', rarity: 'Gold', color: 'border-yellow-400 bg-yellow-900/30' }
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <NewPostModal />
-      {showProfileModal && (
-        <ProfileViewModal 
-          member={selectedMember} 
-          onClose={() => setShowProfileModal(false)} 
-        />
-      )}
-      {showEventModal && (
-        <EventCreationModal
-          onClose={() => setShowEventModal(false)}
-          onCreate={(newEvent) => {
-            const created = { id: Date.now(), ...newEvent };
-            setEvents(prev => [created, ...prev]);
-          }}
-        />
-      )}
-      
-      {registerModalEvent && (
-        <RegisterEventModal
-          event={registerModalEvent}
-          onClose={handleCloseRegisterModal}
-          onRegister={handleRegister}
-        />
-      )}
-      
-      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
-      
-      {/* Header */}
-      <div  style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}} className="text-white">
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Community Hub</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
-            Connect with fellow learners, share knowledge, attend events, and be part of the Akan cultural community
-          </p>
+    <CommunityLayout showComposer={showComposer} onToggleComposer={() => setShowComposer(!showComposer)}>
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800">
+        <div className="px-4 py-3">
+          <h2 className="text-xl font-bold">Community</h2>
         </div>
-      </div>
-
-      {/* Community Stats */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">1,247</div>
-              <div className="text-sm text-gray-600">Active Members</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">156</div>
-              <div className="text-sm text-gray-600">Discussions</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">23</div>
-              <div className="text-sm text-gray-600">Events This Month</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-900">89%</div>
-              <div className="text-sm text-gray-600">Satisfaction Rate</div>
-            </div>
-          </div>
+        <div className="flex">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 flex items-center justify-center space-x-2 py-4 text-sm font-medium transition-colors hover:bg-gray-900/50 ${
+                  activeTab === tab.id ? 'text-white border-b-2 border-yellow-500' : 'text-gray-500'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="hidden sm:inline">{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </header>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
+      {/* Composer */}
+      {showComposer && activeTab === 'forums' && (
+        <div className="border-b border-gray-800 p-4">
+          <div className="flex space-x-4">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-black font-bold flex-shrink-0">U</div>
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="What's happening?"
+                value={newPostData.title}
+                onChange={(e) => setNewPostData({ ...newPostData, title: e.target.value })}
+                className="w-full bg-transparent text-xl placeholder-gray-500 focus:outline-none mb-3"
+              />
+              <textarea
+                placeholder="Tell us more..."
+                value={newPostData.content}
+                onChange={(e) => setNewPostData({ ...newPostData, content: e.target.value })}
+                className="w-full bg-transparent text-base placeholder-gray-500 focus:outline-none resize-none"
+                rows="3"
+              />
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-800">
+                <div className="flex items-center space-x-2">
+                  <button type="button" className="p-2 text-yellow-500 hover:bg-gray-900 rounded-full transition-colors"><Image className="w-5 h-5" /></button>
+                  <button type="button" className="p-2 text-yellow-500 hover:bg-gray-900 rounded-full transition-colors"><Smile className="w-5 h-5" /></button>
+                  <button type="button" className="p-2 text-yellow-500 hover:bg-gray-900 rounded-full transition-colors"><BarChart2 className="w-5 h-5" /></button>
+                </div>
                 <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 py-4 px-2 border-b-2 font-medium text-sm whitespace-nowrap ${
-                    activeTab === tab.id
-                      ? 'border-yellow-500 text-yellow-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
+                  onClick={handleCreatePost}
+                  disabled={!newPostData.title.trim() || !newPostData.content.trim()}
+                  className="bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold py-2 px-6 rounded-full transition-colors"
                 >
-                  <Icon className="w-5 h-5" />
-                  <span>{tab.label}</span>
+                  Post
                 </button>
-              );
-            })}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Forums Tab */}
-        {activeTab === 'forums' && (
-          <div>
-            {/* Forum Controls */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Discussion Forums</h2>
-                <p className="text-gray-600">Join conversations about Akan language and culture</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                  aria-label="Filter forum posts by category"
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>
-                      {category === 'all' ? 'All Categories' : category}
-                    </option>
-                  ))}
-                </select>
-                <button 
-                  className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors flex items-center"
-                  onClick={handleNewPostClick}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Post
-                </button>
-              </div>
-            </div>
+      {/* Category Filter */}
+      {activeTab === 'forums' && (
+        <div className="border-b border-gray-800 px-4 py-2 flex items-center space-x-2 overflow-x-auto">
+          {categories.map(category => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                selectedCategory === category
+                  ? 'bg-yellow-500 text-black'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              {category === 'all' ? 'All Topics' : category}
+            </button>
+          ))}
+        </div>
+      )}
 
-            {/* Trending Topics */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-              <div className="flex items-center mb-4">
-                <TrendingUp className="w-5 h-5 text-yellow-600 mr-2" />
-                <h3 className="font-semibold text-gray-900">Trending Topics</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {['akan-proverbs', 'twi-pronunciation', 'cultural-festivals', 'adinkra-symbols', 'language-exchange'].map((topic, index) => (
-                  <span key={index} className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
-                    #{topic}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Forum Posts */}
-            <div className="space-y-6">
-              {filteredForumPosts.map((post) => (
-                <ForumPostCard key={post.id} post={post} />
-              ))}
-            </div>
+      {/* Tab Content */}
+      <div>
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-4 border-gray-700 border-t-yellow-500 rounded-full animate-spin"></div>
           </div>
-        )}
-
-        {/* Events Tab */}
-        {activeTab === 'events' && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
+        ) : (
+          <>
+            {activeTab === 'forums' && (
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Events & Meetups</h2>
-                <p className="text-gray-600">Discover and attend Akan cultural events</p>
+                {filteredForumPosts.length === 0 ? (
+                  <div className="p-8 text-center text-gray-500">
+                    <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-40" />
+                    <p className="text-lg font-medium">No discussions yet</p>
+                    <p className="text-sm">Be the first to start a conversation!</p>
+                  </div>
+                ) : (
+                  filteredForumPosts.map((post) => (
+                    <ForumPostCard key={post.id} post={post} />
+                  ))
+                )}
               </div>
-              <CreateEventButton onClick={() => setShowEventModal(true)}>
-                Create Event
-              </CreateEventButton>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {events.map((event) => (
-                <EventCard key={event.id} event={event} onRegisterClick={handleOpenRegisterModal} />
-              ))}
-            </div>
+            )}
 
-            {registrations.length > 0 && (
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold mb-3">Recent Registrations</h3>
-                <div className="space-y-2">
-                  {registrations.map((r, idx) => (
-                    <div key={idx} className="bg-gray-50 p-3 rounded flex justify-between items-center">
-                      <div>
-                        <div className="font-medium">{r.name}</div>
-                        <div className="text-xs text-gray-500">{r.email} • {r.tickets} ticket(s)</div>
-                      </div>
-                      <div className="text-xs text-gray-400">{new Date(r.registeredAt).toLocaleString()}</div>
-                    </div>
+            {activeTab === 'events' && (
+              <div className="p-4">
+                {events.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">No upcoming events.</div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {events.map((event) => (
+                      <EventCard key={event.id} event={event} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'members' && (
+              <div className="p-4">
+                {members.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">No members found.</div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {members.map((member) => (
+                      <MemberCard key={member.id} member={member} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'achievements' && (
+              <div className="p-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  {achievements.map((achievement, index) => (
+                    <AchievementCard key={index} achievement={achievement} />
                   ))}
                 </div>
               </div>
             )}
-          </div>
-        )}
-
-        {/* Members Tab */}
-        {activeTab === 'members' && (
-          <div>
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">Community Members</h2>
-                <p className="text-gray-600">Connect with learners, researchers, and cultural enthusiasts</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <button className="text-gray-600 hover:text-gray-700 p-2 border border-gray-300 rounded-lg">
-                  <Filter className="w-4 h-4" />
-                </button>
-                <button 
-                  className="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
-                  onClick={() => alert('Join Community functionality would go here')}
-                >
-                  Join Community
-                </button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {members.map((member) => (
-                <MemberCard key={member.id} member={member} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Achievements Tab */}
-        {activeTab === 'achievements' && (
-          <div>
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Community Achievements</h2>
-              <p className="text-gray-600">Celebrate milestones and recognize outstanding contributions</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  title: 'Language Champion',
-                  description: 'Completed 50 vocabulary lessons',
-                  icon: '🏆',
-                  rarity: 'Gold',
-                  holders: 23
-                },
-                {
-                  title: 'Cultural Ambassador',
-                  description: 'Shared 25 cultural insights',
-                  icon: '🌟',
-                  rarity: 'Silver',
-                  holders: 67
-                },
-                {
-                  title: 'Community Helper',
-                  description: 'Helped 100 other learners',
-                  icon: '🤝',
-                  rarity: 'Bronze',
-                  holders: 156
-                },
-                {
-                  title: 'Research Pioneer',
-                  description: 'Contributed to 5 research projects',
-                  icon: '🔬',
-                  rarity: 'Gold',
-                  holders: 12
-                },
-                {
-                  title: 'Event Organizer',
-                  description: 'Organized 10 community events',
-                  icon: '📅',
-                  rarity: 'Silver',
-                  holders: 34
-                },
-                {
-                  title: 'Storyteller',
-                  description: 'Shared 20 traditional stories',
-                  icon: '📚',
-                  rarity: 'Bronze',
-                  holders: 89
-                }
-              ].map((achievement, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md p-6 text-center">
-                  <div className="text-4xl mb-4">{achievement.icon}</div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{achievement.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{achievement.description}</p>
-                  <div className="flex justify-center items-center space-x-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      achievement.rarity === 'Gold' ? 'bg-yellow-100 text-yellow-700' :
-                      achievement.rarity === 'Silver' ? 'bg-gray-100 text-gray-700' :
-                      'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {achievement.rarity}
-                    </span>
-                    <span className="text-xs text-gray-500">{achievement.holders} holders</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          </>
         )}
       </div>
-    </div>
+
+      {/* New Post Modal */}
+      {showNewPostModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-900 rounded-lg p-6 w-full max-w-md border border-gray-700">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-white">Create New Post</h3>
+              <button onClick={handleCloseModal} className="text-gray-400 hover:text-white transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-1">Title</label>
+              <input
+                type="text"
+                name="title"
+                value={newPostData.title}
+                onChange={handlePostInputChange}
+                className="w-full border border-gray-700 rounded-lg px-3 py-2 bg-gray-800 text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Enter post title"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-1">Category</label>
+              <select
+                name="category"
+                value={newPostData.category}
+                onChange={handlePostInputChange}
+                className="w-full border border-gray-700 rounded-lg px-3 py-2 bg-gray-800 text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              >
+                <option value="Language Learning">Language Learning</option>
+                <option value="Cultural Events">Cultural Events</option>
+                <option value="Research">Research</option>
+                <option value="General Discussion">General Discussion</option>
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-300 mb-1">Content</label>
+              <textarea
+                name="content"
+                value={newPostData.content}
+                onChange={handlePostInputChange}
+                rows="4"
+                className="w-full border border-gray-700 rounded-lg px-3 py-2 bg-gray-800 text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                placeholder="Write your post content here..."
+              />
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreatePost}
+                className="bg-yellow-500 text-black px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors font-bold"
+              >
+                Create Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+    </CommunityLayout>
   );
 };
 

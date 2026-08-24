@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter, FileText } from 'lucide-react';
-import researchPapers from '../data/researchPapers';
+import { getResearchPapers } from '../api';
 import ResearchCard from '../components/research/ResearchCard';
 import ResearchPlayer from '../components/research/ResearchPlayer';
 
 const CultureResearchPapers = () => {
+  const [papers, setPapers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPaper, setSelectedPaper] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -12,16 +14,33 @@ const CultureResearchPapers = () => {
   const [selectedType, setSelectedType] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = ['all', ...new Set(researchPapers.map(paper => paper.category))];
-  const languages = ['all', ...new Set(researchPapers.map(paper => paper.language))];
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      try {
+        const data = await getResearchPapers();
+        if (mounted) setPapers(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, []);
+
+  const categories = ['all', ...new Set(papers.map(paper => paper.category).filter(Boolean))];
+  const languages = ['all', ...new Set(papers.map(paper => paper.language).filter(Boolean))];
   const types = ['all', 'pdf', 'audio', 'video'];
 
-  const filteredPapers = researchPapers.filter(paper => {
+  const filteredPapers = papers.filter(paper => {
     const matchesSearch = !searchTerm ||
       paper.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      paper.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      paper.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      paper.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm.toLowerCase()));
+      (paper.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (paper.author || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (paper.keywords || []).some(keyword => keyword.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesCategory = selectedCategory === 'all' || paper.category === selectedCategory;
     const matchesLanguage = selectedLanguage === 'all' || paper.language === selectedLanguage;
@@ -126,15 +145,22 @@ const CultureResearchPapers = () => {
         </div>
 
         {/* Papers Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredPapers.map(paper => (
-            <ResearchCard 
-              key={paper.id} 
-              paper={paper} 
-              onClick={handlePaperClick}
-            />
-          ))}
-        </div>
+        {loading ? (
+          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
+            <div className="w-8 h-8 border-4 border-gray-700 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading papers...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredPapers.map(paper => (
+              <ResearchCard 
+                key={paper.id} 
+                paper={paper} 
+                onClick={handlePaperClick}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Optional Player Modal */}
         {selectedPaper && (

@@ -354,6 +354,98 @@ const seed = async () => {
         festivalPromises.push(p);
       });
       Promise.all(festivalPromises).then(() => console.log('Seeded festivals'));
+
+      // Seed Folk Stories
+      const folkStoryPromises = [];
+      const folkStories = [
+        { title: 'The Spider and the Wisdom', description: "Anansi's quest to obtain wisdom from the sky god Nyame", category: 'Animal Fables', language: 'Twi', duration: '12 minutes', type: 'audio', transcript: 'Once upon a time, Anansi the spider wanted to obtain wisdom from the sky god Nyame...', narrator: 'Kwame Asante', region: 'Ashanti' },
+        { title: 'The Origin of Fire', description: 'How fire came to the earth through the cleverness of the animals', category: 'Creation Stories', language: 'Twi', duration: '15 minutes', type: 'audio', transcript: 'Long ago, when the world was young, there was no fire on earth...', narrator: 'Afua Darko', region: 'Akuapem' },
+        { title: 'The Talking Skull', description: 'A cautionary tale about the dangers of boasting and pride', category: 'Moral Stories', language: 'Twi', duration: '10 minutes', type: 'audio', transcript: 'There once lived two friends who were very boastful...', narrator: 'Yaw Mensah', region: 'Fante' },
+        { title: 'The Moon and the Sea', description: 'Why the moon reflects on water and the origin of tides', category: 'Nature Stories', language: 'Twi', duration: '8 minutes', type: 'audio', transcript: 'In the beginning, the moon and the sea were close friends...', narrator: 'Adwoa Boateng', region: 'Ga' }
+      ];
+      folkStories.forEach(s => {
+        const p = new Promise((resolve, reject) => {
+          db.run(
+            `INSERT OR IGNORE INTO folk_stories (title, description, category, language, duration, type, transcript, narrator, region, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [s.title, s.description, s.category, s.language, s.duration, s.type, s.transcript, s.narrator, s.region, 1],
+            (err) => {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
+        });
+        folkStoryPromises.push(p);
+      });
+      Promise.all(folkStoryPromises).then(() => console.log('Seeded folk stories'));
+
+      // Seed Drumming
+      const drummingPromises = [];
+      const drummingLessons = [
+        { title: 'Introduction to Kagan Drum', description: 'Learn the basics of the Kagan, a double-headed drum used in storytelling', instrument: 'Kagan', difficulty: 'Beginner', bpm: 80, type: 'video', pattern_notation: 'Tone - Tone - Slap - Tone - Tone - Slap', transcript: 'The Kagan drum is a double-headed drum with a unique hourglass shape...', instructor: 'Kofi Asante', duration: '15 minutes', region: 'Ashanti' },
+        { title: 'Dondo Rhythms for Beginners', description: 'Master the fundamental rhythms of the Dondo drum', instrument: 'Dondo', difficulty: 'Beginner', bpm: 100, type: 'video', pattern_notation: 'Bass - Tone - Tone - Bass - Tone - Tone', transcript: 'The Dondo is a cylindrical drum that produces deep, resonant sounds...', instructor: 'Yaw Mensah', duration: '12 minutes', region: 'Akuapem' },
+        { title: 'Advanced Atumpan Techniques', description: 'Learn complex polyrhythms with the Atumpan talking drums', instrument: 'Atumpan', difficulty: 'Advanced', bpm: 120, type: 'video', pattern_notation: 'Tone - Slap - Bass - Slap - Tone - Bass', transcript: 'The Atumpan are talking drums that can mimic the tonal patterns of Akan speech...', instructor: 'Kwame Boateng', duration: '20 minutes', region: 'Ashanti' },
+        { title: 'Fontomfrom Ensemble Playing', description: 'Learn to play in a traditional Fontomfrom drum ensemble', instrument: 'Fontomfrom', difficulty: 'Intermediate', bpm: 90, type: 'video', pattern_notation: 'Bass - Bass - Tone - Tone - Slap - Slap', transcript: 'The Fontomfrom is a large ceremonial drum played in pairs during important occasions...', instructor: 'Afua Darko', duration: '18 minutes', region: 'Ashanti' }
+      ];
+      drummingLessons.forEach(l => {
+        const p = new Promise((resolve, reject) => {
+          db.run(
+            `INSERT OR IGNORE INTO drumming (title, description, instrument, difficulty, bpm, type, pattern_notation, transcript, instructor, duration, region, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [l.title, l.description, l.instrument, l.difficulty, l.bpm, l.type, l.pattern_notation, l.transcript, l.instructor, l.duration, l.region, 1],
+            (err) => {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
+        });
+        drummingPromises.push(p);
+      });
+      Promise.all(drummingPromises).then(() => console.log('Seeded drumming lessons'));
+
+      // Seed Festival Photos
+      const festivalPhotoPromises = [];
+      const festivalPhotos = [
+        { title: 'Akwasidae Festival', description: 'Traditional drumming ceremony at the Manhyia Palace', image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop', category: 'festival', location: 'Kumasi, Ashanti Region', event_date: '2024-01-21', photographer: 'Kwame Asante', tags: 'drumming,traditional,palace' },
+        { title: 'Kundum Festival', description: 'Colorful traditional dancers in elaborate costumes', image_url: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop', category: 'dance', location: 'Axim, Western Region', event_date: '2024-08-15', photographer: 'Ama Boateng', tags: 'dance,costumes,celebration' },
+        { title: 'Homowo Festival', description: 'Traditional priests performing rituals', image_url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop', category: 'ritual', location: 'Accra, Greater Accra', event_date: '2024-08-12', photographer: 'Kofi Mensah', tags: 'ritual,priests,ceremony' },
+        { title: 'Aboakyir Festival', description: 'Youth carrying ceremonial stools', image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop', category: 'procession', location: 'Winneba, Central Region', event_date: '2024-05-20', photographer: 'Adwoa Darko', tags: 'procession,youth,stools' }
+      ];
+      festivalPhotos.forEach(p => {
+        const pr = new Promise((resolve, reject) => {
+          db.run(
+            `INSERT OR IGNORE INTO festival_photos (title, description, image_url, category, location, event_date, photographer, tags, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [p.title, p.description, p.image_url, p.category, p.location, p.event_date, p.photographer, p.tags, 1],
+            (err) => {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
+        });
+        festivalPhotoPromises.push(pr);
+      });
+      Promise.all(festivalPhotoPromises).then(() => console.log('Seeded festival photos'));
+
+      // Seed Research Papers
+      const researchPromises = [];
+      const researchPapers = [
+        { title: 'The Role of Oral Tradition in Akan Society', description: 'Comprehensive analysis of how oral traditions maintain cultural identity and transmit knowledge across generations', author: 'Dr. Kwame Adu-Gyamfi', institution: 'University of Ghana', category: 'Anthropology', abstract: 'This paper examines the critical role of oral tradition in preserving Akan cultural heritage...', publication_date: '2023-05-15', pages: 45, keywords: 'oral tradition,Akan culture,storytelling,cultural preservation', doi: '10.1234/akan.2023.001', citation: 'Adu-Gyamfi, K. (2023). The Role of Oral Tradition in Akan Society. Journal of African Cultural Studies, 15(2), 78-122.' },
+        { title: 'Drumming as Communication in Akan Culture', description: 'Exploration of the linguistic and communicative functions of traditional Akan drumming systems', author: 'Dr. Abena Osei', institution: 'Kwame Nkrumah University', category: 'Ethnomusicology', abstract: 'This study investigates how Akan talking drums serve as sophisticated communication systems...', publication_date: '2023-08-20', pages: 38, keywords: 'talking drums,Akan communication,ethnomusicology,cultural linguistics', doi: '10.1234/akan.2023.002', citation: 'Osei, A. (2023). Drumming as Communication in Akan Culture. African Music Studies, 12(3), 145-182.' },
+        { title: 'Gender Roles in Akan Traditional Society', description: 'Analysis of gender dynamics and social structures in traditional Akan communities', author: 'Dr. Esi Mensah', institution: 'University of Cape Coast', category: 'Sociology', abstract: 'This research examines the complex gender roles and social structures within traditional Akan society...', publication_date: '2023-03-10', pages: 52, keywords: 'gender roles,Akan society,social structure,traditional culture', doi: '10.1234/akan.2023.003', citation: 'Mensah, E. (2023). Gender Roles in Akan Traditional Society. Gender & Society in Africa, 8(1), 23-74.' },
+        { title: 'The Philosophy of Akan Proverbs', description: 'Deep dive into the philosophical wisdom embedded in Akan proverbs and their cultural significance', author: 'Prof. Kofi Appiah', institution: 'University of Education, Winneba', category: 'Philosophy', abstract: 'This paper explores the philosophical depth and cultural wisdom contained within Akan proverbs...', publication_date: '2023-11-05', pages: 67, keywords: 'Akan proverbs,philosophy,cultural wisdom,linguistic analysis', doi: '10.1234/akan.2023.004', citation: 'Appiah, K. (2023). The Philosophy of Akan Proverbs. African Philosophy Review, 5(2), 89-155.' }
+      ];
+      researchPapers.forEach(p => {
+        const pr = new Promise((resolve, reject) => {
+          db.run(
+            `INSERT OR IGNORE INTO research_papers (title, description, author, institution, category, abstract, publication_date, pages, keywords, doi, citation, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [p.title, p.description, p.author, p.institution, p.category, p.abstract, p.publication_date, p.pages, p.keywords, p.doi, p.citation, 1],
+            (err) => {
+              if (err) reject(err);
+              else resolve();
+            }
+          );
+        });
+        researchPromises.push(pr);
+      });
+      Promise.all(researchPromises).then(() => console.log('Seeded research papers'));
     });
 
     setTimeout(() => {
