@@ -4,9 +4,12 @@ import { MessageSquare, Calendar, Users, Star, MapPin, Clock, Plus, X, MessageCi
 import { getForumPosts, getEvents, getProfiles, createForumPost } from '../api';
 import CommunityLayout from '../components/CommunityLayout';
 import Toast from '../components/Toast';
+import AuthPromptModal from '../components/AuthPromptModal';
+import { useAuth } from '../hooks/useAuth';
 
 const Community = ({ initialTab = 'forums' }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState(initialTab);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showNewPostModal, setShowNewPostModal] = useState(false);
@@ -21,6 +24,25 @@ const Community = ({ initialTab = 'forums' }) => {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
   const [showComposer, setShowComposer] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+
+  useEffect(() => {
+    if (user && pendingAction) {
+      const action = pendingAction;
+      setPendingAction(null);
+      action();
+    }
+  }, [user, pendingAction]);
+
+  const requireAuth = (action) => {
+    if (!user) {
+      setPendingAction(() => action);
+      setShowAuthModal(true);
+      return false;
+    }
+    return true;
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -51,6 +73,7 @@ const Community = ({ initialTab = 'forums' }) => {
   }, [navigate]);
 
   const handleCreatePost = async () => {
+    if (!requireAuth(() => {})) return;
     try {
       await createForumPost(newPostData);
       setNewPostData({ title: '', content: '', category: 'Language Learning' });
@@ -95,6 +118,19 @@ const Community = ({ initialTab = 'forums' }) => {
     const [reposted, setReposted] = useState(false);
     const [shared, setShared] = useState(false);
 
+    const handleLike = () => {
+      if (!requireAuth(() => setLiked(!liked))) return;
+      setLiked(!liked);
+    };
+    const handleRepost = () => {
+      if (!requireAuth(() => setReposted(!reposted))) return;
+      setReposted(!reposted);
+    };
+    const handleShare = () => {
+      if (!requireAuth(() => setShared(!shared))) return;
+      setShared(!shared);
+    };
+
     return (
       <article className="border-b border-gray-800 p-4 hover:bg-gray-900/50 transition-colors">
         <div className="flex space-x-4">
@@ -136,7 +172,7 @@ const Community = ({ initialTab = 'forums' }) => {
               </button>
               <button 
                 className={`flex items-center space-x-2 group transition-colors ${reposted ? 'text-green-500' : 'text-gray-500 hover:text-green-500'}`}
-                onClick={() => setReposted(!reposted)}
+                onClick={handleRepost}
               >
                 <div className={`p-2 rounded-full transition-colors ${reposted ? 'bg-green-500/10' : 'group-hover:bg-green-500/10'}`}>
                   <Repeat2 className="w-4 h-4" />
@@ -144,7 +180,7 @@ const Community = ({ initialTab = 'forums' }) => {
               </button>
               <button 
                 className={`flex items-center space-x-2 group transition-colors ${liked ? 'text-pink-500' : 'text-gray-500 hover:text-pink-500'}`}
-                onClick={() => setLiked(!liked)}
+                onClick={handleLike}
               >
                 <div className={`p-2 rounded-full transition-colors ${liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'}`}>
                   <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
@@ -152,7 +188,7 @@ const Community = ({ initialTab = 'forums' }) => {
               </button>
               <button 
                 className={`flex items-center space-x-2 group transition-colors ${shared ? 'text-yellow-500' : 'text-gray-500 hover:text-yellow-500'}`}
-                onClick={() => setShared(!shared)}
+                onClick={handleShare}
               >
                 <div className={`p-2 rounded-full transition-colors ${shared ? 'bg-yellow-500/10' : 'group-hover:bg-yellow-500/10'}`}>
                   <Share className="w-4 h-4" />
@@ -213,7 +249,7 @@ const Community = ({ initialTab = 'forums' }) => {
   ];
 
   return (
-    <CommunityLayout showComposer={showComposer} onToggleComposer={() => setShowComposer(!showComposer)}>
+    <CommunityLayout showComposer={showComposer} onToggleComposer={() => requireAuth(() => setShowComposer(prev => !prev))}>
       {/* Sticky Header */}
       <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800">
         <div className="px-4 py-3">
@@ -265,7 +301,7 @@ const Community = ({ initialTab = 'forums' }) => {
                   <button type="button" className="p-2 text-yellow-500 hover:bg-gray-900 rounded-full transition-colors"><BarChart2 className="w-5 h-5" /></button>
                 </div>
                 <button
-                  onClick={handleCreatePost}
+                  onClick={() => requireAuth(handleCreatePost)}
                   disabled={!newPostData.title.trim() || !newPostData.content.trim()}
                   className="bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold py-2 px-6 rounded-full transition-colors"
                 >
@@ -430,6 +466,7 @@ const Community = ({ initialTab = 'forums' }) => {
       )}
 
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+      <AuthPromptModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </CommunityLayout>
   );
 };

@@ -3,10 +3,13 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { MoreHorizontal, MessageCircle, Heart, Repeat2, Share, Image, Smile, BarChart2, Search, ArrowLeft } from 'lucide-react';
 import { getForumPosts, createForumPost, getEvents, getProfiles, getForumPost, getForumComments, createForumComment } from '../api';
 import CommunityLayout from '../components/CommunityLayout';
+import AuthPromptModal from '../components/AuthPromptModal';
+import { useAuth } from '../hooks/useAuth';
 
 const CommunityHub = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [events, setEvents] = useState([]);
   const [profiles, setProfiles] = useState([]);
@@ -14,6 +17,25 @@ const CommunityHub = () => {
   const [newPost, setNewPost] = useState({ title: '', content: '', category: 'Language Learning' });
   const [showComposer, setShowComposer] = useState(false);
   const [activeTab, setActiveTab] = useState('forums');
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+
+  useEffect(() => {
+    if (user && pendingAction) {
+      const action = pendingAction;
+      setPendingAction(null);
+      action();
+    }
+  }, [user, pendingAction]);
+
+  const requireAuth = (action) => {
+    if (!user) {
+      setPendingAction(() => action);
+      setShowAuthModal(true);
+      return false;
+    }
+    return true;
+  };
 
   // Thread state
   const [post, setPost] = useState(null);
@@ -90,6 +112,7 @@ const CommunityHub = () => {
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
+    if (!requireAuth(() => {})) return;
     if (!newPost.title.trim() || !newPost.content.trim()) return;
     try {
       await createForumPost(newPost);
@@ -102,6 +125,7 @@ const CommunityHub = () => {
   };
 
   const handleAddReply = async () => {
+    if (!requireAuth(() => {})) return;
     if (!newReply.trim() || !id) return;
     try {
       const comment = await createForumComment(id, {
@@ -161,7 +185,7 @@ const CommunityHub = () => {
   );
 
   return (
-    <CommunityLayout showComposer={showComposer} onToggleComposer={() => setShowComposer(!showComposer)}>
+    <CommunityLayout showComposer={showComposer} onToggleComposer={() => requireAuth(() => setShowComposer(prev => !prev))}>
       {/* Sticky Header */}
       <header className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-gray-800 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -277,7 +301,7 @@ const CommunityHub = () => {
                           </div>
                         </button>
                         <button 
-                          onClick={(e) => handleButtonClick(e, () => toggleInteraction(post.id, 'reposted'))}
+                          onClick={(e) => handleButtonClick(e, () => { if (requireAuth(() => toggleInteraction(post.id, 'reposted'))) toggleInteraction(post.id, 'reposted'); })}
                           className={`flex items-center space-x-2 group transition-colors ${postInteractions[post.id]?.reposted ? 'text-green-500' : 'text-gray-500 hover:text-green-500'}`}
                         >
                           <div className={`p-2 rounded-full transition-colors ${postInteractions[post.id]?.reposted ? 'bg-green-500/10' : 'group-hover:bg-green-500/10'}`}>
@@ -285,7 +309,7 @@ const CommunityHub = () => {
                           </div>
                         </button>
                         <button 
-                          onClick={(e) => handleButtonClick(e, () => toggleInteraction(post.id, 'liked'))}
+                          onClick={(e) => handleButtonClick(e, () => { if (requireAuth(() => toggleInteraction(post.id, 'liked'))) toggleInteraction(post.id, 'liked'); })}
                           className={`flex items-center space-x-2 group transition-colors ${postInteractions[post.id]?.liked ? 'text-pink-500' : 'text-gray-500 hover:text-pink-500'}`}
                         >
                           <div className={`p-2 rounded-full transition-colors ${postInteractions[post.id]?.liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'}`}>
@@ -293,7 +317,7 @@ const CommunityHub = () => {
                           </div>
                         </button>
                         <button 
-                          onClick={(e) => handleButtonClick(e, () => toggleInteraction(post.id, 'shared'))}
+                          onClick={(e) => handleButtonClick(e, () => { if (requireAuth(() => toggleInteraction(post.id, 'shared'))) toggleInteraction(post.id, 'shared'); })}
                           className={`flex items-center space-x-2 group transition-colors ${postInteractions[post.id]?.shared ? 'text-yellow-500' : 'text-gray-500 hover:text-yellow-500'}`}
                         >
                           <div className={`p-2 rounded-full transition-colors ${postInteractions[post.id]?.shared ? 'bg-yellow-500/10' : 'group-hover:bg-yellow-500/10'}`}>
@@ -346,18 +370,21 @@ const CommunityHub = () => {
                         </div>
                         <span className="text-sm">{comments.length}</span>
                       </button>
-                      <button className="flex items-center space-x-2 text-gray-500 hover:text-green-500 group transition-colors">
-                        <div className="p-2 rounded-full group-hover:bg-green-500/10 transition-colors">
+                      <button 
+                        onClick={() => { if (requireAuth(() => toggleInteraction(post.id, 'reposted'))) toggleInteraction(post.id, 'reposted'); }}
+                        className={`flex items-center space-x-2 group transition-colors ${postInteractions[post.id]?.reposted ? 'text-green-500' : 'text-gray-500 hover:text-green-500'}`}
+                      >
+                        <div className={`p-2 rounded-full transition-colors ${postInteractions[post.id]?.reposted ? 'bg-green-500/10' : 'group-hover:bg-green-500/10'}`}>
                           <Repeat2 className="w-4 h-4" />
                         </div>
                       </button>
-                      <button onClick={() => setLiked(!liked)} className={`flex items-center space-x-2 group transition-colors ${liked ? 'text-pink-500' : 'text-gray-500 hover:text-pink-500'}`}>
+                      <button onClick={() => { if (requireAuth(() => { setLiked(!liked); toggleInteraction(post.id, 'liked'); })) { setLiked(!liked); toggleInteraction(post.id, 'liked'); } }} className={`flex items-center space-x-2 group transition-colors ${liked ? 'text-pink-500' : 'text-gray-500 hover:text-pink-500'}`}>
                         <div className={`p-2 rounded-full transition-colors ${liked ? 'bg-pink-500/10' : 'group-hover:bg-pink-500/10'}`}>
                           <Heart className={`w-4 h-4 ${liked ? 'fill-current' : ''}`} />
                         </div>
                         <span className="text-sm">{liked ? '1' : '0'}</span>
                       </button>
-                      <button onClick={() => setBookmarked(!bookmarked)} className={`flex items-center space-x-2 group transition-colors ${bookmarked ? 'text-yellow-500' : 'text-gray-500 hover:text-yellow-500'}`}>
+                      <button onClick={() => { if (requireAuth(() => { setBookmarked(!bookmarked); toggleInteraction(post.id, 'shared'); })) { setBookmarked(!bookmarked); toggleInteraction(post.id, 'shared'); } }} className={`flex items-center space-x-2 group transition-colors ${bookmarked ? 'text-yellow-500' : 'text-gray-500 hover:text-yellow-500'}`}>
                         <div className={`p-2 rounded-full transition-colors ${bookmarked ? 'bg-yellow-500/10' : 'group-hover:bg-yellow-500/10'}`}>
                           <Share className={`w-4 h-4 ${bookmarked ? 'fill-current' : ''}`} />
                         </div>
@@ -385,7 +412,7 @@ const CommunityHub = () => {
                         <button className="p-2 text-yellow-500 hover:bg-gray-900 rounded-full transition-colors"><Smile className="w-5 h-5" /></button>
                       </div>
                       <button
-                        onClick={handleAddReply}
+                        onClick={() => requireAuth(handleAddReply)}
                         disabled={!newReply.trim()}
                         className="bg-yellow-500 hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold py-2 px-6 rounded-full transition-colors"
                       >
@@ -521,6 +548,7 @@ const CommunityHub = () => {
           )}
         </>
       )}
+      <AuthPromptModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </CommunityLayout>
   );
 };
