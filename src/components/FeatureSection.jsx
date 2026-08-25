@@ -40,7 +40,7 @@ const FeatureSection = () => {
           <h2 className="text-sm sm:text-base font-semibold text-amber-400 mb-2">
             Explore Akan Heritage
           </h2>
-          <p className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-3 sm:mb-4">
+          <p className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white mb-2 sm:mb-3">
             Discover the Heart of Akan
           </p>
           <p className="text-base sm:text-lg text-gray-200 max-w-xl mx-auto">
@@ -49,7 +49,7 @@ const FeatureSection = () => {
         </div>
 
         {/* Feature Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:gap-10 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (

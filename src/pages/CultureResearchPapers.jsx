@@ -61,12 +61,12 @@ const CultureResearchPapers = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-700 to-blue-900 text-white">
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="flex items-center mb-4">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center mb-2">
             <FileText className="w-10 h-10 mr-4" />
-            <h1 className="text-4xl font-bold">Research Papers</h1>
+            <h1 className="text-3xl font-bold">Research Papers</h1>
           </div>
-          <p className="text-xl opacity-90 max-w-3xl">
+          <p className="text-base opacity-90 max-w-3xl">
             Explore academic studies, scholarly articles, and research papers on Akan culture, traditions, 
             and heritage. Access comprehensive analyses by leading scholars and researchers.
           </p>
@@ -75,7 +75,7 @@ const CultureResearchPapers = () => {
 
       {/* Search and Filters */}
       <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+         <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {/* Search */}
             <div className="md:col-span-2">
@@ -145,13 +145,13 @@ const CultureResearchPapers = () => {
         </div>
 
         {/* Papers Grid */}
-        {loading ? (
-          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-            <div className="w-8 h-8 border-4 border-gray-700 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading papers...</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+         {loading ? (
+           <div className="bg-white rounded-lg shadow-lg p-4 text-center">
+             <div className="w-8 h-8 border-4 border-gray-700 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+             <p className="text-gray-600">Loading papers...</p>
+           </div>
+         ) : (
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredPapers.map(paper => (
               <ResearchCard 
                 key={paper.id} 

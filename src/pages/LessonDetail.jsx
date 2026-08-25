@@ -63,13 +63,13 @@ const LessonDetail = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <Link to="/learn" className="inline-flex items-center text-white/80 hover:text-white mb-4">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Link to="/learn" className="inline-flex items-center text-white/80 hover:text-white mb-2">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Lessons
           </Link>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{lesson.title}</h1>
-          <p className="text-xl opacity-90 mb-6">{lesson.description}</p>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">{lesson.title}</h1>
+          <p className="text-base opacity-90 mb-4">{lesson.description}</p>
           <div className="flex items-center space-x-4 text-sm">
             <span className="px-3 py-1 rounded-full bg-white/20">{lesson.level}</span>
             <span className="flex items-center">
@@ -81,10 +81,10 @@ const LessonDetail = () => {
       </div>
 
       <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Progress</h2>
+         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+           <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+             <div className="flex items-center justify-between">
+               <h2 className="text-base font-semibold text-gray-900">Progress</h2>
               <span className="text-sm text-gray-600">{Math.round(progress)}%</span>
             </div>
             <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
@@ -92,10 +92,10 @@ const LessonDetail = () => {
             </div>
           </div>
 
-          <div className="p-6">
-            {lesson.content?.sections?.map((section, index) => (
-              <div key={index} className={`mb-8 ${index === currentSection ? '' : 'hidden'}`}>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{section.title}</h3>
+           <div className="p-4">
+             {lesson.content?.sections?.map((section, index) => (
+               <div key={index} className={`mb-6 ${index === currentSection ? '' : 'hidden'}`}>
+                 <h3 className="text-lg font-bold text-gray-900 mb-3">{section.title}</h3>
                 <div className="prose max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: section.body || section.content || '' }}></div>
                 {section.audio && (
                   <div className="mt-4">
@@ -108,12 +108,12 @@ const LessonDetail = () => {
               </div>
             ))}
 
-            {lesson.quiz && (
-              <div className="border-t border-gray-200 pt-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Quiz</h3>
-                {lesson.quiz.map((q, qIndex) => (
-                  <div key={qIndex} className="mb-6">
-                    <p className="text-gray-900 mb-3">{q.question}</p>
+             {lesson.quiz && (
+               <div className="border-t border-gray-200 pt-6">
+                 <h3 className="text-lg font-bold text-gray-900 mb-3">Quiz</h3>
+                 {lesson.quiz.map((q, qIndex) => (
+                   <div key={qIndex} className="mb-4">
+                     <p className="text-gray-900 text-sm mb-2">{q.question}</p>
                     <div className="space-y-2">
                       {q.options.map((option, oIndex) => (
                         <label key={oIndex} className="flex items-center space-x-2 cursor-pointer">
@@ -143,7 +143,7 @@ const LessonDetail = () => {
               </div>
             )}
 
-            <div className="mt-8 flex justify-between">
+             <div className="mt-6 flex justify-between">
               <button
                 onClick={() => setCurrentSection(Math.max(0, currentSection - 1))}
                 disabled={currentSection === 0}

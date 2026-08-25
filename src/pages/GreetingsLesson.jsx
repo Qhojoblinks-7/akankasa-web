@@ -130,11 +130,11 @@ const GreetingsLesson = () => {
 
       <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 py-8">
         {/* Lesson Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4" style={{color: '#564c38'}}>
+         <div className="text-center mb-4">
+           <h1 className="text-3xl font-bold mb-2" style={{color: '#564c38'}}>
             Basic Akan Greetings
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-base text-gray-600">
             Learn essential daily greetings to start conversations in Akan
           </p>
           <div className="mt-4 inline-flex items-center px-4 py-2 rounded-full text-sm font-medium" 
@@ -144,17 +144,17 @@ const GreetingsLesson = () => {
         </div>
 
         {/* Main Content Card */}
-        <motion.div 
-          key={currentGreeting}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-          className="bg-white rounded-2xl shadow-lg p-8 mb-8"
-        >
+         <motion.div 
+           key={currentGreeting}
+           initial={{ opacity: 0, x: 50 }}
+           animate={{ opacity: 1, x: 0 }}
+           transition={{ duration: 0.3 }}
+           className="bg-white rounded-2xl shadow-lg p-4 mb-4"
+         >
           <div className="text-center">
-            {/* Akan Text */}
-            <div className="mb-6">
-              <h2 className="text-5xl font-bold mb-4" style={{color: '#564c38'}}>
+             {/* Akan Text */}
+             <div className="mb-4">
+               <h2 className="text-xl font-bold mb-3" style={{color: '#564c38'}}>
                 {currentData.akan}
               </h2>
               <button
@@ -169,16 +169,16 @@ const GreetingsLesson = () => {
               </button>
             </div>
 
-            {/* Pronunciation */}
-            <div className="mb-6">
-              <p className="text-lg text-gray-600 mb-2">Pronunciation:</p>
-              <p className="text-2xl font-mono" style={{color: '#695e46'}}>
+             {/* Pronunciation */}
+             <div className="mb-4">
+               <p className="text-base text-gray-600 mb-1">Pronunciation:</p>
+               <p className="text-xl font-mono" style={{color: '#695e46'}}>
                 [{currentData.pronunciation}]
               </p>
             </div>
 
-            {/* Translation Toggle */}
-            <div className="mb-6">
+             {/* Translation Toggle */}
+             <div className="mb-4">
               <button
                 onClick={() => setShowTranslation(!showTranslation)}
                 className="px-6 py-3 rounded-lg font-medium transition-colors"
@@ -196,7 +196,7 @@ const GreetingsLesson = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-4"
                 >
-                  <p className="text-3xl font-semibold" style={{color: '#564c38'}}>
+                   <p className="text-xl font-semibold" style={{color: '#564c38'}}>
                     "{currentData.english}"
                   </p>
                 </motion.div>
@@ -211,8 +211,8 @@ const GreetingsLesson = () => {
           </div>
         </motion.div>
 
-        {/* Navigation and Actions */}
-        <div className="flex justify-between items-center mb-8">
+         {/* Navigation and Actions */}
+         <div className="flex justify-between items-center mb-4">
           <button
             onClick={prevGreeting}
             disabled={currentGreeting === 0}
@@ -259,11 +259,11 @@ const GreetingsLesson = () => {
         </div>
 
         {/* Progress Overview */}
-        <div className="bg-white rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4" style={{color: '#564c38'}}>
+         <div className="bg-white rounded-lg p-4">
+           <h3 className="text-lg font-semibold mb-3" style={{color: '#564c38'}}>
             Lesson Progress
           </h3>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
+           <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
             {greetings.map((greeting, index) => (
               <button
                 key={index}
@@ -287,7 +287,7 @@ const GreetingsLesson = () => {
               </button>
             ))}
           </div>
-          <div className="mt-4 text-sm text-gray-600">
+           <div className="mt-3 text-sm text-gray-600">
             Completion: {Math.round(completionRate)}%
           </div>
         </div>
@@ -297,11 +297,11 @@ const GreetingsLesson = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mt-8 bg-white rounded-lg p-6 text-center border-2"
+            className="mt-4 bg-white rounded-lg p-4 text-center border-2"
             style={{borderColor: '#f1d799'}}
           >
             <div className="text-6xl mb-4">🎉</div>
-            <h3 className="text-2xl font-bold mb-2" style={{color: '#564c38'}}>
+             <h3 className="text-xl font-bold mb-2" style={{color: '#564c38'}}>
               Congratulations!
             </h3>
             <p className="text-gray-600 mb-4">

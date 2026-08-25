@@ -57,9 +57,9 @@ const HeritageSpeakerPath = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Heritage Speaker Path</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Heritage Speaker Path</h1>
+          <p className="text-base opacity-90 max-w-3xl">
             Reconnect with your roots - 6-8 weeks to deepen your cultural understanding
           </p>
         </div>
@@ -108,20 +108,20 @@ const HeritageSpeakerPath = () => {
         {activeTab === 'overview' && (
           <div className="space-y-12">
             <section>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Reconnect with Your Heritage</h2>
-              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Reconnect with Your Heritage</h2>
+              <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-[#564c38] mb-2">6-8</div>
-                    <div className="text-gray-600">Weeks</div>
+                    <div className="text-2xl font-bold text-[#564c38] mb-2">6-8</div>
+                    <div className="text-gray-600 text-sm">Weeks</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-[#564c38] mb-2">100+</div>
-                    <div className="text-gray-600">Cultural Terms</div>
+                    <div className="text-2xl font-bold text-[#564c38] mb-2">100+</div>
+                    <div className="text-gray-600 text-sm">Cultural Terms</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-[#564c38] mb-2">5</div>
-                    <div className="text-gray-600">Core Modules</div>
+                    <div className="text-2xl font-bold text-[#564c38] mb-2">5</div>
+                    <div className="text-gray-600 text-sm">Core Modules</div>
                   </div>
                 </div>
               </div>
@@ -131,12 +131,12 @@ const HeritageSpeakerPath = () => {
 
         {activeTab === 'cultural' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Cultural Context</h2>
-            <div className="space-y-6">
-              {cultureArticles.map((article) => (
-                <div key={article.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-6 border border-gray-100">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{article.title}</h3>
-                  <p className="text-gray-600 mb-4">{article.description || article.body}</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Cultural Context</h2>
+              <div className="space-y-4">
+                {cultureArticles.map((article) => (
+                  <div key={article.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-4 border border-gray-100">
+                    <h3 className="text-base font-bold text-gray-900 mb-2">{article.title}</h3>
+                    <p className="text-gray-600 text-sm mb-3">{article.description || article.body}</p>
                   <span className="px-3 py-1 rounded-full text-xs font-medium" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
                     {article.category}
                   </span>
@@ -148,17 +148,17 @@ const HeritageSpeakerPath = () => {
 
         {activeTab === 'vocabulary' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Advanced Vocabulary</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               {heritageVocabularyModules.map((module) => (
-                 <div key={module.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border border-gray-100">
-                  <div className="p-6 text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
-                    <h3 className="text-xl font-bold mb-2">{module.title}</h3>
-                    <p style={{color: '#f1d799'}}>{module.description}</p>
-                    <p className="text-sm mt-2" style={{color: '#c2ae81'}}>{module.words?.length || 0} words</p>
-                  </div>
-                  <div className="p-6">
-                    <div className="space-y-3 mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Advanced Vocabulary</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                 {heritageVocabularyModules.map((module) => (
+                  <div key={module.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border border-gray-100">
+                   <div className="p-4 text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
+                     <h3 className="text-lg font-bold mb-2">{module.title}</h3>
+                     <p style={{color: '#f1d799'}}>{module.description}</p>
+                     <p className="text-sm mt-2" style={{color: '#c2ae81'}}>{module.words?.length || 0} words</p>
+                   </div>
+                   <div className="p-4">
+                     <div className="space-y-3 mb-4">
                       {(module.words || []).slice(0, 3).map((word, index) => (
                         <div key={index} className="flex justify-between items-center">
                           <div>
@@ -196,23 +196,23 @@ const HeritageSpeakerPath = () => {
 
         {activeTab === 'proverbs' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Akan Proverbs</h2>
-            <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-              <p className="text-lg text-gray-700">Explore traditional Akan proverbs and their meanings.</p>
-            </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Akan Proverbs</h2>
+              <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                <p className="text-base text-gray-700">Explore traditional Akan proverbs and their meanings.</p>
+              </div>
           </div>
         )}
 
         {activeTab === 'lessons' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Heritage Lessons</h2>
-            <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Heritage Lessons</h2>
+            <div className="space-y-4">
                {heritageLessons.map((lesson) => (
-                 <div key={lesson.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-6 border border-gray-100">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{lesson.title}</h3>
-                      <p className="text-gray-600 mb-4">{lesson.description}</p>
+                <div key={lesson.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-4 border border-gray-100">
+                 <div className="flex justify-between items-start mb-3">
+                   <div>
+                     <h3 className="text-lg font-bold text-gray-900 mb-2">{lesson.title}</h3>
+                     <p className="text-gray-600 text-sm mb-3">{lesson.description}</p>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <span className="px-3 py-1 rounded-full" style={{backgroundColor: '#f1d799', color: '#564c38'}}>{lesson.level}</span>
                         <span className="flex items-center">
@@ -232,8 +232,8 @@ const HeritageSpeakerPath = () => {
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
                   </div>
-                  <div className="border-t border-gray-200 pt-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Learning Objectives:</h4>
+                  <div className="border-t border-gray-200 pt-3">
+                    <h4 className="font-semibold text-gray-900 text-sm mb-2">Learning Objectives:</h4>
                     <ul className="space-y-1">
                       {(lesson.objectives || []).map((objective, index) => (
                         <li key={index} className="flex items-center text-gray-600">

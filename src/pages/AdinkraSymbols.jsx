@@ -50,20 +50,20 @@ const AdinkraSymbols = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
         <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-center mb-4">
+          <div className="flex items-center mb-2">
             <Link to="/culture" className="flex items-center text-white/80 hover:text-white mr-4">
               ← Back to Culture
             </Link>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Adinkra Symbols</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Adinkra Symbols</h1>
+          <p className="text-base opacity-90 max-w-3xl">
             Discover the wisdom embedded in traditional Akan symbols, each carrying deep cultural meaning and philosophical significance
           </p>
         </div>
       </div>
 
       <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -92,24 +92,24 @@ const AdinkraSymbols = () => {
             <p className="text-gray-600">Try adjusting your search terms</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredSymbols.map((symbol) => (
               <div
                 key={symbol.id}
                 onClick={() => setSelectedArticle(symbol)}
                 className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
               >
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="text-4xl font-bold" style={{color: '#564c38'}}>
+                 <div className="p-4">
+                   <div className="flex items-start justify-between mb-3">
+                      <div className="text-2xl font-bold" style={{color: '#564c38'}}>
                       {symbol.examples && symbol.examples.length > 0 ? symbol.examples[0].symbol : '※'}
                     </div>
                     <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                       {symbol.category}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{symbol.title}</h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{symbol.description || symbol.content}</p>
+                   <h3 className="text-base font-bold text-gray-900 mb-2">{symbol.title}</h3>
+                   <p className="text-gray-600 text-sm mb-3 line-clamp-3">{symbol.description || symbol.content}</p>
                   
                   <div className="space-y-2">
                     {symbol.examples && symbol.examples.length > 0 && (

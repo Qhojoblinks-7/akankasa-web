@@ -42,9 +42,9 @@ const AcademicLearnerPath = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #77705c 0%, #564c38 100%)'}}>
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Academic Learner Path</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Academic Learner Path</h1>
+          <p className="text-base opacity-90 max-w-3xl">
             Comprehensive linguistic approach - 12-16 weeks for in-depth understanding
           </p>
         </div>
@@ -93,20 +93,20 @@ const AcademicLearnerPath = () => {
         {activeTab === 'overview' && (
           <div className="space-y-12">
             <section>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Academic Overview</h2>
-              <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Academic Overview</h2>
+              <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-[#564c38] mb-2">12-16</div>
-                    <div className="text-gray-600">Weeks</div>
+                    <div className="text-2xl font-bold text-[#564c38] mb-2">12-16</div>
+                    <div className="text-gray-600 text-sm">Weeks</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-[#564c38] mb-2">Advanced</div>
-                    <div className="text-gray-600">Level</div>
+                    <div className="text-2xl font-bold text-[#564c38] mb-2">Advanced</div>
+                    <div className="text-gray-600 text-sm">Level</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-4xl font-bold text-[#564c38] mb-2">{documents.length}</div>
-                    <div className="text-gray-600">Resources</div>
+                    <div className="text-2xl font-bold text-[#564c38] mb-2">{documents.length}</div>
+                    <div className="text-gray-600 text-sm">Resources</div>
                   </div>
                 </div>
               </div>
@@ -116,12 +116,12 @@ const AcademicLearnerPath = () => {
 
         {activeTab === 'grammar' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Grammar Resources</h2>
-            <div className="space-y-6">
-              {documents.filter(d => d.category === 'grammar').map((doc) => (
-                <div key={doc.id} className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{doc.title}</h3>
-                  <p className="text-gray-600 mb-4">{doc.description}</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Grammar Resources</h2>
+              <div className="space-y-4">
+                {documents.filter(d => d.category === 'grammar').map((doc) => (
+                  <div key={doc.id} className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                    <h3 className="text-base font-bold text-gray-900 mb-2">{doc.title}</h3>
+                    <p className="text-gray-600 text-sm mb-3">{doc.description}</p>
                   <span className="px-3 py-1 rounded-full text-xs font-medium" style={{backgroundColor: '#f1d799', color: '#564c38'}}>
                     {doc.category}
                   </span>
@@ -133,30 +133,30 @@ const AcademicLearnerPath = () => {
 
         {activeTab === 'phonology' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Phonology</h2>
-            <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-              <p className="text-lg text-gray-700">Study Akan sound systems, phonetic notation, and pronunciation patterns.</p>
-            </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Phonology</h2>
+              <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                <p className="text-base text-gray-700">Study Akan sound systems, phonetic notation, and pronunciation patterns.</p>
+              </div>
           </div>
         )}
 
         {activeTab === 'dialects' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Dialectal Variations</h2>
-            <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-              <p className="text-lg text-gray-700">Explore Twi, Fante, and Akuapem dialect differences and regional variations.</p>
-            </div>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Dialectal Variations</h2>
+              <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                <p className="text-base text-gray-700">Explore Twi, Fante, and Akuapem dialect differences and regional variations.</p>
+              </div>
           </div>
         )}
 
         {activeTab === 'research' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Research Methods</h2>
-            <div className="space-y-6">
-              {lessons.filter(l => l.level === 'advanced').map((lesson) => (
-                <div key={lesson.id} className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{lesson.title}</h3>
-                  <p className="text-gray-600 mb-4">{lesson.description}</p>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Research Methods</h2>
+              <div className="space-y-4">
+                {lessons.filter(l => l.level === 'advanced').map((lesson) => (
+                  <div key={lesson.id} className="bg-white rounded-xl shadow-lg p-4 border border-gray-100">
+                    <h3 className="text-base font-bold text-gray-900 mb-2">{lesson.title}</h3>
+                    <p className="text-gray-600 text-sm mb-3">{lesson.description}</p>
                   <Link to={`/learn/lesson/${lesson.id}`} className="text-[#564c38] font-medium hover:underline">
                     View Lesson →
                   </Link>

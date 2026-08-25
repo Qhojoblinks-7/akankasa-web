@@ -129,14 +129,14 @@ const CultureDetailPage = () => {
 
           {/* Hero Content */}
           <div className="absolute bottom-0 left-0 right-0">
-            <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+            <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 pb-6">
               <div className="max-w-3xl">
                 {content.category && (
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-4 ${colors.bg} ${colors.text} border ${colors.border}`}>
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mb-2 ${colors.bg} ${colors.text} border ${colors.border}`}>
                     {content.category.charAt(0).toUpperCase() + content.category.slice(1)}
                   </span>
                 )}
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2 leading-tight">
                   {content.title}
                 </h1>
                 {content.description && (

@@ -80,9 +80,9 @@ const LanguageLearning = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="text-white" style={{background: 'linear-gradient(135deg, #ca8a04 0%, #f59e0b 100%)'}}>
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Learn Akan Language</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Learn Akan Language</h1>
+          <p className="text-base opacity-90 max-w-3xl">
             Master the beautiful Akan language through interactive lessons, cultural context, and engaging exercises
           </p>
         </div>
@@ -134,8 +134,8 @@ const LanguageLearning = () => {
           <div className="space-y-12">
             {/* Learning Paths */}
             <section>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Choose Your Learning Path</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Choose Your Learning Path</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {learningPaths.map((path, index) => (
                   <div key={index} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border border-gray-100">
                     <div className="h-32 relative" style={{backgroundColor: path.color}}>
@@ -143,13 +143,13 @@ const LanguageLearning = () => {
                         <h3 className="text-white text-xl font-bold text-center">{path.title}</h3>
                       </div>
                     </div>
-                    <div className="p-6">
-                      <p className="text-gray-600 mb-4">{path.description}</p>
-                      <div className="flex items-center text-sm text-gray-500 mb-4">
+                     <div className="p-4">
+                       <p className="text-gray-600 text-sm mb-3">{path.description}</p>
+                       <div className="flex items-center text-sm text-gray-500 mb-3">
                         <Clock className="w-4 h-4 mr-2" />
                         {path.duration}
                       </div>
-                      <div className="space-y-2 mb-6">
+                      <div className="space-y-2 mb-4">
                         {path.modules.map((module, idx) => (
                           <div key={idx} className="flex items-center text-sm">
                             <CheckCircle className="w-4 h-4 mr-2" style={{color: '#f1d799'}} />
@@ -178,19 +178,19 @@ const LanguageLearning = () => {
 
             {/* Quick Start */}
             <section>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">Quick Start Options</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Start Options</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
                   { title: "Learn Alphabet", desc: "Master Akan letters and sounds", link: "#alphabet", icon: "অ" },
                   { title: "Basic Greetings", desc: "Essential daily greetings", link: "#greetings", icon: "👋" },
                   { title: "Family Words", desc: "Learn family relationships", link: "#vocabulary", icon: "👨‍👩‍👧‍👦" },
                   { title: "Numbers 1-10", desc: "Count in Akan", link: "#vocabulary", icon: "🔢" }
                 ].map((item, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveTab(item.link.replace('#', ''))}
-                    className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 text-center group border border-gray-100"
-                  >
+                     <button
+                     key={index}
+                     onClick={() => setActiveTab(item.link.replace('#', ''))}
+                     className="bg-white p-4 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 text-center group border border-gray-100"
+                   >
                     <div className="text-4xl mb-4">{item.icon}</div>
                     <h3 className="font-semibold text-gray-900 mb-2 group-hover:transition-colors" 
                         onMouseEnter={(e) => e.target.style.color = '#564c38'}
@@ -207,16 +207,16 @@ const LanguageLearning = () => {
         {/* Alphabet Tab */}
         {activeTab === 'alphabet' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Akan Alphabet & Pronunciation</h2>
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
-              <p className="text-lg text-gray-700 mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Akan Alphabet & Pronunciation</h2>
+            <div className="bg-white rounded-xl shadow-lg p-4 mb-4 border border-gray-100">
+              <p className="text-base text-gray-700 mb-4">
                 The Akan alphabet consists of 22 letters. Click on each letter to hear its pronunciation and see an example word.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {alphabet.map((letter, index) => (
                    <div key={index} className="border border-gray-200 rounded-xl p-4 hover:bg-gray-50 transition-colors">
                     <div className="text-center">
-                      <div className="text-4xl font-bold mb-2" style={{color: '#564c38'}}>{letter.letter}</div>
+                       <div className="text-2xl font-bold mb-2" style={{color: '#564c38'}}>{letter.letter}</div>
                       <div className="text-sm text-gray-600 mb-2">{letter.pronunciation}</div>
                       <button
                         onClick={() => playAudio(letter.audio)}
@@ -240,14 +240,14 @@ const LanguageLearning = () => {
         {/* Greetings Tab */}
         {activeTab === 'greetings' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Essential Akan Greetings</h2>
-            <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Essential Akan Greetings</h2>
+            <div className="space-y-4">
                {greetings.map((greeting) => (
-                 <div key={greeting.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-6 border border-gray-100">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                <div key={greeting.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-4 border border-gray-100">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{greeting.akan}</h3>
-                      <p className="text-lg text-gray-600 mb-2">{greeting.english}</p>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">{greeting.akan}</h3>
+                      <p className="text-base text-gray-600 mb-2">{greeting.english}</p>
                       <p className="text-sm text-gray-500 mb-4">Pronunciation: {greeting.pronunciation}</p>
                       <p className="text-sm" style={{color: '#564c38'}}>{greeting.context}</p>
                     </div>
@@ -273,17 +273,17 @@ const LanguageLearning = () => {
         {/* Vocabulary Tab */}
         {activeTab === 'vocabulary' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Vocabulary Modules</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Vocabulary Modules</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                {vocabulary.map((module) => (
-                 <div key={module.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border border-gray-100">
-                  <div className="p-6 text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
-                    <h3 className="text-xl font-bold mb-2">{module.title}</h3>
+                <div key={module.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 overflow-hidden border border-gray-100">
+                  <div className="p-4 text-white" style={{background: 'linear-gradient(135deg, #695e46 0%, #77705c 100%)'}}>
+                    <h3 className="text-lg font-bold mb-2">{module.title}</h3>
                     <p style={{color: '#f1d799'}}>{module.description}</p>
                     <p className="text-sm mt-2" style={{color: '#c2ae81'}}>{module.words?.length || 0} words</p>
                   </div>
-                  <div className="p-6">
-                    <div className="space-y-3 mb-6">
+                  <div className="p-4">
+                    <div className="space-y-3 mb-4">
                       {(module.words || []).slice(0, 3).map((word, index) => (
                         <div key={index} className="flex justify-between items-center">
                           <div>
@@ -325,14 +325,14 @@ const LanguageLearning = () => {
         {/* Lessons Tab */}
         {activeTab === 'lessons' && (
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Structured Lessons</h2>
-            <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Structured Lessons</h2>
+            <div className="space-y-4">
                {lessons.map((lesson) => (
-                 <div key={lesson.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-6 border border-gray-100">
-                  <div className="flex justify-between items-start mb-4">
+                <div key={lesson.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 p-4 border border-gray-100">
+                  <div className="flex justify-between items-start mb-3">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{lesson.title}</h3>
-                      <p className="text-gray-600 mb-4">{lesson.description}</p>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">{lesson.title}</h3>
+                      <p className="text-gray-600 text-sm mb-3">{lesson.description}</p>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <span className="px-3 py-1 rounded-full" style={{backgroundColor: '#f1d799', color: '#564c38'}}>{lesson.level}</span>
                         <span className="flex items-center">
@@ -352,8 +352,8 @@ const LanguageLearning = () => {
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
                   </div>
-                  <div className="border-t border-gray-200 pt-4">
-                    <h4 className="font-semibold text-gray-900 mb-2">Learning Objectives:</h4>
+                  <div className="border-t border-gray-200 pt-3">
+                    <h4 className="font-semibold text-gray-900 text-sm mb-2">Learning Objectives:</h4>
                     <ul className="space-y-1">
                       {(lesson.objectives || []).map((objective, index) => (
                         <li key={index} className="flex items-center text-gray-600">

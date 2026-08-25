@@ -77,8 +77,8 @@ const CultureHighlights = () => {
           </span>
         </div>
       </div>
-      <div className="p-6">
-        <div className="mb-4">
+         <div className="p-4">
+          <div className="mb-3">
           <p className="text-gray-700 leading-relaxed line-clamp-3">{item.content}</p>
         </div>
 
@@ -150,17 +150,17 @@ const CultureHighlights = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Akan Culture Highlights</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
+         <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Akan Culture Highlights</h1>
+          <p className="text-base opacity-90 max-w-3xl">
             Explore the rich traditions, fascinating history, beautiful arts, and vibrant culture of the Akan people
           </p>
         </div>
-      </div>
+      </div>
       {/* Section Navigation */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-8 overflow-x-auto" role="tablist" aria-label="Culture sections">
+          <div className="flex space-x-6 overflow-x-auto" role="tablist" aria-label="Culture sections">
             {sections.map((section) => {
               const Icon = section.icon;
               return (
@@ -196,9 +196,9 @@ const CultureHighlights = () => {
           </div>
         </div>
       </div>
-      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filters and Search */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+         <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Filters and Search */}
+          <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div className="md:col-span-2">
@@ -232,8 +232,8 @@ const CultureHighlights = () => {
           </div>
         </div>
          {/* Section Content */}
-         <div id="culture-content-panel" className="mb-8" role="tabpanel">
-           <div className="flex items-center mb-6">
+          <div id="culture-content-panel" className="mb-4" role="tabpanel">
+            <div className="flex items-center mb-4">
             {sections.find(s => s.id === activeSection) && (() => {
               const Icon = sections.find(s => s.id === activeSection).icon;
               return (
@@ -243,7 +243,7 @@ const CultureHighlights = () => {
               );
             })()}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-gray-900">
                 {sections.find(s => s.id === activeSection)?.label}
               </h2>
               <p className="text-gray-600">
@@ -265,7 +265,7 @@ const CultureHighlights = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredContent.map((item) => (
                 <CultureCard
                   key={item.id}
@@ -278,8 +278,8 @@ const CultureHighlights = () => {
         </div>
         {/* Cultural Map Section (commented out) */}
         {/* Multimedia Gallery */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Multimedia Gallery</h3>
+         <div className="bg-white rounded-lg shadow-lg p-4">
+          <h3 className="text-xl font-bold text-gray-900 mb-3">Multimedia Gallery</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { type: 'video', title: 'Traditional Drumming', description: 'Learn about Akan drumming traditions', link: '/culture/drumming' },
@@ -308,10 +308,10 @@ const CultureHighlights = () => {
           </div>
         </div>
         {/* User Contribution Section */}
-        <div className="bg-gradient-to-r from-yellow-700 to-yellow-600 text-white rounded-lg p-8 mt-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold mb-4">Share Your Knowledge</h3>
-            <p className="text-lg opacity-90 mb-6">
+         <div className="bg-gradient-to-r from-yellow-700 to-yellow-600 text-white rounded-lg p-4 mt-3">
+          <div className="text-center">
+            <h3 className="text-xl font-bold mb-3">Share Your Knowledge</h3>
+            <p className="text-base opacity-90 mb-4">
               Help preserve Akan culture by contributing your stories, photos, and knowledge
             </p>
             <button

@@ -78,12 +78,12 @@ const Research = () => {
   };
 
   const ResourceCard = ({ resource }) => (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-start mb-4">
+    <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-start mb-3">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{resource.title}</h3>
-          <p className="text-sm text-gray-600 mb-2">by {resource.author}</p>
-          <p className="text-gray-700 mb-4">{resource.description}</p>
+          <h3 className="text-base font-semibold text-gray-900 mb-2">{resource.title}</h3>
+          <p className="text-xs text-gray-600 mb-1">by {resource.author}</p>
+          <p className="text-gray-700 text-sm mb-3">{resource.description}</p>
         </div>
         <div className="flex flex-col items-end space-y-2 ml-4">
           <span className="px-2 py-1 rounded-full text-xs font-medium"
@@ -99,7 +99,7 @@ const Research = () => {
           </span>
         </div>
       </div>
-      <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
+      <div className="flex items-center space-x-3 text-xs text-gray-500 mb-3">
         <span className="flex items-center">
           <FileText className="w-4 h-4 mr-1" />
           {resource.category}
@@ -123,12 +123,12 @@ const Research = () => {
   );
 
   const ForumPostCard = ({ post }) => (
-    <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-      <div className="flex justify-between items-start mb-4">
+    <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-start mb-3">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{post.title}</h3>
-          <p className="text-gray-700 mb-3">{post.content}</p>
-          <div className="flex items-center space-x-4 text-sm text-gray-500">
+          <h3 className="text-base font-semibold text-gray-900 mb-2">{post.title}</h3>
+          <p className="text-gray-700 text-sm mb-2">{post.content}</p>
+          <div className="flex items-center space-x-3 text-xs text-gray-500">
             <span>by {post.author_name || 'Anonymous'}</span>
             <span>{new Date(post.created_at).toLocaleDateString()}</span>
           </div>
@@ -143,16 +143,16 @@ const Research = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Research & Resources</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Research & Resources</h1>
+          <p className="text-base opacity-90 max-w-3xl">
             Access academic papers, linguistic resources, and collaborative research tools for Akan studies
           </p>
         </div>
       </div>
 
-      <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white border-b border-gray-200 sticky top-16 z-40 mb-8">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+         <div className="bg-white border-b border-gray-200 sticky top-16 z-40 mb-4">
           <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex space-x-8 overflow-x-auto">
               {tabs.map((tab) => {
@@ -187,8 +187,8 @@ const Research = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 mb-6">
+        <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
+          <div className="flex flex-col lg:flex-row gap-3 mb-4">
             <div className="flex-1 relative">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -249,9 +249,9 @@ const Research = () => {
               {downloadError}
             </div>
           )}
-          <div className="bg-white rounded-lg shadow-lg">
-            <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">
+  <div className="bg-white rounded-lg shadow-lg">
+           <div className="px-4 py-3 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900">
               {activeTab === 'resources' ? `Resources (${filteredResources.length})` : `Forum Posts (${forumPosts.length})`}
             </h2>
           </div>

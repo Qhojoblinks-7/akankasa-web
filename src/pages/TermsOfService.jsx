@@ -11,14 +11,14 @@ const TermsOfService = () => {
         <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto">
           <Link 
             to="/" 
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors text-white mb-4"
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors text-white mb-2"
             onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'}
             onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back to Home</span>
           </Link>
-          <h1 className="text-4xl font-bold text-white">Terms of Service</h1>
+          <h1 className="text-3xl font-bold text-white">Terms of Service</h1>
           <p className="text-xl mt-2" style={{color: 'var(--color-accent)'}}>
             Terms and conditions for using Akan Kasa ne Amammere
           </p>

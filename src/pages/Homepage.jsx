@@ -62,13 +62,13 @@ const Homepage = () => {
   <FeatureSection />
 
       {/* Featured Content */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
+      <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">
               {t('featuredContentTitle')}
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
               {t('featuredContentDesc')}
             </p>
           </div>
@@ -97,7 +97,7 @@ const Homepage = () => {
                           <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-black/80" />
                         </div>
                       </div>
-                      <div className="p-4 sm:p-6">
+                       <div className="p-4">
                         <span className="inline-block px-2.5 py-1 text-xs font-medium rounded-full mb-2.5 sm:mb-3 bg-[#564c38] text-white">
                           {content.category}
                         </span>
@@ -127,7 +127,7 @@ const Homepage = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {[
               { number: '500+', label: 'Dictionary Words' },
               { number: '50+', label: 'Audio Pronunciations' },
@@ -141,7 +141,7 @@ const Homepage = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-1.5 sm:mb-2">{stat.number}</div>
+                 <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2">{stat.number}</div>
                 <div className="text-sm sm:text-lg opacity-90">{stat.label}</div>
               </motion.div>
             ))}
@@ -150,12 +150,12 @@ const Homepage = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+      <section className="py-8 sm:py-12 lg:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
             {t('readyToBegin')}
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 max-w-2xl mx-auto">
             {t('readyToBeginDesc')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">

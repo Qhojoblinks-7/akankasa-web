@@ -114,9 +114,9 @@ const Dictionary = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="text-white" style={{background: 'linear-gradient(135deg, #564c38 0%, #695e46 100%)'}}>
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Akan Dictionary</h1>
-          <p className="text-xl opacity-90 max-w-3xl">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Akan Dictionary</h1>
+          <p className="text-base opacity-90 max-w-3xl">
             Comprehensive bilingual dictionary with audio pronunciations, etymologies, and cultural context
           </p>
         </div>
@@ -129,8 +129,8 @@ const Dictionary = () => {
           </div>
         )}
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 mb-6">
+        <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
+          <div className="flex flex-col lg:flex-row gap-3 mb-4">
             <div className="flex bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => { setSearchDirection('akan-english'); setPage(1); }}
@@ -236,31 +236,31 @@ const Dictionary = () => {
           </div>
         </div>
 
-  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <BookOpen className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Comprehensive</h3>
-            <p className="text-sm text-gray-600">Over 500+ words with detailed definitions</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <Volume2 className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Audio Pronunciation</h3>
-            <p className="text-sm text-gray-600">Native speaker recordings for every word</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <MapPin className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Regional Variants</h3>
-            <p className="text-sm text-gray-600">Different dialects and pronunciations</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <Heart className="w-8 h-8 text-yellow-600 mx-auto mb-3" />
-            <h3 className="font-semibold text-gray-900 mb-2">Etymology</h3>
-            <p className="text-sm text-gray-600">Word origins and historical development</p>
-          </div>
-        </div>
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+           <div className="bg-white p-4 rounded-lg shadow-md text-center">
+             <BookOpen className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+             <h3 className="font-semibold text-gray-900 text-sm mb-1">Comprehensive</h3>
+             <p className="text-xs text-gray-600">Over 500+ words with detailed definitions</p>
+           </div>
+           <div className="bg-white p-4 rounded-lg shadow-md text-center">
+             <Volume2 className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+             <h3 className="font-semibold text-gray-900 text-sm mb-1">Audio Pronunciation</h3>
+             <p className="text-xs text-gray-600">Native speaker recordings for every word</p>
+           </div>
+           <div className="bg-white p-4 rounded-lg shadow-md text-center">
+             <MapPin className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+             <h3 className="font-semibold text-gray-900 text-sm mb-1">Regional Variants</h3>
+             <p className="text-xs text-gray-600">Different dialects and pronunciations</p>
+           </div>
+           <div className="bg-white p-4 rounded-lg shadow-md text-center">
+             <Heart className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+             <h3 className="font-semibold text-gray-900 text-sm mb-1">Etymology</h3>
+             <p className="text-xs text-gray-600">Word origins and historical development</p>
+           </div>
+         </div>
 
   <div className="bg-white rounded-lg shadow-lg">
-          <div className="px-6 py-4 border-b border-gray-200">
+           <div className="px-4 py-3 border-b border-gray-200">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-900">
                 Dictionary Results ({total})
@@ -287,12 +287,12 @@ const Dictionary = () => {
                   </p>
                 </div>
               ) : (
-                results.map((word) => (
-                  <div key={word.id} className="px-6 py-6 hover:bg-gray-50 transition-colors">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-4 mb-2">
-                          <h3 className="text-2xl font-bold text-gray-900">{word.primary_akan}</h3>
+                 results.map((word) => (
+                   <div key={word.id} className="px-4 py-4 hover:bg-gray-50 transition-colors">
+                     <div className="flex justify-between items-start mb-3">
+                       <div className="flex-1">
+                         <div className="flex items-center space-x-3 mb-2">
+                           <h3 className="text-lg font-bold text-gray-900">{word.primary_akan}</h3>
                           <div>
                             {word.audio && (
                               <AudioPlayer
@@ -311,7 +311,7 @@ const Dictionary = () => {
                           </span>
                         </div>
                         
-                        <p className="text-lg text-gray-700 mb-2">{word.english_translation}</p>
+                         <p className="text-base text-gray-700 mb-2">{word.english_translation}</p>
                         {word.variations && word.variations[0]?.phonetic_script && (
                           <p className="text-sm text-gray-500 mb-4">
                             Pronunciation: <span className="font-mono">{word.variations[0].phonetic_script}</span>
@@ -355,7 +355,7 @@ const Dictionary = () => {
               )}
             </div>
 
-            <aside className="md:col-span-1 border-l border-gray-100 p-4 bg-gray-50">
+            <aside className="md:col-span-1 border-l border-gray-100 p-3 bg-gray-50">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">Favorites ({favorites.length})</h3>
                 <button onClick={() => setFavorites([])} className="text-sm text-gray-500 hover:text-gray-700" aria-label="Clear all favorites">Clear</button>

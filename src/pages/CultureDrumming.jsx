@@ -61,12 +61,12 @@ const CultureDrumming = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-gradient-to-r from-red-700 to-red-900 text-white">
-        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="flex items-center mb-4">
+        <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center mb-2">
             <Music className="w-10 h-10 mr-4" />
-            <h1 className="text-4xl font-bold">Traditional Drumming</h1>
+            <h1 className="text-3xl font-bold">Traditional Drumming</h1>
           </div>
-          <p className="text-xl opacity-90 max-w-3xl">
+          <p className="text-base opacity-90 max-w-3xl">
             Master the rhythms and techniques of traditional Akan drums. Learn from expert instructors 
             and discover the cultural significance behind each beat and pattern.
           </p>
@@ -75,7 +75,7 @@ const CultureDrumming = () => {
 
       {/* Search and Filters */}
       <div className="w-full sm:w-[80%] md:w-[75%] lg:w-[94%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+         <div className="bg-white rounded-lg shadow-lg p-4 mb-4">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {/* Search */}
             <div className="md:col-span-2">
@@ -160,21 +160,21 @@ const CultureDrumming = () => {
         </div>
         
         {/* Lessons Grid */}
-        {loading ? (
-          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-            <div className="w-8 h-8 border-4 border-gray-700 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading lessons...</p>
-          </div>
-        ) : filteredLessons.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-            <Music className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No lessons found</h3>
+         {loading ? (
+           <div className="bg-white rounded-lg shadow-lg p-4 text-center">
+             <div className="w-8 h-8 border-4 border-gray-700 border-t-red-600 rounded-full animate-spin mx-auto mb-4"></div>
+             <p className="text-gray-600">Loading lessons...</p>
+           </div>
+         ) : filteredLessons.length === 0 ? (
+           <div className="bg-white rounded-lg shadow-lg p-4 text-center">
+             <Music className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+             <h3 className="text-lg font-medium text-gray-900 mb-2">No lessons found</h3>
             <p className="text-gray-600">
               Try adjusting your search terms or filters to find what you're looking for.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredLessons.map(lesson => (
               <LessonCard 
                 key={lesson.id} 
