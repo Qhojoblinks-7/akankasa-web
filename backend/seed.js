@@ -1,5 +1,5 @@
 import { initDatabase, getDb } from './database.js';
-import { dictionaryData, culturalData, researchData, forumData, communityData, lessonsData, alphabetData, greetingsData, vocabularyModules, userProfiles } from '../src/data/mockData.js';
+import { dictionaryData, culturalData, researchData, forumData, communityData, lessonsData, alphabetData, greetingsData, vocabularyModules, userProfiles } from '../frontend/src/data/mockData.js';
 
 const seed = async () => {
   try {

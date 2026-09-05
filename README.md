@@ -6,13 +6,14 @@ A comprehensive digital platform for learning the Akan language and exploring Ak
 
 This repository contains two independent applications:
 
-- **Frontend** (`/`) — React + Vite SPA
+- **Frontend** (`/frontend`) — React + Vite SPA
 - **Backend** (`/backend`) — Express + SQLite API server
 
 ## Quick Start
 
 ### Frontend
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
@@ -28,7 +29,7 @@ Runs on `http://localhost:4000`
 
 ## Environment Variables
 
-### Frontend (`.env` in root)
+### Frontend (`frontend/.env`)
 ```
 VITE_API_BASE_URL=http://localhost:4000
 ```
@@ -41,7 +42,7 @@ PRERENDER_TOKEN=your_prerender_io_token
 
 ## Deployment
 
-- **Frontend**: Deploy the `dist/` folder to any static host (Vercel, Netlify, cPanel, S3, etc.)
+- **Frontend**: Deploy the `frontend/dist/` folder to any static host (Vercel, Netlify, cPanel, S3, etc.)
 - **Backend**: Deploy the `backend/` folder to any Node.js host (Render, Railway, DigitalOcean, etc.)
 
 See [README_FRONTEND.md](./README_FRONTEND.md) for frontend details.

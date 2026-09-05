@@ -5,6 +5,7 @@ React + Vite single-page application for the Akan Kasa platform.
 ## Quick Start
 
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
@@ -28,7 +29,7 @@ VITE_API_BASE_URL=https://your-backend-domain.com
 npm run build
 ```
 
-Outputs static files to `dist/`.
+Outputs static files to `frontend/dist/`.
 
 ## SEO
 
@@ -51,7 +52,7 @@ This SPA is optimized for search engines through:
 
 ## Deployment
 
-Deploy the `dist/` folder to any static host:
+Deploy the `frontend/dist/` folder to any static host:
 - Vercel
 - Netlify
 - AWS S3 + CloudFront
